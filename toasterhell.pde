@@ -4,6 +4,8 @@ Made by Dominic Francis Stephen Ford (dofo@itu.dk) and Frederik Boye Hansen (frb
 ITU 2017, Programming for Designers
 */
 
+LevelManager levelManager;
+PlayerManager playerManager;
 int gamestate;
 
 setup() {
@@ -20,6 +22,6 @@ draw() {
     case 3 :
 
     case 4 :
-    
+
   }
 }
