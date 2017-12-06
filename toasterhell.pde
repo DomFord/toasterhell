@@ -15,6 +15,8 @@ void setup() {
   gamestate = 1;
 
   levelManager = new LevelManager();
+  playerManager = new PlayerManager();
+
   stars = new Star[10];
   for (int i = 0; i < 10; i++) {
     stars[i] = new Star();
@@ -38,11 +40,24 @@ void keyPressed() {
       gamestate = 4;
       break;
   }
+
+  switch (gamestate) {
+    case 1:
+      switch (keyCode) {
+        case LEFT:
+          playerManager.movePlayer(0);
+          break;
+        case RIGHT:
+          playerManager.movePlayer(1);
+          break;
+      }
+      break;
+  }
 }
 
 void draw() {
-background(0);
 levelManager.levelSelector();
+playerManager.drawPlayer();
 
   switch (gamestate) {
     case 1 :

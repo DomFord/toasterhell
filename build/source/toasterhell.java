@@ -31,6 +31,8 @@ public void setup() {
   gamestate = 1;
 
   levelManager = new LevelManager();
+  playerManager = new PlayerManager();
+
   stars = new Star[10];
   for (int i = 0; i < 10; i++) {
     stars[i] = new Star();
@@ -54,11 +56,24 @@ public void keyPressed() {
       gamestate = 4;
       break;
   }
+
+  switch (gamestate) {
+    case 1:
+      switch (keyCode) {
+        case LEFT:
+          playerManager.movePlayer(0);
+          break;
+        case RIGHT:
+          playerManager.movePlayer(1);
+          break;
+      }
+      break;
+  }
 }
 
 public void draw() {
-background(0);
 levelManager.levelSelector();
+playerManager.drawPlayer();
 
   switch (gamestate) {
     case 1 :
@@ -121,6 +136,7 @@ public static class FileManager {                                   // The class
 This script deals with levels; it handles what level is selected and how each level plays out etc.
 */
 class LevelManager{
+  int bgColour;
 
   LevelManager() {
   }
@@ -128,6 +144,7 @@ class LevelManager{
   public void levelSelector() {
     switch (gamestate) {
       case 1:
+        bgColour = color(12, 23, 45);
         spaceLevel();
         break;
       case 2:
@@ -140,6 +157,7 @@ class LevelManager{
   }
 
   public void spaceLevel() {
+    background(bgColour);
     for (int i = 0; i < stars.length; i++) {
       stars[i].moveStar();
     }
@@ -149,7 +167,41 @@ class LevelManager{
 This script handles the player, both what player is selected, player life, weapon, controls etc.
 */
 class PlayerManager{
-  
+  float xpos, ypos, speed, size;
+  boolean alive;
+
+  PlayerManager() {
+    alive = true;
+    xpos = width / 2;
+    ypos = height - 75;
+    speed = 20;
+    size = 50;
+  }
+
+  public void drawPlayer() {
+    if (alive) {
+      noFill();
+      rectMode(CENTER);
+      rect(xpos, ypos, size, size);
+    } else {
+      death();
+    }
+  }
+
+  public void movePlayer(int direction) {
+    switch (direction) {
+      case 0:
+        xpos -= speed;
+        break;
+      case 1:
+        xpos += speed;
+        break;
+    }
+  }
+
+  public void death() {
+  }
+
 }
 class Star {
   float xpos, ypos, speed, size;
@@ -162,7 +214,7 @@ class Star {
     xpos = random(width);
     ypos = 0 - size;
     speed = random(1, 40);
-    size = speed / 2;
+    size = speed / 1.5f;
   }
 
   public void drawStar() {

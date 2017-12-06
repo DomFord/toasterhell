@@ -9,7 +9,7 @@ class Star {
     xpos = random(width);
     ypos = 0 - size;
     speed = random(1, 40);
-    size = speed / 2;
+    size = speed / 1.5;
   }
 
   void drawStar() {
