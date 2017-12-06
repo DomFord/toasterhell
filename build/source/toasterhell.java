@@ -29,10 +29,13 @@ public void setup() {
   
   background(0);
   gamestate = 1;
+
+  levelManager = new LevelManager();
   stars = new Star[10];
   for (int i = 0; i < 10; i++) {
     stars[i] = new Star();
   }
+
 }
 
 public void keyPressed() {
@@ -55,12 +58,10 @@ public void keyPressed() {
 
 public void draw() {
 background(0);
+levelManager.levelSelector();
 
   switch (gamestate) {
     case 1 :
-      for (int i = 0; i < stars.length; i++) {
-        stars[i].moveStar();
-      }
       break;
     case 2 :
       break;
@@ -121,6 +122,28 @@ This script deals with levels; it handles what level is selected and how each le
 */
 class LevelManager{
 
+  LevelManager() {
+  }
+
+  public void levelSelector() {
+    switch (gamestate) {
+      case 1:
+        spaceLevel();
+        break;
+      case 2:
+        break;
+      case 3:
+        break;
+      case 4:
+        break;
+    }
+  }
+
+  public void spaceLevel() {
+    for (int i = 0; i < stars.length; i++) {
+      stars[i].moveStar();
+    }
+  }
 }
 /*
 This script handles the player, both what player is selected, player life, weapon, controls etc.
