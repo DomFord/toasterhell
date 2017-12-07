@@ -46,6 +46,7 @@ class BasicEnemy {
               && playerManager.bullets.get(i).ypos + playerManager.bullets.get(i).size / 2 < ypos + size / 2) {
                 println("Enemy hit!");
                 alive = false;
+                playerManager.bullets.remove(i);
               }
         }
     }
