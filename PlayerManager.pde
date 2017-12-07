@@ -70,8 +70,6 @@ class PlayerManager{
       /*noFill();
       rectMode(CENTER);
       rect(xpos, ypos, size, size);
-      speedHandler();
-      // speedDebug();
       movePlayer();
       shoot();*/
       } else {
@@ -80,6 +78,8 @@ class PlayerManager{
     }
 
     void movePlayer() {
+      speedHandler();
+      shootHandler();
       if (xpos - size < 10) {
         leftSpeed = 0;
       }
@@ -138,7 +138,7 @@ class PlayerManager{
       }
     }
 
-    void shoot() {
+    void shootHandler() {
       if (shooting) {
         if (ticksElapsed > timeStamp + shootRateModifier) {
           bullets.add(new PlayerBullet(xpos, ypos));
@@ -147,6 +147,9 @@ class PlayerManager{
       }
       for (int i = bullets.size() - 1; i >= 0; i--) {
         bullets.get(i).drawBullet();
+        if (bullets.get(i).ypos < 0) {
+          bullets.remove(i);
+        }
     }
   }
 

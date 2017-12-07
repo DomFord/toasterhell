@@ -6,6 +6,7 @@ ITU 2017, Programming for Designers
 
 LevelManager levelManager;
 PlayerManager playerManager;
+EnemyManager enemyManager;
 Star[] stars;
 int gamestate, ticksElapsed;
 
@@ -17,6 +18,7 @@ void setup() {
 
   levelManager = new LevelManager();
   playerManager = new PlayerManager();
+  enemyManager = new EnemyManager();
 
   stars = new Star[10];
   for (int i = 0; i < 10; i++) {
@@ -96,6 +98,7 @@ void keyReleased() {
 void draw() {
 levelManager.levelSelector();
 playerManager.drawPlayer();
+enemyManager.enemySpawner();
 ticksElapsed++;
 
   switch (gamestate) {

@@ -22,6 +22,7 @@ ITU 2017, Programming for Designers
 
 LevelManager levelManager;
 PlayerManager playerManager;
+EnemyManager enemyManager;
 Star[] stars;
 int gamestate, ticksElapsed;
 
@@ -33,6 +34,7 @@ public void setup() {
 
   levelManager = new LevelManager();
   playerManager = new PlayerManager();
+  enemyManager = new EnemyManager();
 
   stars = new Star[10];
   for (int i = 0; i < 10; i++) {
@@ -112,6 +114,7 @@ public void keyReleased() {
 public void draw() {
 levelManager.levelSelector();
 playerManager.drawPlayer();
+enemyManager.enemySpawner();
 ticksElapsed++;
 
   switch (gamestate) {
@@ -123,6 +126,92 @@ ticksElapsed++;
       break;
     case 4 :
       break;
+  }
+}
+class BasicEnemy {
+  int timeStamp, shootRateModifier;
+  float xpos, ypos, speed, size, leftSpeed, rightSpeed, upSpeed, downSpeed, speedModifier, brakeModifier;
+  boolean alive, shooting;
+  //ArrayList<Enemy> bullets;
+
+  BasicEnemy() {
+    timeStamp = 0;
+    shootRateModifier = 0;
+    xpos = random(0 + size, width - size);
+    ypos = -100;
+    speed = 5;
+    size = 50;
+    leftSpeed = 0;
+    rightSpeed = 0;
+    upSpeed = 0;
+    downSpeed = 0;
+    speedModifier = 0.2f;
+    brakeModifier = 0.5f;
+    alive = true;
+    shooting = false;
+    //bullets = new ArrayList<EnemyBullet>;
+  }
+
+  public void drawEnemy() {
+    if (alive) {
+      noFill();
+      rectMode(CENTER);
+      rect(xpos, ypos, size, size);
+      move();
+      bulletCollision();
+      } else {
+        //death();
+      }
+    }
+
+    public void move() {
+      ypos += speed;
+    }
+
+    public void bulletCollision() {
+        for (int i = playerManager.bullets.size() - 1; i >= 0; i--) {
+          if (playerManager.bullets.get(i).xpos - playerManager.bullets.get(i).size / 2 > xpos - size / 2
+              && playerManager.bullets.get(i).xpos + playerManager.bullets.get(i).size / 2 < xpos + size / 2
+              && playerManager.bullets.get(i).ypos - playerManager.bullets.get(i).size / 2 > ypos - size / 2
+              && playerManager.bullets.get(i).ypos + playerManager.bullets.get(i).size / 2 < ypos + size / 2) {
+                println("Enemy hit!");
+                alive = false;
+                playerManager.bullets.remove(i);
+              }
+        }
+    }
+}
+class EnemyManager {
+  ArrayList<BasicEnemy> basicEnemies;
+  int timeStamp;
+
+  EnemyManager() {
+    basicEnemies = new ArrayList<BasicEnemy>();
+    timeStamp = 0;
+  }
+
+  public void enemySpawner() {
+    //switch case here to spawn the correct numbers and types of enemies per level
+    enemyKiller();
+    switch (gamestate) {
+      case 1:
+        if (ticksElapsed > timeStamp + 100) {
+          basicEnemies.add(new BasicEnemy());
+          timeStamp = ticksElapsed;
+      }
+        for (int i = basicEnemies.size() - 1; i >= 0; i--) {
+          basicEnemies.get(i).drawEnemy();
+          }
+        break;
+    }
+  }
+
+  public void enemyKiller() {
+    for (int i = basicEnemies.size() - 1; i >= 0; i--) {
+      if (!basicEnemies.get(i).alive) {
+        basicEnemies.remove(i);
+      }
+    }
   }
 }
 /*
@@ -296,16 +385,19 @@ class PlayerManager{
       /*noFill();
       rectMode(CENTER);
       rect(xpos, ypos, size, size);
-      speedHandler();
-      // speedDebug();
       movePlayer();
+<<<<<<< HEAD
       shoot();*/
+=======
+>>>>>>> master
       } else {
         death();
       }
     }
 
     public void movePlayer() {
+      speedHandler();
+      shootHandler();
       if (xpos - size < 10) {
         leftSpeed = 0;
       }
@@ -364,7 +456,7 @@ class PlayerManager{
       }
     }
 
-    public void shoot() {
+    public void shootHandler() {
       if (shooting) {
         if (ticksElapsed > timeStamp + shootRateModifier) {
           bullets.add(new PlayerBullet(xpos, ypos));
@@ -373,6 +465,9 @@ class PlayerManager{
       }
       for (int i = bullets.size() - 1; i >= 0; i--) {
         bullets.get(i).drawBullet();
+        if (bullets.get(i).ypos < 0) {
+          bullets.remove(i);
+        }
     }
   }
 
