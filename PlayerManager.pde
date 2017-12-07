@@ -2,10 +2,13 @@
 This script handles the player, both what player is selected, player life, weapon, controls etc.
 */
 class PlayerManager{
+  int timeStamp;
   float xpos, ypos, maxSpeed, size, leftSpeed, rightSpeed, upSpeed, downSpeed, speedModifier, brakeModifier;
-  boolean alive, left, right, up, down;
+  boolean alive, left, right, up, down, shooting;
+  ArrayList<PlayerBullet> bullets;
 
   PlayerManager() {
+    timeStamp = 0;
     alive = true;
     xpos = width / 2;
     ypos = height - 75;
@@ -15,12 +18,14 @@ class PlayerManager{
     right = false;
     up = false;
     down = false;
+    shooting = false;
     leftSpeed = constrain(leftSpeed, 0, maxSpeed);
     rightSpeed = constrain(rightSpeed, 0, maxSpeed);
     upSpeed = constrain(upSpeed, 0, maxSpeed);
     downSpeed = constrain(downSpeed, 0, maxSpeed);
     speedModifier = 0.2;
     brakeModifier = 0.5;
+    bullets = new ArrayList<PlayerBullet>();
   }
 
   void drawPlayer() {
@@ -31,6 +36,7 @@ class PlayerManager{
       speedHandler();
       speedDebug();
       movePlayer();
+      shoot();
       } else {
         death();
       }
@@ -94,6 +100,18 @@ class PlayerManager{
         println("Down: " + downSpeed);
       }
     }
+
+    void shoot() {
+      if (shooting) {
+        if (ticksElapsed > timeStamp + 10) {
+          bullets.add(new PlayerBullet(xpos, ypos));
+          timeStamp = ticksElapsed;
+        }
+      }
+      for (int i = bullets.size() - 1; i >= 0; i--) {
+        bullets.get(i).drawBullet();
+    }
+  }
 
     void death() {
     }

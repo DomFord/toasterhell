@@ -23,12 +23,13 @@ ITU 2017, Programming for Designers
 LevelManager levelManager;
 PlayerManager playerManager;
 Star[] stars;
-int gamestate;
+int gamestate, ticksElapsed;
 
 public void setup() {
   
   background(0);
   gamestate = 1;
+  ticksElapsed = 0;
 
   levelManager = new LevelManager();
   playerManager = new PlayerManager();
@@ -61,20 +62,21 @@ public void keyPressed() {
     case 1:
       switch (keyCode) {
         case LEFT:
-          //playerManager.movePlayer(0);
           playerManager.left = true;
           break;
         case RIGHT:
-          //playerManager.movePlayer(1);
           playerManager.right = true;
           break;
         case UP:
-          //playerManager.movePlayer(2);
           playerManager.up = true;
           break;
         case DOWN:
-          //playerManager.movePlayer(3);
           playerManager.down = true;
+          break;
+      }
+      switch (key) {
+        case ' ':
+          playerManager.shooting = true;
           break;
       }
       break;
@@ -86,20 +88,21 @@ public void keyReleased() {
     case 1:
       switch (keyCode) {
         case LEFT:
-          //playerManager.movePlayer(0);
           playerManager.left = false;
           break;
         case RIGHT:
-          //playerManager.movePlayer(1);
           playerManager.right = false;
           break;
         case UP:
-          //playerManager.movePlayer(2);
           playerManager.up = false;
           break;
         case DOWN:
-          //playerManager.movePlayer(3);
           playerManager.down = false;
+          break;
+      }
+      switch (key) {
+        case ' ':
+          playerManager.shooting = false;
           break;
       }
       break;
@@ -109,6 +112,7 @@ public void keyReleased() {
 public void draw() {
 levelManager.levelSelector();
 playerManager.drawPlayer();
+ticksElapsed++;
 
   switch (gamestate) {
     case 1 :
@@ -198,14 +202,39 @@ class LevelManager{
     }
   }
 }
+class PlayerBullet {
+  float xpos, ypos, speed, size;
+  boolean collided;
+
+  PlayerBullet(float x, float y) {
+    xpos = x;
+    ypos = y;
+    speed = 10;
+    size = 3;
+  }
+
+  public void drawBullet() {
+    rectMode(CENTER);
+    fill(255);
+    stroke(255);
+    rect(xpos, ypos, size, size * 5);
+
+    if (!collided) {
+      ypos -= speed;
+    }
+  }
+}
 /*
 This script handles the player, both what player is selected, player life, weapon, controls etc.
 */
 class PlayerManager{
+  int timeStamp;
   float xpos, ypos, maxSpeed, size, leftSpeed, rightSpeed, upSpeed, downSpeed, speedModifier, brakeModifier;
-  boolean alive, left, right, up, down;
+  boolean alive, left, right, up, down, shooting;
+  ArrayList<PlayerBullet> bullets;
 
   PlayerManager() {
+    timeStamp = 0;
     alive = true;
     xpos = width / 2;
     ypos = height - 75;
@@ -215,12 +244,14 @@ class PlayerManager{
     right = false;
     up = false;
     down = false;
+    shooting = false;
     leftSpeed = constrain(leftSpeed, 0, maxSpeed);
     rightSpeed = constrain(rightSpeed, 0, maxSpeed);
     upSpeed = constrain(upSpeed, 0, maxSpeed);
     downSpeed = constrain(downSpeed, 0, maxSpeed);
     speedModifier = 0.2f;
     brakeModifier = 0.5f;
+    bullets = new ArrayList<PlayerBullet>();
   }
 
   public void drawPlayer() {
@@ -228,75 +259,26 @@ class PlayerManager{
       noFill();
       rectMode(CENTER);
       rect(xpos, ypos, size, size);
-      //smoothMove();
       speedHandler();
       speedDebug();
-      playerMove();
+      movePlayer();
+      shoot();
       } else {
         death();
       }
     }
-/*
-    void movePlayer(int direction) {
-      switch (direction) {
-        case 0:
-          if (xpos - size > 0) {
-            xpos -= speed;
-        }
-          break;
-        case 1:
-          if (xpos + size < width) {
-            xpos += speed;
-        }
-          break;
-        case 2:
-          if (ypos - size > 0) {
-            ypos -= speed;
-        }
-          break;
-        case 3:
-          if (ypos + size < height) {
-            ypos += speed;
-        }
-          break;
-      }
-    }
 
-    void smoothMove() {
-      if (left) {
-        if (xpos - size > 0) {
-          xpos -= speed;
-        }
-      }
-      if (right) {
-        if (xpos + size < width) {
-          xpos += speed;
-        }
-      }
-      if (up) {
-        if (ypos - size > 0) {
-          ypos -= speed;
-        }
-      }
-      if (down) {
-        if (ypos + size < height) {
-          ypos += speed;
-        }
-      }
-
-    } */
-
-    public void playerMove() {
+    public void movePlayer() {
       if (xpos - size < 10) {
         leftSpeed = 0;
       }
-      else{
+      else {
         xpos -= leftSpeed;
       }
       if (xpos + size > width - 10) {
         rightSpeed = 0;
       }
-      else{
+      else {
         xpos += rightSpeed;
       }
       if (ypos - size < 10) {
@@ -308,7 +290,7 @@ class PlayerManager{
       if (ypos + size > height - 10) {
         downSpeed = 0;
       }
-      else{
+      else {
         ypos += downSpeed;
       }
     }
@@ -344,6 +326,18 @@ class PlayerManager{
         println("Down: " + downSpeed);
       }
     }
+
+    public void shoot() {
+      if (shooting) {
+        if (ticksElapsed > timeStamp + 10) {
+          bullets.add(new PlayerBullet(xpos, ypos));
+          timeStamp = ticksElapsed;
+        }
+      }
+      for (int i = bullets.size() - 1; i >= 0; i--) {
+        bullets.get(i).drawBullet();
+    }
+  }
 
     public void death() {
     }

@@ -7,12 +7,13 @@ ITU 2017, Programming for Designers
 LevelManager levelManager;
 PlayerManager playerManager;
 Star[] stars;
-int gamestate;
+int gamestate, ticksElapsed;
 
 void setup() {
   size(800,600);
   background(0);
   gamestate = 1;
+  ticksElapsed = 0;
 
   levelManager = new LevelManager();
   playerManager = new PlayerManager();
@@ -45,20 +46,21 @@ void keyPressed() {
     case 1:
       switch (keyCode) {
         case LEFT:
-          //playerManager.movePlayer(0);
           playerManager.left = true;
           break;
         case RIGHT:
-          //playerManager.movePlayer(1);
           playerManager.right = true;
           break;
         case UP:
-          //playerManager.movePlayer(2);
           playerManager.up = true;
           break;
         case DOWN:
-          //playerManager.movePlayer(3);
           playerManager.down = true;
+          break;
+      }
+      switch (key) {
+        case ' ':
+          playerManager.shooting = true;
           break;
       }
       break;
@@ -70,20 +72,21 @@ void keyReleased() {
     case 1:
       switch (keyCode) {
         case LEFT:
-          //playerManager.movePlayer(0);
           playerManager.left = false;
           break;
         case RIGHT:
-          //playerManager.movePlayer(1);
           playerManager.right = false;
           break;
         case UP:
-          //playerManager.movePlayer(2);
           playerManager.up = false;
           break;
         case DOWN:
-          //playerManager.movePlayer(3);
           playerManager.down = false;
+          break;
+      }
+      switch (key) {
+        case ' ':
+          playerManager.shooting = false;
           break;
       }
       break;
@@ -93,6 +96,7 @@ void keyReleased() {
 void draw() {
 levelManager.levelSelector();
 playerManager.drawPlayer();
+ticksElapsed++;
 
   switch (gamestate) {
     case 1 :
