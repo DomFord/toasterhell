@@ -2,11 +2,11 @@ class BasicEnemy {
   int timeStamp, shootRateModifier;
   float xpos, ypos, speed, size, leftSpeed, rightSpeed, upSpeed, downSpeed, speedModifier, brakeModifier;
   boolean alive, shooting;
-  //ArrayList<Enemy> bullets;
+  ArrayList<EnemyBullet> bullets;
 
   BasicEnemy() {
     timeStamp = 0;
-    shootRateModifier = 0;
+    shootRateModifier = 50;
     xpos = random(0 + size, width - size);
     ypos = -100;
     speed = 5;
@@ -18,8 +18,8 @@ class BasicEnemy {
     speedModifier = 0.2;
     brakeModifier = 0.5;
     alive = true;
-    shooting = false;
-    //bullets = new ArrayList<EnemyBullet>;
+    shooting = true;
+    bullets = new ArrayList<EnemyBullet>();
   }
 
   void drawEnemy() {
@@ -29,6 +29,7 @@ class BasicEnemy {
       rect(xpos, ypos, size, size);
       move();
       bulletCollision();
+      shootHandler();
       } else {
         //death();
       }
@@ -47,7 +48,24 @@ class BasicEnemy {
                 println("Enemy hit!");
                 alive = false;
                 playerManager.bullets.remove(i);
+                playerManager.score += 10;
+                println(playerManager.score);
               }
         }
     }
+
+    void shootHandler() {
+      if (shooting) {
+        if (ticksElapsed > timeStamp + shootRateModifier) {
+          bullets.add(new EnemyBullet(xpos, ypos));
+          timeStamp = ticksElapsed;
+        }
+      }
+      for (int i = bullets.size() - 1; i >= 0; i--) {
+        bullets.get(i).drawBullet();
+        if (bullets.get(i).ypos < 0) {
+          bullets.remove(i);
+        }
+    }
+  }
 }

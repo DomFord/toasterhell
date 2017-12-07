@@ -97,8 +97,8 @@ void keyReleased() {
 
 void draw() {
 levelManager.levelSelector();
-playerManager.drawPlayer();
 enemyManager.enemySpawner();
+playerManager.drawPlayer();
 ticksElapsed++;
 
   switch (gamestate) {
