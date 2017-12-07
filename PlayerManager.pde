@@ -2,13 +2,14 @@
 This script handles the player, both what player is selected, player life, weapon, controls etc.
 */
 class PlayerManager{
-  int timeStamp;
+  int timeStamp, shootRateModifier;
   float xpos, ypos, maxSpeed, size, leftSpeed, rightSpeed, upSpeed, downSpeed, speedModifier, brakeModifier;
   boolean alive, left, right, up, down, shooting;
   ArrayList<PlayerBullet> bullets;
 
   PlayerManager() {
     timeStamp = 0;
+    shootRateModifier = 10;
     alive = true;
     xpos = width / 2;
     ypos = height - 75;
@@ -34,7 +35,7 @@ class PlayerManager{
       rectMode(CENTER);
       rect(xpos, ypos, size, size);
       speedHandler();
-      speedDebug();
+      // speedDebug();
       movePlayer();
       shoot();
       } else {
@@ -103,7 +104,7 @@ class PlayerManager{
 
     void shoot() {
       if (shooting) {
-        if (ticksElapsed > timeStamp + 10) {
+        if (ticksElapsed > timeStamp + shootRateModifier) {
           bullets.add(new PlayerBullet(xpos, ypos));
           timeStamp = ticksElapsed;
         }
