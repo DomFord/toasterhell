@@ -32,19 +32,19 @@ void keyPressed() {
   switch (key) {
     case '1':
       gamestate = 1;
-      break;
+    break;
     case '2':
       gamestate = 2;
-      break;
+    break;
     case '3':
       gamestate = 3;
-      break;
+    break;
     case '4':
       gamestate = 4;
-      break;
+    break;
     case '5':
       gamestate = 5;
-      break;
+    break;
   }
 
   switch (gamestate) {
@@ -56,23 +56,23 @@ void keyPressed() {
       switch (keyCode) {
         case LEFT:
           playerManager.left = true;
-          break;
+        break;
         case RIGHT:
           playerManager.right = true;
-          break;
+        break;
         case UP:
           playerManager.up = true;
-          break;
+        break;
         case DOWN:
           playerManager.down = true;
-          break;
+        break;
       }
       switch (key) {
         case ' ':
           playerManager.shooting = true;
-          break;
+        break;
       }
-      break;
+    break;
   }
 }
 
@@ -100,9 +100,9 @@ void keyReleased() {
       switch (key) {
         case ' ':
           playerManager.shooting = false;
-          break;
+        break;
       }
-      break;
+    break;
   }
 }
 
