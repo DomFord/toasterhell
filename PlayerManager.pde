@@ -41,7 +41,7 @@ class PlayerManager{
     if (alive) {
       speedHandler();
       movePlayer();
-      shoot();
+      shootHandler();
       imageMode(CENTER);
       if(playerSelect == 1){
         PImage f = player1sheet.get((avatarFrame*60),0,60,66);
@@ -80,6 +80,7 @@ class PlayerManager{
     void movePlayer() {
       speedHandler();
       shootHandler();
+      bulletCollision();
       if (xpos - size < 10) {
         leftSpeed = 0;
       }
@@ -151,6 +152,19 @@ class PlayerManager{
           bullets.remove(i);
         }
     }
+  }
+
+  void bulletCollision() {
+    for (int i = enemyManager.basicEnemies.size() - 1; i >= 0; i--) {
+      for (int j = enemyManager.basicEnemies.get(i).bullets.size() - 1; j >= 0; j--) {
+        if (enemyManager.basicEnemies.get(i).bullets.get(j).xpos - enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 > xpos - size / 2
+            && enemyManager.basicEnemies.get(i).bullets.get(j).xpos + enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 < xpos + size / 2
+            && enemyManager.basicEnemies.get(i).bullets.get(j).ypos - enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 > ypos - size / 2
+            && enemyManager.basicEnemies.get(i).bullets.get(j).ypos + enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 < ypos + size / 2) {
+              println("Player hit!");
+            }
+          }
+      }
   }
 
     void death() {

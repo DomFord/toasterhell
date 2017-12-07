@@ -132,11 +132,11 @@ class BasicEnemy {
   int timeStamp, shootRateModifier;
   float xpos, ypos, speed, size, leftSpeed, rightSpeed, upSpeed, downSpeed, speedModifier, brakeModifier;
   boolean alive, shooting;
-  //ArrayList<Enemy> bullets;
+  ArrayList<EnemyBullet> bullets;
 
   BasicEnemy() {
     timeStamp = 0;
-    shootRateModifier = 0;
+    shootRateModifier = 50;
     xpos = random(0 + size, width - size);
     ypos = -100;
     speed = 5;
@@ -148,8 +148,8 @@ class BasicEnemy {
     speedModifier = 0.2f;
     brakeModifier = 0.5f;
     alive = true;
-    shooting = false;
-    //bullets = new ArrayList<EnemyBullet>;
+    shooting = true;
+    bullets = new ArrayList<EnemyBullet>();
   }
 
   public void drawEnemy() {
@@ -159,6 +159,7 @@ class BasicEnemy {
       rect(xpos, ypos, size, size);
       move();
       bulletCollision();
+      shootHandler();
       } else {
         //death();
       }
@@ -180,6 +181,40 @@ class BasicEnemy {
               }
         }
     }
+
+    public void shootHandler() {
+      if (shooting) {
+        if (ticksElapsed > timeStamp + shootRateModifier) {
+          bullets.add(new EnemyBullet(xpos, ypos));
+          timeStamp = ticksElapsed;
+        }
+      }
+      for (int i = bullets.size() - 1; i >= 0; i--) {
+        bullets.get(i).drawBullet();
+        if (bullets.get(i).ypos < 0) {
+          bullets.remove(i);
+        }
+    }
+  }
+}
+class EnemyBullet {
+  float xpos, ypos, speed, size;
+  boolean collided;
+
+  EnemyBullet(float x, float y) {
+    xpos = x;
+    ypos = y;
+    speed = 15;
+    size = 3;
+  }
+
+  public void drawBullet() {
+    rectMode(CENTER);
+    fill(218, 44, 56);
+    stroke(218, 44, 56);
+    rect(xpos, ypos, size, size * 5);
+    ypos += speed;
+  }
 }
 class EnemyManager {
   ArrayList<BasicEnemy> basicEnemies;
@@ -346,7 +381,7 @@ class PlayerManager{
     bullets = new ArrayList<PlayerBullet>();
     player1sheet = loadImage("player_avatar_1.png");
     player2sheet = loadImage("player_avatar_2.png");
-    playerSelect = 2;
+    playerSelect = 1;
     avatarFrame = 0;
     ticksLast = millis();
     frameDuration = 100;
@@ -356,7 +391,7 @@ class PlayerManager{
     if (alive) {
       speedHandler();
       movePlayer();
-      shoot();
+      shootHandler();
       imageMode(CENTER);
       if(playerSelect == 1){
         PImage f = player1sheet.get((avatarFrame*60),0,60,66);
@@ -386,10 +421,7 @@ class PlayerManager{
       rectMode(CENTER);
       rect(xpos, ypos, size, size);
       movePlayer();
-<<<<<<< HEAD
       shoot();*/
-=======
->>>>>>> master
       } else {
         death();
       }
@@ -398,6 +430,7 @@ class PlayerManager{
     public void movePlayer() {
       speedHandler();
       shootHandler();
+      bulletCollision();
       if (xpos - size < 10) {
         leftSpeed = 0;
       }
@@ -469,6 +502,19 @@ class PlayerManager{
           bullets.remove(i);
         }
     }
+  }
+
+  public void bulletCollision() {
+    for (int i = enemyManager.basicEnemies.size() - 1; i >= 0; i--) {
+      for (int j = enemyManager.basicEnemies.get(i).bullets.size() - 1; j >= 0; j--) {
+        if (enemyManager.basicEnemies.get(i).bullets.get(j).xpos - enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 > xpos - size / 2
+            && enemyManager.basicEnemies.get(i).bullets.get(j).xpos + enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 < xpos + size / 2
+            && enemyManager.basicEnemies.get(i).bullets.get(j).ypos - enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 > ypos - size / 2
+            && enemyManager.basicEnemies.get(i).bullets.get(j).ypos + enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 < ypos + size / 2) {
+              println("Player hit!");
+            }
+          }
+      }
   }
 
     public void death() {
