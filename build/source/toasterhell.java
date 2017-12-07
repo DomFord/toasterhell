@@ -66,6 +66,12 @@ public void keyPressed() {
         case RIGHT:
           playerManager.movePlayer(1);
           break;
+        case UP:
+          playerManager.movePlayer(2);
+          break;
+        case DOWN:
+          playerManager.movePlayer(3);
+          break;
       }
       break;
   }
@@ -183,26 +189,40 @@ class PlayerManager{
       noFill();
       rectMode(CENTER);
       rect(xpos, ypos, size, size);
-    } else {
-      death();
+      } else {
+        death();
+      }
     }
-  }
 
-  public void movePlayer(int direction) {
-    switch (direction) {
-      case 0:
-        xpos -= speed;
-        break;
-      case 1:
-        xpos += speed;
-        break;
+    public void movePlayer(int direction) {
+      switch (direction) {
+        case 0:
+          if (xpos - size > 0) {
+            xpos -= speed;
+        }
+          break;
+        case 1:
+          if (xpos + size < width) {
+            xpos += speed;
+        }
+          break;
+        case 2:
+          if (ypos - size > 0) {
+            ypos -= speed;
+        }
+          break;
+        case 3:
+          if (ypos + size < height) {
+            ypos += speed;
+        }
+          break;
+      }
     }
-  }
 
-  public void death() {
-  }
+    public void death() {
+    }
 
-}
+  }
 class Star {
   float xpos, ypos, speed, size;
 

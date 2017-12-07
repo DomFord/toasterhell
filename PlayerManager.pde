@@ -18,23 +18,37 @@ class PlayerManager{
       noFill();
       rectMode(CENTER);
       rect(xpos, ypos, size, size);
-    } else {
-      death();
+      } else {
+        death();
+      }
     }
-  }
 
-  void movePlayer(int direction) {
-    switch (direction) {
-      case 0:
-        xpos -= speed;
-        break;
-      case 1:
-        xpos += speed;
-        break;
+    void movePlayer(int direction) {
+      switch (direction) {
+        case 0:
+          if (xpos - size > 0) {
+            xpos -= speed;
+        }
+          break;
+        case 1:
+          if (xpos + size < width) {
+            xpos += speed;
+        }
+          break;
+        case 2:
+          if (ypos - size > 0) {
+            ypos -= speed;
+        }
+          break;
+        case 3:
+          if (ypos + size < height) {
+            ypos += speed;
+        }
+          break;
+      }
     }
-  }
 
-  void death() {
-  }
+    void death() {
+    }
 
-}
+  }

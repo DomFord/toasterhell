@@ -50,6 +50,12 @@ void keyPressed() {
         case RIGHT:
           playerManager.movePlayer(1);
           break;
+        case UP:
+          playerManager.movePlayer(2);
+          break;
+        case DOWN:
+          playerManager.movePlayer(3);
+          break;
       }
       break;
   }
