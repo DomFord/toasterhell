@@ -42,6 +42,9 @@ void keyPressed() {
     case '4':
       gamestate = 4;
       break;
+    case '5':
+      gamestate = 5;
+      break;
   }
 
   switch (gamestate) {

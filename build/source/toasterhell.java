@@ -58,6 +58,9 @@ public void keyPressed() {
     case '4':
       gamestate = 4;
       break;
+    case '5':
+      gamestate = 5;
+      break;
   }
 
   switch (gamestate) {
@@ -133,6 +136,11 @@ class BasicEnemy {
   float xpos, ypos, speed, size, leftSpeed, rightSpeed, upSpeed, downSpeed, speedModifier, brakeModifier;
   boolean alive, shooting;
   ArrayList<EnemyBullet> bullets;
+  PImage enemyImage1;
+  PImage enemyImage2;
+  PImage enemyImage3;
+  PImage enemyImage4;
+  PImage enemyImage5;
 
   BasicEnemy() {
     timeStamp = 0;
@@ -150,16 +158,40 @@ class BasicEnemy {
     alive = true;
     shooting = true;
     bullets = new ArrayList<EnemyBullet>();
+    enemyImage1 = loadImage("enemy_grass.png");
+    enemyImage2 = loadImage("enemy_water.png");
+    enemyImage3 = loadImage("enemy_rock.png");
+    enemyImage4 = loadImage("enemy_ice.png");
+    enemyImage5 = loadImage("enemy_lava.png");
   }
 
   public void drawEnemy() {
     if (alive) {
-      noFill();
-      rectMode(CENTER);
-      rect(xpos, ypos, size, size);
       move();
       bulletCollision();
       shootHandler();
+      imageMode(CENTER);
+      switch (gamestate){
+        case 1:
+        image(enemyImage1,xpos,ypos);
+        break;
+        case 2:
+        image(enemyImage2,xpos,ypos);
+        break;
+        case 3:
+        image(enemyImage3,xpos,ypos);
+        break;
+        case 4:
+        image(enemyImage4,xpos,ypos);
+        break;
+        case 5:
+        image(enemyImage5,xpos,ypos);
+        break;
+      }
+      /*noFill();
+      rectMode(CENTER);
+      rect(xpos, ypos, size, size);*/
+
       } else {
         //death();
       }
@@ -302,14 +334,36 @@ This script deals with levels; it handles what level is selected and how each le
 */
 class LevelManager{
   int bgColour;
+  int backgroundyPos;
+  PImage backgroundGrass;
+  PImage backgroundWater;
+  PImage backgroundRock;
+  PImage backgroundIce;
+  PImage backgroundLava;
 
   LevelManager() {
+    backgroundyPos = 0;
+    backgroundGrass = loadImage("grass.png");
+    backgroundWater = loadImage("water.png");
+    backgroundRock = loadImage("rocks.png");
+    backgroundIce = loadImage("ice.png");
+    backgroundLava = loadImage("lava.png");
+    backgroundGrass.resize(width,0);
+    backgroundWater.resize(width,0);
+    backgroundRock.resize(width,0);
+    backgroundIce.resize(width,0);
+    backgroundLava.resize(width,0);
   }
 
   public void levelSelector() {
     switch (gamestate) {
       case 1:
-        bgColour = color(12, 23, 45);
+        image(backgroundGrass,width/2,backgroundyPos);
+        image(backgroundGrass,width/2,(backgroundyPos-backgroundGrass.height));
+        backgroundyPos++;
+        if(backgroundyPos >= backgroundGrass.height){
+          backgroundyPos = 0;
+        }
         spaceLevel();
         break;
       case 2:
@@ -322,7 +376,6 @@ class LevelManager{
   }
 
   public void spaceLevel() {
-    background(bgColour);
     for (int i = 0; i < stars.length; i++) {
       stars[i].moveStar();
     }
