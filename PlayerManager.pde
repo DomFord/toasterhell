@@ -41,7 +41,7 @@ class PlayerManager{
     if (alive) {
       speedHandler();
       movePlayer();
-      shoot();
+      shootHandler();
       imageMode(CENTER);
       if(playerSelect == 1){
         PImage f = player1sheet.get((avatarFrame*60),0,60,66);

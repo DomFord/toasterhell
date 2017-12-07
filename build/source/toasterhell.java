@@ -346,7 +346,7 @@ class PlayerManager{
     bullets = new ArrayList<PlayerBullet>();
     player1sheet = loadImage("player_avatar_1.png");
     player2sheet = loadImage("player_avatar_2.png");
-    playerSelect = 2;
+    playerSelect = 1;
     avatarFrame = 0;
     ticksLast = millis();
     frameDuration = 100;
@@ -356,7 +356,7 @@ class PlayerManager{
     if (alive) {
       speedHandler();
       movePlayer();
-      shoot();
+      shootHandler();
       imageMode(CENTER);
       if(playerSelect == 1){
         PImage f = player1sheet.get((avatarFrame*60),0,60,66);
@@ -386,10 +386,7 @@ class PlayerManager{
       rectMode(CENTER);
       rect(xpos, ypos, size, size);
       movePlayer();
-<<<<<<< HEAD
       shoot();*/
-=======
->>>>>>> master
       } else {
         death();
       }
