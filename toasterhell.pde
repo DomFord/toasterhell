@@ -45,16 +45,45 @@ void keyPressed() {
     case 1:
       switch (keyCode) {
         case LEFT:
-          playerManager.movePlayer(0);
+          //playerManager.movePlayer(0);
+          playerManager.left = true;
           break;
         case RIGHT:
-          playerManager.movePlayer(1);
+          //playerManager.movePlayer(1);
+          playerManager.right = true;
           break;
         case UP:
-          playerManager.movePlayer(2);
+          //playerManager.movePlayer(2);
+          playerManager.up = true;
           break;
         case DOWN:
-          playerManager.movePlayer(3);
+          //playerManager.movePlayer(3);
+          playerManager.down = true;
+          break;
+      }
+      break;
+  }
+}
+
+void keyReleased() {
+  switch (gamestate) {
+    case 1:
+      switch (keyCode) {
+        case LEFT:
+          //playerManager.movePlayer(0);
+          playerManager.left = false;
+          break;
+        case RIGHT:
+          //playerManager.movePlayer(1);
+          playerManager.right = false;
+          break;
+        case UP:
+          //playerManager.movePlayer(2);
+          playerManager.up = false;
+          break;
+        case DOWN:
+          //playerManager.movePlayer(3);
+          playerManager.down = false;
           break;
       }
       break;
