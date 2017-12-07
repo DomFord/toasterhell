@@ -113,8 +113,8 @@ public void keyReleased() {
 
 public void draw() {
 levelManager.levelSelector();
-playerManager.drawPlayer();
 enemyManager.enemySpawner();
+playerManager.drawPlayer();
 ticksElapsed++;
 
   switch (gamestate) {
@@ -512,6 +512,7 @@ class PlayerManager{
             && enemyManager.basicEnemies.get(i).bullets.get(j).ypos - enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 > ypos - size / 2
             && enemyManager.basicEnemies.get(i).bullets.get(j).ypos + enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 < ypos + size / 2) {
               println("Player hit!");
+              enemyManager.basicEnemies.get(i).bullets.remove(j);
             }
           }
       }
