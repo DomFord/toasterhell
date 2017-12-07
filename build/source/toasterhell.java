@@ -65,6 +65,10 @@ public void keyPressed() {
 
   switch (gamestate) {
     case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
       switch (keyCode) {
         case LEFT:
           playerManager.left = true;
@@ -91,6 +95,10 @@ public void keyPressed() {
 public void keyReleased() {
   switch (gamestate) {
     case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
       switch (keyCode) {
         case LEFT:
           playerManager.left = false;
@@ -120,16 +128,6 @@ enemyManager.enemySpawner();
 playerManager.drawPlayer();
 ticksElapsed++;
 
-  switch (gamestate) {
-    case 1 :
-      break;
-    case 2 :
-      break;
-    case 3 :
-      break;
-    case 4 :
-      break;
-  }
 }
 class BasicEnemy {
   int timeStamp, shootRateModifier;
@@ -262,16 +260,12 @@ class EnemyManager {
   public void enemySpawner() {
     //switch case here to spawn the correct numbers and types of enemies per level
     enemyKiller();
-    switch (gamestate) {
-      case 1:
-        if (ticksElapsed > timeStamp + 100) {
-          basicEnemies.add(new BasicEnemy());
-          timeStamp = ticksElapsed;
-      }
-        for (int i = basicEnemies.size() - 1; i >= 0; i--) {
-          basicEnemies.get(i).drawEnemy();
-          }
-        break;
+    if (ticksElapsed > timeStamp + 100) {
+      basicEnemies.add(new BasicEnemy());
+      timeStamp = ticksElapsed;
+    }
+    for (int i = basicEnemies.size() - 1; i >= 0; i--) {
+      basicEnemies.get(i).drawEnemy();
     }
   }
 
@@ -365,13 +359,43 @@ class LevelManager{
           backgroundyPos = 0;
         }
         spaceLevel();
-        break;
+      break;
       case 2:
-        break;
+        image(backgroundWater,width/2,backgroundyPos);
+        image(backgroundWater,width/2,(backgroundyPos-backgroundWater.height));
+        backgroundyPos++;
+        if(backgroundyPos >= backgroundWater.height){
+          backgroundyPos = 0;
+        }
+        spaceLevel();
+      break;
       case 3:
-        break;
+        image(backgroundRock,width/2,backgroundyPos);
+        image(backgroundRock,width/2,(backgroundyPos-backgroundRock.height));
+        backgroundyPos++;
+        if(backgroundyPos >= backgroundRock.height){
+          backgroundyPos = 0;
+        }
+        spaceLevel();
+      break;
       case 4:
-        break;
+        image(backgroundIce,width/2,backgroundyPos);
+        image(backgroundIce,width/2,(backgroundyPos-backgroundIce.height));
+        backgroundyPos++;
+        if(backgroundyPos >= backgroundIce.height){
+          backgroundyPos = 0;
+        }
+        spaceLevel();
+      break;
+      case 5:
+        image(backgroundLava,width/2,backgroundyPos);
+        image(backgroundLava,width/2,(backgroundyPos-backgroundLava.height));
+        backgroundyPos++;
+        if(backgroundyPos >= backgroundLava.height){
+          backgroundyPos = 0;
+        }
+        spaceLevel();
+      break;
     }
   }
 

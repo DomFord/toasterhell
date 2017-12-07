@@ -49,6 +49,10 @@ void keyPressed() {
 
   switch (gamestate) {
     case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
       switch (keyCode) {
         case LEFT:
           playerManager.left = true;
@@ -75,6 +79,10 @@ void keyPressed() {
 void keyReleased() {
   switch (gamestate) {
     case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
       switch (keyCode) {
         case LEFT:
           playerManager.left = false;
@@ -104,14 +112,4 @@ enemyManager.enemySpawner();
 playerManager.drawPlayer();
 ticksElapsed++;
 
-  switch (gamestate) {
-    case 1 :
-      break;
-    case 2 :
-      break;
-    case 3 :
-      break;
-    case 4 :
-      break;
-  }
 }

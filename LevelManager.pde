@@ -37,7 +37,7 @@ class LevelManager{
       break;
       case 2:
         image(backgroundWater,width/2,backgroundyPos);
-        image(backgroundRock,width/2,(backgroundyPos-backgroundWater.height));
+        image(backgroundWater,width/2,(backgroundyPos-backgroundWater.height));
         backgroundyPos++;
         if(backgroundyPos >= backgroundWater.height){
           backgroundyPos = 0;
@@ -54,7 +54,7 @@ class LevelManager{
         spaceLevel();
       break;
       case 4:
-        image(backgroundIceIce,width/2,backgroundyPos);
+        image(backgroundIce,width/2,backgroundyPos);
         image(backgroundIce,width/2,(backgroundyPos-backgroundIce.height));
         backgroundyPos++;
         if(backgroundyPos >= backgroundIce.height){
@@ -62,7 +62,7 @@ class LevelManager{
         }
         spaceLevel();
       break;
-      case 4:
+      case 5:
         image(backgroundLava,width/2,backgroundyPos);
         image(backgroundLava,width/2,(backgroundyPos-backgroundLava.height));
         backgroundyPos++;
