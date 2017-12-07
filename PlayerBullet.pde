@@ -5,7 +5,7 @@ class PlayerBullet {
   PlayerBullet(float x, float y) {
     xpos = x;
     ypos = y;
-    speed = 10;
+    speed = 15;
     size = 3;
   }
 
