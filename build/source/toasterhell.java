@@ -228,10 +228,12 @@ class PlayerBullet {
 This script handles the player, both what player is selected, player life, weapon, controls etc.
 */
 class PlayerManager{
-  int timeStamp, shootRateModifier;
+  int timeStamp, shootRateModifier, playerSelect, avatarFrame, ticksLast, frameDuration;
   float xpos, ypos, maxSpeed, size, leftSpeed, rightSpeed, upSpeed, downSpeed, speedModifier, brakeModifier;
   boolean alive, left, right, up, down, shooting;
   ArrayList<PlayerBullet> bullets;
+  PImage player1sheet;
+  PImage player2sheet;
 
   PlayerManager() {
     timeStamp = 0;
@@ -253,17 +255,51 @@ class PlayerManager{
     speedModifier = 0.2f;
     brakeModifier = 0.5f;
     bullets = new ArrayList<PlayerBullet>();
+    player1sheet = loadImage("player_avatar_1.png");
+    player2sheet = loadImage("player_avatar_2.png");
+    playerSelect = 2;
+    avatarFrame = 0;
+    ticksLast = millis();
+    frameDuration = 100;
   }
 
   public void drawPlayer() {
     if (alive) {
-      noFill();
+      speedHandler();
+      movePlayer();
+      shoot();
+      imageMode(CENTER);
+      if(playerSelect == 1){
+        PImage f = player1sheet.get((avatarFrame*60),0,60,66);
+        image(f,xpos,ypos);
+        int delta = millis() - ticksLast;
+        if (delta >= frameDuration){
+          avatarFrame++;
+          if(avatarFrame >= 3){
+            avatarFrame = 0;
+          }
+          ticksLast += delta;
+        }
+      }
+      else if (playerSelect == 2){
+        PImage f = player2sheet.get((avatarFrame*60),0,60,66);
+        image(f,xpos,ypos);
+        int delta = millis() - ticksLast;
+        if (delta >= frameDuration){
+          avatarFrame++;
+          if(avatarFrame >= 3){
+            avatarFrame = 0;
+          }
+          ticksLast += delta;
+        }
+      }
+      /*noFill();
       rectMode(CENTER);
       rect(xpos, ypos, size, size);
       speedHandler();
       // speedDebug();
       movePlayer();
-      shoot();
+      shoot();*/
       } else {
         death();
       }
