@@ -2,7 +2,7 @@
 This script handles the player, both what player is selected, player life, weapon, controls etc.
 */
 class PlayerManager{
-  int timeStamp, shootRateModifier, playerSelect, avatarFrame, ticksLast, frameDuration;
+  int timeStamp, shootRateModifier, playerSelect, avatarFrame, ticksLast, frameDuration, score, health;
   float xpos, ypos, maxSpeed, size, leftSpeed, rightSpeed, upSpeed, downSpeed, speedModifier, brakeModifier;
   boolean alive, left, right, up, down, shooting;
   ArrayList<PlayerBullet> bullets;
@@ -35,6 +35,8 @@ class PlayerManager{
     avatarFrame = 0;
     ticksLast = millis();
     frameDuration = 100;
+    score = 0;
+    health = 3;
   }
 
   void drawPlayer() {
@@ -163,12 +165,17 @@ class PlayerManager{
             && enemyManager.basicEnemies.get(i).bullets.get(j).ypos + enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 < ypos + size / 2) {
               println("Player hit!");
               enemyManager.basicEnemies.get(i).bullets.remove(j);
+              health--;
+              println(health);
             }
           }
       }
   }
 
     void death() {
+      if (health == 0) {
+
+      }
     }
 
   }

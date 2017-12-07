@@ -48,6 +48,8 @@ class BasicEnemy {
                 println("Enemy hit!");
                 alive = false;
                 playerManager.bullets.remove(i);
+                playerManager.score += 10;
+                println(playerManager.score);
               }
         }
     }
