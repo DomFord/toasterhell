@@ -91,25 +91,25 @@ class PlayerManager{
       bulletCollision();
       hitBlinker();
       displayLife();
-      if (xpos - size < 10) {
+      if (xpos < 20) {
         leftSpeed = 0;
       }
       else {
         xpos -= leftSpeed * float(millis() - ticksLastUpdate) * 0.001;
       }
-      if (xpos + size > width - 10) {
+      if (xpos > width - 20) {
         rightSpeed = 0;
       }
       else {
         xpos += rightSpeed * float(millis() - ticksLastUpdate) * 0.001;
       }
-      if (ypos - size < 10) {
+      if (ypos < 40) {
         upSpeed = 0;
       }
       else {
         ypos -= upSpeed * float(millis() - ticksLastUpdate) * 0.001;
       }
-      if (ypos + size > height - 10) {
+      if (ypos > height - 30) {
         downSpeed = 0;
       }
       else {
