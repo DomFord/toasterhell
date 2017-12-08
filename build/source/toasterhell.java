@@ -437,6 +437,7 @@ class PlayerManager{
   ArrayList<PlayerBullet> bullets;
   PImage player1sheet;
   PImage player2sheet;
+  PImage heart;
 
   PlayerManager() {
     timeStamp = 0;
@@ -460,6 +461,7 @@ class PlayerManager{
     bullets = new ArrayList<PlayerBullet>();
     player1sheet = loadImage("player_avatar_1.png");
     player2sheet = loadImage("player_avatar_2.png");
+    heart = loadImage("heart.png");
     playerSelect = 1;
     avatarFrame = 0;
     ticksLast = millis();
@@ -512,6 +514,7 @@ class PlayerManager{
       speedHandler();
       shootHandler();
       bulletCollision();
+      displayLife();
       if (xpos - size < 10) {
         leftSpeed = 0;
       }
@@ -599,6 +602,25 @@ class PlayerManager{
             }
           }
       }
+  }
+
+  public void displayLife() {
+    for (int i = 0; i <= health - 1; i++) {
+      if (health >= 3) {
+        if (millis() / 100 % 10 != 0) {
+          image(heart, width - 50 - (i * 35), height - 50);
+        }
+      } else if (health == 2) {
+        if (millis() / 100 % 5 != 0) {
+          image(heart, width - 50 - (i * 35), height - 50);
+        }
+      } else {
+        if (millis() / 100 % 2 != 0) {
+          image(heart, width - 50 - (i * 35), height - 50);
+        }
+      }
+
+    }
   }
 
     public void death() {
