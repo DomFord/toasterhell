@@ -30,7 +30,6 @@ ITU 2017, Programming for Designers
 
 
 
-MainMenu mainMenu;
 LevelManager levelManager;
 PlayerManager playerManager;
 EnemyManager enemyManager;
@@ -38,7 +37,7 @@ LeaderboardsInput leaderboardInput;
 ArrayList<Score> highScoreList;
 Star[] stars;
 int gamestate, ticksElapsed, ticksLastUpdate, menuIndex;
-PFont font1, font2;
+PFont font;
 
 public void setup() {
   
@@ -48,10 +47,8 @@ public void setup() {
   ticksLastUpdate = 0;
   menuIndex = 4;
 
-  font1 = createFont("font.ttf", 100);
-  font2 = createFont("LondrinaShadow-Regular.ttf", 100);
+  font = createFont("font.ttf", 100);
 
-  mainMenu = new MainMenu();
   levelManager = new LevelManager();
   playerManager = new PlayerManager();
   enemyManager = new EnemyManager();
@@ -92,50 +89,90 @@ public void keyPressed() {
     case '5':
       gamestate = 5;
     break;
-    case '6':
-      gamestate = 6;
-    break;
-    case '7':
-      gamestate = 7;
-    break;
   }
 
-  switch (menuIndex) {
-    case 1:
-      if (key == ' ') {
-        mainMenu.spacePressed = true;
+  if(menuIndex == 4){
+    if(key == CODED){
+      if(keyCode == UP){
+        if(leaderboardInput.letterSelect < 35){
+          leaderboardInput.letterSelect++;
+          leaderboardInput.nameconstructor[leaderboardInput.curserPos] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+        }
+        else{
+          leaderboardInput.letterSelect = 0;
+          leaderboardInput.nameconstructor[leaderboardInput.curserPos] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+        }
       }
-      switch (keyCode) {
-        case UP:
-          if (mainMenu.indicator > 1) {
-            mainMenu.indicator--;
-          }
-        break;
-        case DOWN:
-          if (mainMenu.indicator < 4) {
-            mainMenu.indicator++;
-          }
-        break;
-        case RETURN:
-        case ENTER:
-          switch (mainMenu.indicator) {
-            case 1:
-              menuIndex = 2;
-            break;
-            case 2:
-              menuIndex = 3;
-            break;
-            case 3:
-              menuIndex = 5;
-            break;
-            case 4:
-              exit();
-            break;
-          }
-        break;
+      if(keyCode == DOWN){
+        if(leaderboardInput.letterSelect > 0){
+          leaderboardInput.letterSelect--;
+          leaderboardInput.nameconstructor[leaderboardInput.curserPos] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+        }
+        else{
+          leaderboardInput.letterSelect = 35;
+          leaderboardInput.nameconstructor[leaderboardInput.curserPos] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+        }
       }
-    break;
+      if(keyCode == RIGHT){
+        switch(leaderboardInput.curserPos){
+          case 0:
+            leaderboardInput.nameconstructor[0] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+            leaderboardInput.letter1 = leaderboardInput.letterSelect;
+            leaderboardInput.letterSelect = leaderboardInput.letter2;
+          break;
+
+          case 1:
+            leaderboardInput.nameconstructor[1] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+            leaderboardInput.letter2 = leaderboardInput.letterSelect;
+            leaderboardInput.letterSelect = leaderboardInput.letter3;
+          break;
+
+          case 2:
+            leaderboardInput.nameconstructor[2] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+            leaderboardInput.letter3 = leaderboardInput.letterSelect;
+            leaderboardInput.letterSelect = leaderboardInput.letter1;
+          break;
+        }
+        if(leaderboardInput.curserPos < 2){
+          leaderboardInput.curserPos++;
+        }
+        else{
+          leaderboardInput.curserPos = 0;
+        }
+      }
+      if(keyCode == LEFT){
+        switch(leaderboardInput.curserPos){
+          case 0:
+            leaderboardInput.nameconstructor[0] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+            leaderboardInput.letter1 = leaderboardInput.letterSelect;
+            leaderboardInput.letterSelect = leaderboardInput.letter3;
+          break;
+
+          case 1:
+            leaderboardInput.nameconstructor[1] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+            leaderboardInput.letter2 = leaderboardInput.letterSelect;
+            leaderboardInput.letterSelect = leaderboardInput.letter1;
+          break;
+
+          case 2:
+            leaderboardInput.nameconstructor[2] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+            leaderboardInput.letter3 = leaderboardInput.letterSelect;
+            leaderboardInput.letterSelect = leaderboardInput.letter2;
+          break;
+        }
+        if(leaderboardInput.curserPos > 0){
+          leaderboardInput.curserPos--;
+        }
+        else{
+          leaderboardInput.curserPos = 2;
+        }
+      }
+    }
+    if(key == ENTER){
+      leaderboardInput.saveScore();
+    }
   }
+
 
   switch (gamestate) {
     case 1:
@@ -199,7 +236,6 @@ public void keyReleased() {
 public void draw() {
   switch (menuIndex){
     case 1:
-    mainMenu.drawMenu();
     break;
     case 2:
       switch (gamestate) {
@@ -582,33 +618,145 @@ class LeaderboardsInput{
   }
 
   public void saveScore(){
-    scores.add(new Score(name, playerManager.score));
-    FileManager.saveScore("memes.dat", scores);
-    gamestate = 7;
+    Score newScore = new Score();
+    newScore.tag = name;
+    newScore.points = playerManager.score;
+    int placeCheck = 0;
+    while(placeCheck < 10){
+      switch(placeCheck){
+        case 0:
+          if(playerManager.score > highScoreList.get(0).points){
+            highScoreList.add(0, newScore);
+            highScoreList.remove(10);
+            placeCheck = 10;
+          }
+          else{
+            placeCheck = 1;
+          }
+        break;
+        case 1:
+          if(playerManager.score > highScoreList.get(1).points){
+            highScoreList.add(1, newScore);
+            highScoreList.remove(10);
+            placeCheck = 10;
+          }
+          else{
+            placeCheck = 2;
+          }
+        break;
+        case 2:
+          if(playerManager.score > highScoreList.get(2).points){
+            highScoreList.add(2, newScore);
+            highScoreList.remove(10);
+            placeCheck = 10;
+          }
+          else{
+            placeCheck = 3;
+          }
+        break;
+        case 3:
+          if(playerManager.score > highScoreList.get(3).points){
+            highScoreList.add(3, newScore);
+            highScoreList.remove(10);
+            placeCheck = 10;
+          }
+          else{
+            placeCheck = 4;
+          }
+        break;
+        case 4:
+          if(playerManager.score > highScoreList.get(4).points){
+            highScoreList.add(4, newScore);
+            highScoreList.remove(10);
+            placeCheck = 10;
+          }
+          else{
+            placeCheck = 5;
+          }
+        break;
+        case 5:
+          if(playerManager.score > highScoreList.get(5).points){
+            highScoreList.add(5, newScore);
+            highScoreList.remove(10);
+            placeCheck = 10;
+          }
+          else{
+            placeCheck = 6;
+          }
+        break;
+        case 6:
+          if(playerManager.score > highScoreList.get(6).points){
+            highScoreList.add(6, newScore);
+            highScoreList.remove(10);
+            placeCheck = 10;
+          }
+          else{
+            placeCheck = 7;
+          }
+        break;
+        case 7:
+          if(playerManager.score > highScoreList.get(7).points){
+            highScoreList.add(7, newScore);
+            highScoreList.remove(10);
+            placeCheck = 10;
+          }
+          else{
+            placeCheck = 8;
+          }
+        break;
+        case 8:
+          if(playerManager.score > highScoreList.get(8).points){
+            highScoreList.add(8, newScore);
+            highScoreList.remove(10);
+            placeCheck = 10;
+          }
+          else{
+            placeCheck = 9;
+          }
+        break;
+        case 9:
+          if(playerManager.score > highScoreList.get(9).points){
+            highScoreList.add(9, newScore);
+            highScoreList.remove(10);
+            placeCheck = 10;
+          }
+          else{
+            placeCheck = 10;
+          }
+        break;
+      }
+    }
+    String scoreString = "";
+    String[] scoreArray = new String[1];
+    for (int i = 0;  i < highScoreList.size(); i++){
+      scoreString += (highScoreList.get(i).toString() + ",");
+    }
+    scoreArray[0] = scoreString;
+    saveStrings("highscore.txt", scoreArray);
   }
 
   public void displayInput(){
     fill(255);
-    textFont(font1,(150));
+    textFont(font,(150));
     textAlign(CENTER);
-    text(nameconstructor[0], 149, 340);
-    text(nameconstructor[1], 249, 340);
-    text(nameconstructor[2], 349, 340);
-    textFont(font1,(15));
-    text("USE ARROW KEYS TO SET TAG", 240, 480);
-    text("PRESS SPACE TO CONFIRM", 240, 520);
+    text(nameconstructor[0], 299, 340);
+    text(nameconstructor[1], 399, 340);
+    text(nameconstructor[2], 499, 340);
+    textFont(font,(15));
+    text("USE ARROW KEYS TO SET TAG",390, 480);
+    text("PRESS SPACE TO CONFIRM", 399, 520);
     rectMode(CENTER);
     switch(curserPos){
       case 0:
-      rect(140, 353, 95, 15);
+      rect(290, 353, 95, 15);
       break;
 
       case 1:
-      rect(240, 353, 95, 15);
+      rect(390, 353, 95, 15);
       break;
 
       case 2:
-      rect(340, 353, 95, 15);
+      rect(490, 353, 95, 15);
       break;
     }
     rectMode(CORNER);
