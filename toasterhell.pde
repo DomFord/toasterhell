@@ -27,7 +27,7 @@ void setup() {
   gamestate = 1;
   ticksElapsed = 0;
   ticksLastUpdate = 0;
-  menuIndex = 1;
+  menuIndex = 2;
 
   font = createFont("font.ttf", 100);
 
@@ -64,12 +64,6 @@ void keyPressed() {
     case '5':
       gamestate = 5;
     break;
-    case '6':
-      gamestate = 6;
-    break;
-    case '7':
-      gamestate = 7;
-    break;
   }
 
   switch (gamestate) {
@@ -97,39 +91,6 @@ void keyPressed() {
           playerManager.shooting = true;
         break;
       }
-    case 6:
-      switch (keyCode) {
-        case DOWN:
-          if (highscoreEntry.letterRoll == highscoreEntry.alphabet.length - 1) {
-            highscoreEntry.letterRoll = 0;
-          } else {
-            highscoreEntry.letterRoll++;
-          }
-        break;
-        case UP:
-          if (highscoreEntry.letterRoll <= 0) {
-            highscoreEntry.letterRoll = highscoreEntry.alphabet.length - 1;
-          } else {
-            highscoreEntry.letterRoll--;
-          }
-        break;
-        case ENTER:
-        case RETURN:
-          if (highscoreEntry.letterSelect <= 2) {
-            highscoreEntry.lockLetter(highscoreEntry.letterRoll);
-          } else {
-            highscoreEntry.setName();
-            gamestate++;
-          }
-        break;
-
-        case BACKSPACE:
-          if (highscoreEntry.letterSelect >= 0) {
-            highscoreEntry.deleteLetter();
-          }
-        break;
-        }
-
     break;
   }
 }

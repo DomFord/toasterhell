@@ -111,18 +111,21 @@ class BasicEnemy {
             bullets.add(new EnemyBullet(xpos, ypos, 0, 150));
             ticksLast += delta;
             cycleCount++;
+            print(cycleCount);
             println(delta);
             println(ticksLast);
           }
           if (delta > shootCounter && cycleCount > 3){
             ticksLast += delta;
             cycleCount++;
+            print(cycleCount);
             println(delta);
             println(ticksLast);
           }
           if (delta > shootCounter && cycleCount > 10){
             ticksLast += delta;
             cycleCount = 0;
+            print(cycleCount);
             println(delta);
             println(ticksLast);
           }
