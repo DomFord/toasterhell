@@ -27,7 +27,7 @@ void setup() {
   gamestate = 1;
   ticksElapsed = 0;
   ticksLastUpdate = 0;
-  menuIndex = 4;
+  menuIndex = 2;
 
   font = createFont("font.ttf", 100);
 
@@ -43,7 +43,6 @@ void setup() {
   for (int i = 0; i < 10; i++) {
     stars[i] = new Star();
   }
-
 }
 
 void keyPressed() {

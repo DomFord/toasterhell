@@ -48,7 +48,7 @@ public void setup() {
   gamestate = 1;
   ticksElapsed = 0;
   ticksLastUpdate = 0;
-  menuIndex = 4;
+  menuIndex = 2;
 
   font = createFont("font.ttf", 100);
 
@@ -64,7 +64,6 @@ public void setup() {
   for (int i = 0; i < 10; i++) {
     stars[i] = new Star();
   }
-
 }
 
 public void keyPressed() {
@@ -85,13 +84,90 @@ public void keyPressed() {
     case '5':
       gamestate = 5;
     break;
-    case '6':
-      gamestate = 6;
-    break;
-    case '7':
-      gamestate = 7;
-    break;
   }
+
+  if(menuIndex == 4){
+    if(key == CODED){
+      if(keyCode == UP){
+        if(leaderboardInput.letterSelect < 35){
+          leaderboardInput.letterSelect++;
+          leaderboardInput.nameconstructor[leaderboardInput.curserPos] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+        }
+        else{
+          leaderboardInput.letterSelect = 0;
+          leaderboardInput.nameconstructor[leaderboardInput.curserPos] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+        }
+      }
+      if(keyCode == DOWN){
+        if(leaderboardInput.letterSelect > 0){
+          leaderboardInput.letterSelect--;
+          leaderboardInput.nameconstructor[leaderboardInput.curserPos] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+        }
+        else{
+          leaderboardInput.letterSelect = 35;
+          leaderboardInput.nameconstructor[leaderboardInput.curserPos] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+        }
+      }
+      if(keyCode == RIGHT){
+        switch(leaderboardInput.curserPos){
+          case 0:
+            leaderboardInput.nameconstructor[0] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+            leaderboardInput.letter1 = leaderboardInput.letterSelect;
+            leaderboardInput.letterSelect = leaderboardInput.letter2;
+          break;
+
+          case 1:
+            leaderboardInput.nameconstructor[1] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+            leaderboardInput.letter2 = leaderboardInput.letterSelect;
+            leaderboardInput.letterSelect = leaderboardInput.letter3;
+          break;
+
+          case 2:
+            leaderboardInput.nameconstructor[2] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+            leaderboardInput.letter3 = leaderboardInput.letterSelect;
+            leaderboardInput.letterSelect = leaderboardInput.letter1;
+          break;
+        }
+        if(leaderboardInput.curserPos < 2){
+          leaderboardInput.curserPos++;
+        }
+        else{
+          leaderboardInput.curserPos = 0;
+        }
+      }
+      if(keyCode == LEFT){
+        switch(leaderboardInput.curserPos){
+          case 0:
+            leaderboardInput.nameconstructor[0] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+            leaderboardInput.letter1 = leaderboardInput.letterSelect;
+            leaderboardInput.letterSelect = leaderboardInput.letter3;
+          break;
+
+          case 1:
+            leaderboardInput.nameconstructor[1] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+            leaderboardInput.letter2 = leaderboardInput.letterSelect;
+            leaderboardInput.letterSelect = leaderboardInput.letter1;
+          break;
+
+          case 2:
+            leaderboardInput.nameconstructor[2] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+            leaderboardInput.letter3 = leaderboardInput.letterSelect;
+            leaderboardInput.letterSelect = leaderboardInput.letter2;
+          break;
+        }
+        if(leaderboardInput.curserPos > 0){
+          leaderboardInput.curserPos--;
+        }
+        else{
+          leaderboardInput.curserPos = 2;
+        }
+      }
+    }
+    if(key == ENTER){
+      leaderboardInput.saveScore();
+    }
+  }
+
 
   switch (gamestate) {
     case 1:
@@ -118,39 +194,6 @@ public void keyPressed() {
           playerManager.shooting = true;
         break;
       }
-    case 6:
-      switch (keyCode) {
-        case DOWN:
-          if (highscoreEntry.letterRoll == highscoreEntry.alphabet.length - 1) {
-            highscoreEntry.letterRoll = 0;
-          } else {
-            highscoreEntry.letterRoll++;
-          }
-        break;
-        case UP:
-          if (highscoreEntry.letterRoll <= 0) {
-            highscoreEntry.letterRoll = highscoreEntry.alphabet.length - 1;
-          } else {
-            highscoreEntry.letterRoll--;
-          }
-        break;
-        case ENTER:
-        case RETURN:
-          if (highscoreEntry.letterSelect <= 2) {
-            highscoreEntry.lockLetter(highscoreEntry.letterRoll);
-          } else {
-            highscoreEntry.setName();
-            gamestate++;
-          }
-        break;
-
-        case BACKSPACE:
-          if (highscoreEntry.letterSelect >= 0) {
-            highscoreEntry.deleteLetter();
-          }
-        break;
-        }
-
     break;
   }
 }
@@ -307,6 +350,7 @@ class BasicEnemy {
     public void shootHandler() {
       if (shooting) {
         int delta = millis() - ticksLast;
+        println(cycleCount);
         switch (gamestate){
           case 1:
           shootRateModifier = 2000;
@@ -324,88 +368,93 @@ class BasicEnemy {
           }
           break;
           case 3:
-          shootCounter = 500;
-          if (delta > shootCounter && cycleCount < 3){
-            bullets.add(new EnemyBullet(xpos, ypos, 0, 150));
-            ticksLast += delta;
-            cycleCount++;
-            print(cycleCount);
-            println(delta);
-            println(ticksLast);
-          }
-          if (delta > shootCounter && cycleCount > 3){
-            ticksLast += delta;
-            cycleCount++;
-            print(cycleCount);
-            println(delta);
-            println(ticksLast);
-          }
-          if (delta > shootCounter && cycleCount > 10){
-            ticksLast += delta;
-            cycleCount = 0;
-            print(cycleCount);
-            println(delta);
-            println(ticksLast);
-          }
+            shootCounter = 500;
+            if (delta > shootCounter && cycleCount < 3){
+              bullets.add(new EnemyBullet(xpos, ypos, 0, 150));
+              ticksLast += delta;
+              cycleCount++;
+            }
+            else if (delta > shootCounter && cycleCount > 2){
+              ticksLast += delta;
+              cycleCount++;
+            }
+            else if (cycleCount >= 10){
+              ticksLast += delta;
+              cycleCount = 0;
+            }
           break;
           case 4:
-          if (shootCounter == 20){
+          shootCounter = 400;
+          if (delta > shootCounter && cycleCount < 3){
             bullets.add(new EnemyBullet(xpos, ypos, 100, 150));
             bullets.add(new EnemyBullet(xpos, ypos, -100, 150));
+            ticksLast += delta;
+            cycleCount++;
           }
-          if (shootCounter == 40){
-            bullets.add(new EnemyBullet(xpos, ypos, 100, 150));
-            bullets.add(new EnemyBullet(xpos, ypos, -100, 150));
+          else if (delta > shootCounter && cycleCount > 2){
+            ticksLast += delta;
+            cycleCount++;
           }
-          if (shootCounter == 60){
-            bullets.add(new EnemyBullet(xpos, ypos, 100, 150));
-            bullets.add(new EnemyBullet(xpos, ypos, -100, 150));
+          else if (cycleCount >= 8){
+            ticksLast += delta;
+            cycleCount = 0;
           }
-          if (shootCounter == 80){
-            bullets.add(new EnemyBullet(xpos, ypos, 100, 150));
-            bullets.add(new EnemyBullet(xpos, ypos, -100, 150));
-          }
-          if (shootCounter == 100){
-            bullets.add(new EnemyBullet(xpos, ypos, 100, 150));
-            bullets.add(new EnemyBullet(xpos, ypos, -100, 150));
-          }
-          if (shootCounter == 400){
-            shootCounter = 0;
-          }
-          shootCounter ++;
           break;
           case 5:
-          if (shootCounter == 10){
+          shootCounter = 300;
+          if (delta > shootCounter && cycleCount == 0){
             bullets.add(new EnemyBullet(xpos, ypos, 0, 150));
+            ticksLast += delta;
+            cycleCount++;
           }
-          if (shootCounter == 20){
+          else if (delta > shootCounter && cycleCount == 1){
             bullets.add(new EnemyBullet(xpos, ypos, -100, 100));
+            ticksLast += delta;
+            cycleCount++;
           }
-          if (shootCounter == 30){
+          else if (delta > shootCounter && cycleCount == 2){
             bullets.add(new EnemyBullet(xpos, ypos, -150, 00));
+            ticksLast += delta;
+            cycleCount++;
           }
-          if (shootCounter == 40){
+          else if (delta > shootCounter && cycleCount == 3){
             bullets.add(new EnemyBullet(xpos, ypos, -100, -100));
+            ticksLast += delta;
+            cycleCount++;
           }
-          if (shootCounter == 50){
+          else if (delta > shootCounter && cycleCount == 4){
             bullets.add(new EnemyBullet(xpos, ypos, 0, -150));
+            ticksLast += delta;
+            cycleCount++;
           }
-          if (shootCounter == 60){
+          else if (delta > shootCounter && cycleCount == 5){
             bullets.add(new EnemyBullet(xpos, ypos, 100, -100));
+            ticksLast += delta;
+            cycleCount++;
           }
-          if (shootCounter == 70){
+          else if (delta > shootCounter && cycleCount == 6){
             bullets.add(new EnemyBullet(xpos, ypos, 150, 0));
+            ticksLast += delta;
+            cycleCount++;
           }
-          if (shootCounter == 80){
+          else if (delta > shootCounter && cycleCount == 7){
             bullets.add(new EnemyBullet(xpos, ypos, 100, 100));
+            ticksLast += delta;
+            cycleCount++;
           }
-          if (shootCounter == 90){
+          else if (delta > shootCounter && cycleCount == 8){
             bullets.add(new EnemyBullet(xpos, ypos, 0, 150));
+            ticksLast += delta;
+            cycleCount++;
           }
-          if (shootCounter == 300){
-            shootCounter = 0;
+          else if (delta > shootCounter && cycleCount > 8){
+            ticksLast += delta;
+            cycleCount++;
           }
-          shootCounter ++;
+          else if (cycleCount >= 20){
+            ticksLast += delta;
+            cycleCount = 0;
+          }
           break;
         }
       }
@@ -723,24 +772,24 @@ class LeaderboardsInput{
     fill(255);
     textFont(font,(150));
     textAlign(CENTER);
-    text(nameconstructor[0], 149, 340);
-    text(nameconstructor[1], 249, 340);
-    text(nameconstructor[2], 349, 340);
+    text(nameconstructor[0], 299, 340);
+    text(nameconstructor[1], 399, 340);
+    text(nameconstructor[2], 499, 340);
     textFont(font,(15));
-    text("USE ARROW KEYS TO SET TAG", 240, 480);
-    text("PRESS SPACE TO CONFIRM", 240, 520);
+    text("USE ARROW KEYS TO SET TAG",390, 480);
+    text("PRESS SPACE TO CONFIRM", 399, 520);
     rectMode(CENTER);
     switch(curserPos){
       case 0:
-      rect(140, 353, 95, 15);
+      rect(290, 353, 95, 15);
       break;
 
       case 1:
-      rect(240, 353, 95, 15);
+      rect(390, 353, 95, 15);
       break;
 
       case 2:
-      rect(340, 353, 95, 15);
+      rect(490, 353, 95, 15);
       break;
     }
     rectMode(CORNER);
