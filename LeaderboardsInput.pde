@@ -34,26 +34,26 @@ class LeaderboardsInput{
 
   void displayInput(){
     fill(255);
-    textFont(font,(150));
+    textFont(font1,(150));
     textAlign(CENTER);
-    text(nameconstructor[0], 299, 340);
-    text(nameconstructor[1], 399, 340);
-    text(nameconstructor[2], 499, 340);
-    textFont(font,(15));
-    text("USE ARROW KEYS TO SET TAG",390, 480);
-    text("PRESS SPACE TO CONFIRM", 399, 520);
+    text(nameconstructor[0], 149, 340);
+    text(nameconstructor[1], 249, 340);
+    text(nameconstructor[2], 349, 340);
+    textFont(font1,(15));
+    text("USE ARROW KEYS TO SET TAG", 240, 480);
+    text("PRESS SPACE TO CONFIRM", 240, 520);
     rectMode(CENTER);
     switch(curserPos){
       case 0:
-      rect(290, 353, 95, 15);
+      rect(140, 353, 95, 15);
       break;
 
       case 1:
-      rect(390, 353, 95, 15);
+      rect(240, 353, 95, 15);
       break;
 
       case 2:
-      rect(490, 353, 95, 15);
+      rect(340, 353, 95, 15);
       break;
     }
     rectMode(CORNER);
