@@ -320,8 +320,8 @@ public void draw() {
   }
 }
 class BasicEnemy {
-  int timeStamp, shootRateModifier, shootCounter, ticksLast, cycleCount;
-  float xpos, ypos, speed, size, leftSpeed, rightSpeed, upSpeed, downSpeed, speedModifier, brakeModifier;
+  int timeStamp, shootRateModifier, shootCounter, ticksLast, cycleCount,xMove, yMove;
+  float xpos, ypos, speed1, speed2, speed3, speed4, speed5, size, leftSpeed, rightSpeed, upSpeed, downSpeed, speedModifier, brakeModifier;
   boolean alive, shooting;
   ArrayList<EnemyBullet> bullets;
   PImage enemyImage1;
@@ -331,6 +331,8 @@ class BasicEnemy {
   PImage enemyImage5;
 
   BasicEnemy() {
+    xMove = 0;
+    yMove = 0;
     cycleCount = 0;
     ticksLast = millis();
     shootCounter = 0;
@@ -338,7 +340,11 @@ class BasicEnemy {
     shootRateModifier = 60;
     xpos = random(0 + size, width - size);
     ypos = -100;
-    speed = 50;
+    speed1 = 50;
+    speed2 = 70;
+    speed3 = 90;
+    speed4 = 110;
+    speed5 = 130;
     size = 50;
     leftSpeed = 0;
     rightSpeed = 0;
@@ -389,7 +395,112 @@ class BasicEnemy {
     }
 
     public void move() {
-      ypos += speed * PApplet.parseFloat(millis() - ticksLastUpdate)*0.001f;
+      switch (gamestate){
+        case 1:
+          ypos += speed1 * PApplet.parseFloat(millis() - ticksLastUpdate)*0.001f;
+        break;
+        case 2:
+          if (xMove < 250){
+            xpos += speed1 * PApplet.parseFloat(millis() - ticksLastUpdate)*0.001f;
+            xMove ++;
+          }
+          else if (xMove < 500){
+            xpos -= speed2 * PApplet.parseFloat(millis() - ticksLastUpdate)*0.001f;
+            xMove ++;
+          }
+          else{
+            xMove = 0;
+          }
+          if (yMove < 250){
+            ypos += speed3 * PApplet.parseFloat(millis() - ticksLastUpdate)*0.001f;
+            yMove ++;
+          }
+          else if (yMove < 500){
+            yMove ++;
+          }
+          else{
+            yMove = 0;
+          }
+        break;
+        case 3:
+          if (xMove < 50){
+            xpos += speed2 * PApplet.parseFloat(millis() - ticksLastUpdate)*0.001f;
+            xMove ++;
+          }
+          else if (xMove < 100){
+            xpos -= speed2 * PApplet.parseFloat(millis() - ticksLastUpdate)*0.001f;
+            xMove ++;
+          }
+          else{
+            xMove = 0;
+          }
+          if (yMove < 100){
+            ypos += speed4 * PApplet.parseFloat(millis() - ticksLastUpdate)*0.001f;
+            yMove ++;
+          }
+          else if (yMove < 150){
+            yMove ++;
+          }
+          else{
+            yMove = 0;
+          }
+        break;
+        case 4:
+          if (xMove < 50){
+            xpos += speed5 * PApplet.parseFloat(millis() - ticksLastUpdate)*0.001f;
+            xMove ++;
+          }
+          else if (xMove < 100){
+            xpos -= speed5 * PApplet.parseFloat(millis() - ticksLastUpdate)*0.001f;
+            xMove ++;
+          }
+          else{
+            xMove = 0;
+          }
+          if (yMove < 100){
+            ypos += speed4 * PApplet.parseFloat(millis() - ticksLastUpdate)*0.001f;
+            yMove ++;
+          }
+          else if (yMove < 150){
+            yMove ++;
+          }
+          else{
+            yMove = 0;
+          }
+        break;
+        case 5:
+          if (xMove < 50){
+            xpos += speed1 * PApplet.parseFloat(millis() - ticksLastUpdate)*0.001f;
+            xMove ++;
+          }
+          else if (xMove < 250){
+            xMove ++;
+          }
+          else if (xMove < 300){
+            xpos -= speed1 * PApplet.parseFloat(millis() - ticksLastUpdate)*0.001f;
+            xMove ++;
+          }
+          else if (xMove < 500){
+            xMove ++;
+          }
+          else{
+            xMove = 0;
+          }
+          if (yMove < 50){
+            yMove ++;
+          }
+          else if (yMove < 100){
+            ypos += speed3 * PApplet.parseFloat(millis() - ticksLastUpdate)*0.001f;
+            yMove ++;
+          }
+          else if (yMove < 250){
+            yMove ++;
+          }
+          else{
+            yMove = 0;
+          }
+        break;
+      }
     }
 
     public void bulletCollision() {
@@ -410,7 +521,6 @@ class BasicEnemy {
     public void shootHandler() {
       if (shooting) {
         int delta = millis() - ticksLast;
-        println(cycleCount);
         switch (gamestate){
           case 1:
           shootRateModifier = 2000;
