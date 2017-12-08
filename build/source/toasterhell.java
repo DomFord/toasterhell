@@ -39,7 +39,7 @@ LeaderboardsInput leaderboardInput;
 ArrayList<PlayerManager> players;
 ArrayList<Score> scores;
 Star[] stars;
-int gamestate, ticksElapsed, ticksLastUpdate;
+int gamestate, ticksElapsed, ticksLastUpdate, menuIndex;
 PFont font;
 
 public void setup() {
@@ -48,9 +48,10 @@ public void setup() {
   gamestate = 1;
   ticksElapsed = 0;
   ticksLastUpdate = 0;
+  menuIndex = 4;
 
   font = createFont("font.ttf", 100);
-  
+
   levelManager = new LevelManager();
   playerManager = new PlayerManager();
   enemyManager = new EnemyManager();
@@ -185,23 +186,35 @@ public void keyReleased() {
 }
 
 public void draw() {
-  switch (gamestate) {
+  switch (menuIndex){
     case 1:
+    break;
     case 2:
+      switch (gamestate) {
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        levelManager.levelSelector();
+        enemyManager.enemySpawner();
+        playerManager.drawPlayer();
+        ticksElapsed++;
+        ticksLastUpdate = millis();
+        break;
+      }
+    break;
     case 3:
+    break;
     case 4:
+      background(0);
+      leaderboardInput.showBoard();
+      leaderboardInput.displayInput();
+    break;
     case 5:
-    case 6:
-    levelManager.levelSelector();
-    enemyManager.enemySpawner();
-    playerManager.drawPlayer();
-    ticksElapsed++;
-    ticksLastUpdate = millis();
+      highscores.displayHighscores();
     break;
-    case 7:
-    levelManager.levelSelector();
-    break;
-}
+  }
 }
 class BasicEnemy {
   int timeStamp, shootRateModifier, shootCounter, ticksLast, cycleCount;
@@ -316,18 +329,21 @@ class BasicEnemy {
             bullets.add(new EnemyBullet(xpos, ypos, 0, 150));
             ticksLast += delta;
             cycleCount++;
+            print(cycleCount);
             println(delta);
             println(ticksLast);
           }
           if (delta > shootCounter && cycleCount > 3){
             ticksLast += delta;
             cycleCount++;
+            print(cycleCount);
             println(delta);
             println(ticksLast);
           }
           if (delta > shootCounter && cycleCount > 10){
             ticksLast += delta;
             cycleCount = 0;
+            print(cycleCount);
             println(delta);
             println(ticksLast);
           }
@@ -802,14 +818,6 @@ class LevelManager{
           backgroundyPos = 0;
         }
         spaceLevel();
-      break;
-      case 6:
-        background(0);
-        leaderboardInput.showBoard();
-        leaderboardInput.displayInput();
-      break;
-      case 7:
-        highscores.displayHighscores();
       break;
     }
   }
