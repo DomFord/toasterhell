@@ -79,16 +79,16 @@ class MainMenu {
       void menuTextSlide() {
         fill(255);
         textAlign(RIGHT);
-        textFont(font1, 50);
+        textFont(font, 50);
         text("Welcome to", x1, y);
         textAlign(LEFT);
-        textFont(font1, 75);
+        textFont(font, 75);
         text("TOASTERHELL", x2, y + 100);
         if (x1 < width / 2 && x2 > width / 5) {
           x1 += 5;
           x2 -= 10;
         }
-        textFont(font1, 40);
+        textFont(font, 40);
         textAlign(CENTER, CENTER);
         if (millis() / 1000 % 2 == 0)
         text("Press SPACE", width / 2, height - 200);
@@ -97,7 +97,7 @@ class MainMenu {
       void menuSelect() {
         fill(255);
         textAlign(LEFT, CENTER);
-        textFont(font1, 50);
+        textFont(font, 50);
         text("CAMPAIGN", 100, 150);
         text("ENDLESS", 100, 250);
         text("HISCORES", 100, 350);

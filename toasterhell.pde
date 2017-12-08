@@ -24,7 +24,7 @@ void setup() {
   gamestate = 1;
   ticksElapsed = 0;
   ticksLastUpdate = 0;
-  menuIndex = 4;
+  menuIndex = 1;
 
   font = createFont("font.ttf", 100);
 
