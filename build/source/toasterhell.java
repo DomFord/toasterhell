@@ -30,18 +30,14 @@ ITU 2017, Programming for Designers
 
 
 
-MainMenu mainMenu;
 LevelManager levelManager;
 PlayerManager playerManager;
 EnemyManager enemyManager;
-HighscoreEntry highscoreEntry;
-Highscores highscores;
 LeaderboardsInput leaderboardInput;
-ArrayList<PlayerManager> players;
-ArrayList<Score> scores;
+ArrayList<Score> highScoreList;
 Star[] stars;
 int gamestate, ticksElapsed, ticksLastUpdate, menuIndex;
-PFont font1, font2;
+PFont font;
 
 public void setup() {
   
@@ -49,25 +45,30 @@ public void setup() {
   gamestate = 1;
   ticksElapsed = 0;
   ticksLastUpdate = 0;
-  menuIndex = 1;
+  menuIndex = 4;
 
-  font1 = createFont("font.ttf", 100);
-  font2 = createFont("LondrinaShadow-Regular.ttf", 100);
+  font = createFont("font.ttf", 100);
 
-  mainMenu = new MainMenu();
   levelManager = new LevelManager();
   playerManager = new PlayerManager();
   enemyManager = new EnemyManager();
-  highscoreEntry = new HighscoreEntry();
-  highscores = new Highscores();
   leaderboardInput = new LeaderboardsInput();
-  scores = FileManager.loadScore("memes.dat");
+
+  String[] tempScoreList = loadStrings("highscore.txt"); //load in the highscore list and "expand" it into an arraylist of 'Score' objects
+  String tempScoreString = tempScoreList[0];
+  String[] tempScoreArray = split(tempScoreString, ',');
+  highScoreList = new ArrayList<Score>();
+  for(int i = 0; i < tempScoreArray.length - 1; i++){
+    Score newScore = new Score();
+    newScore.tag = tempScoreArray[i].substring(0,3);
+    newScore.points = PApplet.parseInt(tempScoreArray[i].substring(4));
+    highScoreList.add(newScore);
+  }
 
   stars = new Star[10];
   for (int i = 0; i < 10; i++) {
     stars[i] = new Star();
   }
-
 }
 
 public void keyPressed() {
@@ -88,50 +89,90 @@ public void keyPressed() {
     case '5':
       gamestate = 5;
     break;
-    case '6':
-      gamestate = 6;
-    break;
-    case '7':
-      gamestate = 7;
-    break;
   }
 
-  switch (menuIndex) {
-    case 1:
-      if (key == ' ') {
-        mainMenu.spacePressed = true;
+  if(menuIndex == 4){
+    if(key == CODED){
+      if(keyCode == UP){
+        if(leaderboardInput.letterSelect < 35){
+          leaderboardInput.letterSelect++;
+          leaderboardInput.nameconstructor[leaderboardInput.curserPos] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+        }
+        else{
+          leaderboardInput.letterSelect = 0;
+          leaderboardInput.nameconstructor[leaderboardInput.curserPos] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+        }
       }
-      switch (keyCode) {
-        case UP:
-          if (mainMenu.indicator > 1) {
-            mainMenu.indicator--;
-          }
-        break;
-        case DOWN:
-          if (mainMenu.indicator < 4) {
-            mainMenu.indicator++;
-          }
-        break;
-        case RETURN:
-        case ENTER:
-          switch (mainMenu.indicator) {
-            case 1:
-              menuIndex = 2;
-            break;
-            case 2:
-              menuIndex = 3;
-            break;
-            case 3:
-              menuIndex = 5;
-            break;
-            case 4:
-              exit();
-            break;
-          }
-        break;
+      if(keyCode == DOWN){
+        if(leaderboardInput.letterSelect > 0){
+          leaderboardInput.letterSelect--;
+          leaderboardInput.nameconstructor[leaderboardInput.curserPos] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+        }
+        else{
+          leaderboardInput.letterSelect = 35;
+          leaderboardInput.nameconstructor[leaderboardInput.curserPos] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+        }
       }
-    break;
+      if(keyCode == RIGHT){
+        switch(leaderboardInput.curserPos){
+          case 0:
+            leaderboardInput.nameconstructor[0] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+            leaderboardInput.letter1 = leaderboardInput.letterSelect;
+            leaderboardInput.letterSelect = leaderboardInput.letter2;
+          break;
+
+          case 1:
+            leaderboardInput.nameconstructor[1] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+            leaderboardInput.letter2 = leaderboardInput.letterSelect;
+            leaderboardInput.letterSelect = leaderboardInput.letter3;
+          break;
+
+          case 2:
+            leaderboardInput.nameconstructor[2] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+            leaderboardInput.letter3 = leaderboardInput.letterSelect;
+            leaderboardInput.letterSelect = leaderboardInput.letter1;
+          break;
+        }
+        if(leaderboardInput.curserPos < 2){
+          leaderboardInput.curserPos++;
+        }
+        else{
+          leaderboardInput.curserPos = 0;
+        }
+      }
+      if(keyCode == LEFT){
+        switch(leaderboardInput.curserPos){
+          case 0:
+            leaderboardInput.nameconstructor[0] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+            leaderboardInput.letter1 = leaderboardInput.letterSelect;
+            leaderboardInput.letterSelect = leaderboardInput.letter3;
+          break;
+
+          case 1:
+            leaderboardInput.nameconstructor[1] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+            leaderboardInput.letter2 = leaderboardInput.letterSelect;
+            leaderboardInput.letterSelect = leaderboardInput.letter1;
+          break;
+
+          case 2:
+            leaderboardInput.nameconstructor[2] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+            leaderboardInput.letter3 = leaderboardInput.letterSelect;
+            leaderboardInput.letterSelect = leaderboardInput.letter2;
+          break;
+        }
+        if(leaderboardInput.curserPos > 0){
+          leaderboardInput.curserPos--;
+        }
+        else{
+          leaderboardInput.curserPos = 2;
+        }
+      }
+    }
+    if(key == ENTER){
+      leaderboardInput.saveScore();
+    }
   }
+
 
   switch (gamestate) {
     case 1:
@@ -158,39 +199,6 @@ public void keyPressed() {
           playerManager.shooting = true;
         break;
       }
-    case 6:
-      switch (keyCode) {
-        case DOWN:
-          if (highscoreEntry.letterRoll == highscoreEntry.alphabet.length - 1) {
-            highscoreEntry.letterRoll = 0;
-          } else {
-            highscoreEntry.letterRoll++;
-          }
-        break;
-        case UP:
-          if (highscoreEntry.letterRoll <= 0) {
-            highscoreEntry.letterRoll = highscoreEntry.alphabet.length - 1;
-          } else {
-            highscoreEntry.letterRoll--;
-          }
-        break;
-        case ENTER:
-        case RETURN:
-          if (highscoreEntry.letterSelect <= 2) {
-            highscoreEntry.lockLetter(highscoreEntry.letterRoll);
-          } else {
-            highscoreEntry.setName();
-            gamestate++;
-          }
-        break;
-
-        case BACKSPACE:
-          if (highscoreEntry.letterSelect >= 0) {
-            highscoreEntry.deleteLetter();
-          }
-        break;
-        }
-
     break;
   }
 }
@@ -228,7 +236,6 @@ public void keyReleased() {
 public void draw() {
   switch (menuIndex){
     case 1:
-    mainMenu.drawMenu();
     break;
     case 2:
       switch (gamestate) {
@@ -253,7 +260,6 @@ public void draw() {
       leaderboardInput.displayInput();
     break;
     case 5:
-      highscores.displayHighscores();
     break;
   }
 }
@@ -348,6 +354,7 @@ class BasicEnemy {
     public void shootHandler() {
       if (shooting) {
         int delta = millis() - ticksLast;
+        println(cycleCount);
         switch (gamestate){
           case 1:
           shootRateModifier = 2000;
@@ -365,88 +372,93 @@ class BasicEnemy {
           }
           break;
           case 3:
-          shootCounter = 500;
-          if (delta > shootCounter && cycleCount < 3){
-            bullets.add(new EnemyBullet(xpos, ypos, 0, 150));
-            ticksLast += delta;
-            cycleCount++;
-            print(cycleCount);
-            println(delta);
-            println(ticksLast);
-          }
-          if (delta > shootCounter && cycleCount > 3){
-            ticksLast += delta;
-            cycleCount++;
-            print(cycleCount);
-            println(delta);
-            println(ticksLast);
-          }
-          if (delta > shootCounter && cycleCount > 10){
-            ticksLast += delta;
-            cycleCount = 0;
-            print(cycleCount);
-            println(delta);
-            println(ticksLast);
-          }
+            shootCounter = 500;
+            if (delta > shootCounter && cycleCount < 3){
+              bullets.add(new EnemyBullet(xpos, ypos, 0, 150));
+              ticksLast += delta;
+              cycleCount++;
+            }
+            else if (delta > shootCounter && cycleCount > 2){
+              ticksLast += delta;
+              cycleCount++;
+            }
+            else if (cycleCount >= 10){
+              ticksLast += delta;
+              cycleCount = 0;
+            }
           break;
           case 4:
-          if (shootCounter == 20){
+          shootCounter = 400;
+          if (delta > shootCounter && cycleCount < 3){
             bullets.add(new EnemyBullet(xpos, ypos, 100, 150));
             bullets.add(new EnemyBullet(xpos, ypos, -100, 150));
+            ticksLast += delta;
+            cycleCount++;
           }
-          if (shootCounter == 40){
-            bullets.add(new EnemyBullet(xpos, ypos, 100, 150));
-            bullets.add(new EnemyBullet(xpos, ypos, -100, 150));
+          else if (delta > shootCounter && cycleCount > 2){
+            ticksLast += delta;
+            cycleCount++;
           }
-          if (shootCounter == 60){
-            bullets.add(new EnemyBullet(xpos, ypos, 100, 150));
-            bullets.add(new EnemyBullet(xpos, ypos, -100, 150));
+          else if (cycleCount >= 8){
+            ticksLast += delta;
+            cycleCount = 0;
           }
-          if (shootCounter == 80){
-            bullets.add(new EnemyBullet(xpos, ypos, 100, 150));
-            bullets.add(new EnemyBullet(xpos, ypos, -100, 150));
-          }
-          if (shootCounter == 100){
-            bullets.add(new EnemyBullet(xpos, ypos, 100, 150));
-            bullets.add(new EnemyBullet(xpos, ypos, -100, 150));
-          }
-          if (shootCounter == 400){
-            shootCounter = 0;
-          }
-          shootCounter ++;
           break;
           case 5:
-          if (shootCounter == 10){
+          shootCounter = 300;
+          if (delta > shootCounter && cycleCount == 0){
             bullets.add(new EnemyBullet(xpos, ypos, 0, 150));
+            ticksLast += delta;
+            cycleCount++;
           }
-          if (shootCounter == 20){
+          else if (delta > shootCounter && cycleCount == 1){
             bullets.add(new EnemyBullet(xpos, ypos, -100, 100));
+            ticksLast += delta;
+            cycleCount++;
           }
-          if (shootCounter == 30){
+          else if (delta > shootCounter && cycleCount == 2){
             bullets.add(new EnemyBullet(xpos, ypos, -150, 00));
+            ticksLast += delta;
+            cycleCount++;
           }
-          if (shootCounter == 40){
+          else if (delta > shootCounter && cycleCount == 3){
             bullets.add(new EnemyBullet(xpos, ypos, -100, -100));
+            ticksLast += delta;
+            cycleCount++;
           }
-          if (shootCounter == 50){
+          else if (delta > shootCounter && cycleCount == 4){
             bullets.add(new EnemyBullet(xpos, ypos, 0, -150));
+            ticksLast += delta;
+            cycleCount++;
           }
-          if (shootCounter == 60){
+          else if (delta > shootCounter && cycleCount == 5){
             bullets.add(new EnemyBullet(xpos, ypos, 100, -100));
+            ticksLast += delta;
+            cycleCount++;
           }
-          if (shootCounter == 70){
+          else if (delta > shootCounter && cycleCount == 6){
             bullets.add(new EnemyBullet(xpos, ypos, 150, 0));
+            ticksLast += delta;
+            cycleCount++;
           }
-          if (shootCounter == 80){
+          else if (delta > shootCounter && cycleCount == 7){
             bullets.add(new EnemyBullet(xpos, ypos, 100, 100));
+            ticksLast += delta;
+            cycleCount++;
           }
-          if (shootCounter == 90){
+          else if (delta > shootCounter && cycleCount == 8){
             bullets.add(new EnemyBullet(xpos, ypos, 0, 150));
+            ticksLast += delta;
+            cycleCount++;
           }
-          if (shootCounter == 300){
-            shootCounter = 0;
+          else if (delta > shootCounter && cycleCount > 8){
+            ticksLast += delta;
+            cycleCount++;
           }
-          shootCounter ++;
+          else if (cycleCount >= 20){
+            ticksLast += delta;
+            cycleCount = 0;
+          }
           break;
         }
       }
@@ -577,155 +589,6 @@ public static class FileManager {                                   // The class
     return data;                                                // The data variable (our loaded ArrayList) is then returned by the load function.
   }
 }
-class HighscoreEntry {
-  int letterSelect, letterRoll, lettersLocked, xpos, ypos;
-  String a, blank, savedName;
-  char[] alphabet, tag;
-
-  HighscoreEntry() {
-    a = "ABCDEFGHIJKLMNOPQRSTUVWXYX\u00c6\u00d8\u00c51234567890";
-    blank = "   ";
-    alphabet = a.toCharArray();
-    tag = blank.toCharArray();
-    letterSelect = 0;
-    letterRoll = 0;
-    lettersLocked = 0;
-    xpos = width / 2;
-    ypos = 400;
-  }
-
-  public void displayNameSelect() {
-    background(0);
-    fill(255);
-    textAlign(CENTER, CENTER);
-
-    if (letterSelect <= 2) {
-      text("ENTER YOUR NAME", width / 2, 200);
-      } else {
-        text("PRESS ENTER\n TO CONFIRM", width / 2, 200);
-      }
-
-      //letterSelectIndicator();
-
-      letterSelect();
-
-      String name = new String(tag);
-      displayLockedLetters();
-    }
-
-    public void letterSelect() {
-      switch (letterSelect) {
-        case 0:
-        text(alphabet[letterRoll], xpos - 50, ypos);
-        break;
-        case 1:
-        text(alphabet[letterRoll], xpos, ypos);
-        break;
-        case 2:
-        text(alphabet[letterRoll], xpos + 50, ypos);
-        break;
-      }
-    }
-
-    public void displayLockedLetters() {
-      if (lettersLocked > 0) {              // If the number of letters locked is above 0, then the first locked character is displayed along with the rectangle indicator.
-        text(tag[0], xpos - 50, ypos);
-        rect(xpos - 53, ypos + 25, 50, 10);
-      }
-
-      if (lettersLocked > 1) {              // If it's above 1, then also show the second letter.
-      text(tag[1], xpos, ypos);
-      rect(xpos - 3, ypos + 25, 50, 10);
-    }
-
-    if (lettersLocked > 2) {             // And if it's above 2, display the final letter as well.
-    text(tag[2], xpos + 50, ypos);
-    rect(xpos + 47, ypos + 25, 50, 10);
-  }
-}
-
-public void lockLetter(int letter) {
-  tag[letterSelect] = alphabet[letter];
-  lettersLocked++;
-  letterSelect++;
-  letterRoll = 0;
-}
-
-public void deleteLetter() {
-  tag[letterSelect] = 32;
-  lettersLocked--;
-  letterSelect--;
-}
-/*
-void letterSelectIndicator() {           // This function simply displays a flashing box to help indicate to the player which letter they're currently choosing.
-rectMode(CENTER);                      // Draw these rectangles from the centre rather than top left.
-
-if ( (millis() / 1000) % 2 == 0 ) {    // Using the same method of flashing as earlier to make the indicator blink.
-stroke(scoreBoardCol);
-fill(scoreBoardCol);
-} else {
-stroke(scoreBoardBGCol);
-fill(scoreBoardBGCol);
-}
-
-switch (letterSelect) {               // Depending on which letter the player is selecting, the box will appear underneath it.
-case 0:
-rect(xpos - 53, ypos + 25, 50, 10);
-break;
-case 1:
-rect(xpos - 3, ypos + 25, 50, 10);
-break;
-case 2:
-rect(xpos + 47, ypos + 25, 50, 10);
-break;
-}
-} */
-
-public void setName() {                                // And finally we need to save the player's chosen name.
-savedName = new String(tag);                  // Creates a new string from the tag character array.
-scores.add(new Score(savedName, playerManager.score)); // Creates a new Score object to the scores ArrayList with the player's name and score.
-FileManager.saveScore("memes.dat", scores);
-scores = FileManager.loadScore("memes.dat");
-Collections.sort(scores);
-Collections.reverse(scores);
-}
-  }
-class Highscores {
-  int xpos, ypos;
-  boolean printed;
-
-  Highscores() {
-    xpos = width / 2;
-    ypos = 100;
-    printed = false;
-  }
-
-  public void displayHighscores() {
-    //fill(scoreboard.scoreBoardBGCol);
-    background(255);
-    textAlign(CENTER);
-    text("HIGHSCORES", xpos, 50);
-
-    FileManager.saveScore("memes.dat", scores);
-    scores = FileManager.loadScore("memes.dat");
-    Collections.sort(scores);
-    //Collections.reverse(scores);
-
-    for (int i = scores.size() - 1; i >= scores.size() - 11; i--) {
-      textAlign(LEFT);
-      text(scores.get(i).playerName(), 100, height + 100 - (i * 30));
-      textAlign(RIGHT);
-      text(scores.get(i).playerScore(), width - 100, height + 100 - (i * 30));
-    }
-    if (!printed) {
-      println("HIGHSCORES: ");
-      for (int i = 0; i < scores.size(); i++) {
-        println("Score " + i + ": " + scores.get(i).playerName() + " " + scores.get(i).playerScore() + ".");
-      }
-      printed = true;
-  }
-}
-}
 /*
 Author: Frederik Boye
 Homepage: http://www.frederikboye.com
@@ -755,33 +618,145 @@ class LeaderboardsInput{
   }
 
   public void saveScore(){
-    scores.add(new Score(name, playerManager.score));
-    FileManager.saveScore("memes.dat", scores);
-    gamestate = 7;
+    Score newScore = new Score();
+    newScore.tag = name;
+    newScore.points = playerManager.score;
+    int placeCheck = 0;
+    while(placeCheck < 10){
+      switch(placeCheck){
+        case 0:
+          if(playerManager.score > highScoreList.get(0).points){
+            highScoreList.add(0, newScore);
+            highScoreList.remove(10);
+            placeCheck = 10;
+          }
+          else{
+            placeCheck = 1;
+          }
+        break;
+        case 1:
+          if(playerManager.score > highScoreList.get(1).points){
+            highScoreList.add(1, newScore);
+            highScoreList.remove(10);
+            placeCheck = 10;
+          }
+          else{
+            placeCheck = 2;
+          }
+        break;
+        case 2:
+          if(playerManager.score > highScoreList.get(2).points){
+            highScoreList.add(2, newScore);
+            highScoreList.remove(10);
+            placeCheck = 10;
+          }
+          else{
+            placeCheck = 3;
+          }
+        break;
+        case 3:
+          if(playerManager.score > highScoreList.get(3).points){
+            highScoreList.add(3, newScore);
+            highScoreList.remove(10);
+            placeCheck = 10;
+          }
+          else{
+            placeCheck = 4;
+          }
+        break;
+        case 4:
+          if(playerManager.score > highScoreList.get(4).points){
+            highScoreList.add(4, newScore);
+            highScoreList.remove(10);
+            placeCheck = 10;
+          }
+          else{
+            placeCheck = 5;
+          }
+        break;
+        case 5:
+          if(playerManager.score > highScoreList.get(5).points){
+            highScoreList.add(5, newScore);
+            highScoreList.remove(10);
+            placeCheck = 10;
+          }
+          else{
+            placeCheck = 6;
+          }
+        break;
+        case 6:
+          if(playerManager.score > highScoreList.get(6).points){
+            highScoreList.add(6, newScore);
+            highScoreList.remove(10);
+            placeCheck = 10;
+          }
+          else{
+            placeCheck = 7;
+          }
+        break;
+        case 7:
+          if(playerManager.score > highScoreList.get(7).points){
+            highScoreList.add(7, newScore);
+            highScoreList.remove(10);
+            placeCheck = 10;
+          }
+          else{
+            placeCheck = 8;
+          }
+        break;
+        case 8:
+          if(playerManager.score > highScoreList.get(8).points){
+            highScoreList.add(8, newScore);
+            highScoreList.remove(10);
+            placeCheck = 10;
+          }
+          else{
+            placeCheck = 9;
+          }
+        break;
+        case 9:
+          if(playerManager.score > highScoreList.get(9).points){
+            highScoreList.add(9, newScore);
+            highScoreList.remove(10);
+            placeCheck = 10;
+          }
+          else{
+            placeCheck = 10;
+          }
+        break;
+      }
+    }
+    String scoreString = "";
+    String[] scoreArray = new String[1];
+    for (int i = 0;  i < highScoreList.size(); i++){
+      scoreString += (highScoreList.get(i).toString() + ",");
+    }
+    scoreArray[0] = scoreString;
+    saveStrings("highscore.txt", scoreArray);
   }
 
   public void displayInput(){
     fill(255);
-    textFont(font1,(150));
+    textFont(font,(150));
     textAlign(CENTER);
-    text(nameconstructor[0], 149, 340);
-    text(nameconstructor[1], 249, 340);
-    text(nameconstructor[2], 349, 340);
-    textFont(font1,(15));
-    text("USE ARROW KEYS TO SET TAG", 240, 480);
-    text("PRESS SPACE TO CONFIRM", 240, 520);
+    text(nameconstructor[0], 299, 340);
+    text(nameconstructor[1], 399, 340);
+    text(nameconstructor[2], 499, 340);
+    textFont(font,(15));
+    text("USE ARROW KEYS TO SET TAG",390, 480);
+    text("PRESS SPACE TO CONFIRM", 399, 520);
     rectMode(CENTER);
     switch(curserPos){
       case 0:
-      rect(140, 353, 95, 15);
+      rect(290, 353, 95, 15);
       break;
 
       case 1:
-      rect(240, 353, 95, 15);
+      rect(390, 353, 95, 15);
       break;
 
       case 2:
-      rect(340, 353, 95, 15);
+      rect(490, 353, 95, 15);
       break;
     }
     rectMode(CORNER);
@@ -1250,6 +1225,24 @@ class PlayerManager{
     }
 
   }
+/*
+Author: Frederik Boye
+Homepage: http://www.frederikboye.com
+"If you're not weird, don't expect me to understand you"
+*/
+class Score{
+  int points;
+  String tag;
+
+  public @Override
+  String toString(){
+     return tag + ":" + points;
+  }
+
+  public int getPoints(){
+    return points;
+  }
+}
 class Star {
   float xpos, ypos, speed, size;
 
