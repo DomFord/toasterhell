@@ -180,6 +180,7 @@ public void keyReleased() {
 }
 
 public void draw() {
+
   switch (gamestate) {
     case 1:
     case 2:
@@ -190,6 +191,7 @@ public void draw() {
     enemyManager.enemySpawner();
     playerManager.drawPlayer();
     ticksElapsed++;
+    ticksLastUpdate = millis();
     break;
     case 6:
     case 7:
