@@ -1,19 +1,21 @@
 class EnemyBullet {
-  float xpos, ypos, speed, size;
+  float xpos, ypos, ySpeed, xSpeed, size;
   boolean collided;
 
-  EnemyBullet(float x, float y) {
+  EnemyBullet(float x, float y, float xs, float ys) {
     xpos = x;
     ypos = y;
-    speed = 10;
-    size = 3;
+    ySpeed = ys;
+    xSpeed = xs;
+    size = 10;
   }
 
   void drawBullet() {
     rectMode(CENTER);
     fill(218, 44, 56);
-    stroke(218, 44, 56);
-    rect(xpos, ypos, size, size * 5);
-    ypos += speed;
+    stroke(255, 255, 56);
+    rect(xpos, ypos, size, size);
+    ypos += ySpeed;
+    xpos += xSpeed;
   }
 }

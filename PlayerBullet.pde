@@ -12,7 +12,7 @@ class PlayerBullet {
   void drawBullet() {
     rectMode(CENTER);
     fill(255);
-    stroke(255);
+    stroke(0,120,255);
     rect(xpos, ypos, size, size * 5);
 
     if (!collided) {
