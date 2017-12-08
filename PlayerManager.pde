@@ -166,6 +166,18 @@ class PlayerManager{
   }
 
   void bulletCollision() {
+    for (int k = enemyManager.bullets.size() - 1; k >= 0; k--) {
+      if (enemyManager.bullets.get(k).xpos - enemyManager.bullets.get(k).size / 2 > xpos - size / 2
+          && enemyManager.bullets.get(k).xpos + enemyManager.bullets.get(k).size / 2 < xpos + size / 2
+          && enemyManager.bullets.get(k).ypos - enemyManager.bullets.get(k).size / 2 > ypos - size / 2
+          && enemyManager.bullets.get(k).ypos + enemyManager.bullets.get(k).size / 2 < ypos + size / 2) {
+            println("Player hit!");
+            enemyManager.bullets.remove(k);
+            hitBlinkOpacity = 255 / 2;
+            health--;
+            println(health);
+        }
+      }
     for (int i = enemyManager.basicEnemies.size() - 1; i >= 0; i--) {
       for (int j = enemyManager.basicEnemies.get(i).bullets.size() - 1; j >= 0; j--) {
         if (enemyManager.basicEnemies.get(i).bullets.get(j).xpos - enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 > xpos - size / 2
@@ -177,8 +189,8 @@ class PlayerManager{
               hitBlinkOpacity = 255 / 2;
               health--;
               println(health);
-            }
           }
+        }
       }
   }
 

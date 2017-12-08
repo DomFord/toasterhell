@@ -130,7 +130,7 @@ ticksElapsed++;
 
 }
 class BasicEnemy {
-  int timeStamp, shootRateModifier;
+  int timeStamp, shootRateModifier, shootCounter;
   float xpos, ypos, speed, size, leftSpeed, rightSpeed, upSpeed, downSpeed, speedModifier, brakeModifier;
   boolean alive, shooting;
   ArrayList<EnemyBullet> bullets;
@@ -141,11 +141,12 @@ class BasicEnemy {
   PImage enemyImage5;
 
   BasicEnemy() {
+    shootCounter = 0;
     timeStamp = 0;
     shootRateModifier = 60;
     xpos = random(0 + size, width - size);
     ypos = -100;
-    speed = 5;
+    speed = 1;
     size = 50;
     leftSpeed = 0;
     rightSpeed = 0;
@@ -216,44 +217,140 @@ class BasicEnemy {
 
     public void shootHandler() {
       if (shooting) {
-        if (ticksElapsed > timeStamp + shootRateModifier) {
-          bullets.add(new EnemyBullet(xpos, ypos));
-          timeStamp = ticksElapsed;
+        switch (gamestate){
+          case 1:
+          shootRateModifier = 120;
+          if (ticksElapsed > timeStamp + shootRateModifier) {
+            bullets.add(new EnemyBullet(xpos, ypos, 0, 4));
+            timeStamp = ticksElapsed;
+          }
+          break;
+          case 2:
+          shootRateModifier = 200;
+          if (ticksElapsed > timeStamp + shootRateModifier) {
+            bullets.add(new EnemyBullet(xpos, ypos, 2, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, -2, 4));
+            timeStamp = ticksElapsed;
+          }
+          break;
+          case 3:
+          if (shootCounter == 10){
+            bullets.add(new EnemyBullet(xpos, ypos, 0, 4));
+          }
+          if (shootCounter == 20){
+            bullets.add(new EnemyBullet(xpos, ypos, 0, 4));
+          }
+          if (shootCounter == 30){
+            bullets.add(new EnemyBullet(xpos, ypos, 0, 4));
+          }
+          if (shootCounter == 40){
+            bullets.add(new EnemyBullet(xpos, ypos, 0, 4));
+          }
+          if (shootCounter == 50){
+            bullets.add(new EnemyBullet(xpos, ypos, 0, 4));
+          }
+          if (shootCounter == 300){
+            shootCounter = 0;
+          }
+          shootCounter ++;
+          break;
+          case 4:
+          if (shootCounter == 20){
+            bullets.add(new EnemyBullet(xpos, ypos, 2, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, -2, 4));
+          }
+          if (shootCounter == 40){
+            bullets.add(new EnemyBullet(xpos, ypos, 2, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, -2, 4));
+          }
+          if (shootCounter == 60){
+            bullets.add(new EnemyBullet(xpos, ypos, 2, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, -2, 4));
+          }
+          if (shootCounter == 80){
+            bullets.add(new EnemyBullet(xpos, ypos, 2, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, -2, 4));
+          }
+          if (shootCounter == 100){
+            bullets.add(new EnemyBullet(xpos, ypos, 2, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, -2, 4));
+          }
+          if (shootCounter == 400){
+            shootCounter = 0;
+          }
+          shootCounter ++;
+          case 5:
+          if (shootCounter == 10){
+            bullets.add(new EnemyBullet(xpos, ypos, 0, 4));
+          }
+          if (shootCounter == 20){
+            bullets.add(new EnemyBullet(xpos, ypos, -3, 3));
+          }
+          if (shootCounter == 30){
+            bullets.add(new EnemyBullet(xpos, ypos, -4, 0));
+          }
+          if (shootCounter == 40){
+            bullets.add(new EnemyBullet(xpos, ypos, -3, -3));
+          }
+          if (shootCounter == 50){
+            bullets.add(new EnemyBullet(xpos, ypos, 0, -4));
+          }
+          if (shootCounter == 60){
+            bullets.add(new EnemyBullet(xpos, ypos, 3, -3));
+          }
+          if (shootCounter == 70){
+            bullets.add(new EnemyBullet(xpos, ypos, 4, 0));
+          }
+          if (shootCounter == 80){
+            bullets.add(new EnemyBullet(xpos, ypos, 3, 3));
+          }
+          if (shootCounter == 90){
+            bullets.add(new EnemyBullet(xpos, ypos, 0, 4));
+          }
+          if (shootCounter == 300){
+            shootCounter = 0;
+          }
+          shootCounter ++;
+          break;
         }
       }
       for (int i = bullets.size() - 1; i >= 0; i--) {
         bullets.get(i).drawBullet();
-        if (bullets.get(i).ypos < 0) {
+        if (bullets.get(i).ypos > height) {
           bullets.remove(i);
         }
+      }
     }
-  }
 }
 class EnemyBullet {
-  float xpos, ypos, speed, size;
+  float xpos, ypos, ySpeed, xSpeed, size;
   boolean collided;
 
-  EnemyBullet(float x, float y) {
+  EnemyBullet(float x, float y, float xs, float ys) {
     xpos = x;
     ypos = y;
-    speed = 10;
-    size = 3;
+    ySpeed = ys;
+    xSpeed = xs;
+    size = 10;
   }
 
   public void drawBullet() {
     rectMode(CENTER);
     fill(218, 44, 56);
-    stroke(218, 44, 56);
-    rect(xpos, ypos, size, size * 5);
-    ypos += speed;
+    stroke(255, 255, 56);
+    rect(xpos, ypos, size, size);
+    ypos += ySpeed;
+    xpos += xSpeed;
   }
 }
 class EnemyManager {
   ArrayList<BasicEnemy> basicEnemies;
+  ArrayList<EnemyBullet> bullets;
   int timeStamp;
 
   EnemyManager() {
     basicEnemies = new ArrayList<BasicEnemy>();
+    bullets = new ArrayList<EnemyBullet>();
     timeStamp = 0;
   }
 
@@ -267,11 +364,34 @@ class EnemyManager {
     for (int i = basicEnemies.size() - 1; i >= 0; i--) {
       basicEnemies.get(i).drawEnemy();
     }
+    for (int i = bullets.size() - 1; i >= 0; i--) {
+      bullets.get(i).drawBullet();
+      if (bullets.get(i).ypos > height) {
+        bullets.remove(i);
+      }
+      else if (bullets.get(i).ypos < 0) {
+        bullets.remove(i);
+      }
+      else if (bullets.get(i).xpos < 0) {
+        bullets.remove(i);
+      }
+      else if (bullets.get(i).xpos > width) {
+        bullets.remove(i);
+      }
+    }
   }
 
   public void enemyKiller() {
     for (int i = basicEnemies.size() - 1; i >= 0; i--) {
       if (!basicEnemies.get(i).alive) {
+        bullets.add(new EnemyBullet(basicEnemies.get(i).xpos, basicEnemies.get(i).ypos, 0, 4));
+        bullets.add(new EnemyBullet(basicEnemies.get(i).xpos, basicEnemies.get(i).ypos, 0, -4));
+        bullets.add(new EnemyBullet(basicEnemies.get(i).xpos, basicEnemies.get(i).ypos, 4, 0));
+        bullets.add(new EnemyBullet(basicEnemies.get(i).xpos, basicEnemies.get(i).ypos, -4, 0));
+        bullets.add(new EnemyBullet(basicEnemies.get(i).xpos, basicEnemies.get(i).ypos, -3, 3));
+        bullets.add(new EnemyBullet(basicEnemies.get(i).xpos, basicEnemies.get(i).ypos, -3, -3));
+        bullets.add(new EnemyBullet(basicEnemies.get(i).xpos, basicEnemies.get(i).ypos, 3, -3));
+        bullets.add(new EnemyBullet(basicEnemies.get(i).xpos, basicEnemies.get(i).ypos, 3, 3));
         basicEnemies.remove(i);
       }
     }
@@ -419,7 +539,7 @@ class PlayerBullet {
   public void drawBullet() {
     rectMode(CENTER);
     fill(255);
-    stroke(255);
+    stroke(0,120,255);
     rect(xpos, ypos, size, size * 5);
 
     if (!collided) {
@@ -595,6 +715,18 @@ class PlayerManager{
   }
 
   public void bulletCollision() {
+    for (int k = enemyManager.bullets.size() - 1; k >= 0; k--) {
+      if (enemyManager.bullets.get(k).xpos - enemyManager.bullets.get(k).size / 2 > xpos - size / 2
+          && enemyManager.bullets.get(k).xpos + enemyManager.bullets.get(k).size / 2 < xpos + size / 2
+          && enemyManager.bullets.get(k).ypos - enemyManager.bullets.get(k).size / 2 > ypos - size / 2
+          && enemyManager.bullets.get(k).ypos + enemyManager.bullets.get(k).size / 2 < ypos + size / 2) {
+            println("Player hit!");
+            enemyManager.bullets.remove(k);
+            hitBlinkOpacity = 255 / 2;
+            health--;
+            println(health);
+        }
+      }
     for (int i = enemyManager.basicEnemies.size() - 1; i >= 0; i--) {
       for (int j = enemyManager.basicEnemies.get(i).bullets.size() - 1; j >= 0; j--) {
         if (enemyManager.basicEnemies.get(i).bullets.get(j).xpos - enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 > xpos - size / 2
@@ -606,8 +738,8 @@ class PlayerManager{
               hitBlinkOpacity = 255 / 2;
               health--;
               println(health);
-            }
           }
+        }
       }
   }
 
