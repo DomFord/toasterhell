@@ -17,13 +17,14 @@ Highscores highscores;
 ArrayList<PlayerManager> players;
 ArrayList<Score> scores;
 Star[] stars;
-int gamestate, ticksElapsed;
+int gamestate, ticksElapsed, ticksLastUpdate;
 
 void setup() {
   size(800,600);
   background(0);
   gamestate = 1;
   ticksElapsed = 0;
+  ticksLastUpdate = 0;
 
   levelManager = new LevelManager();
   playerManager = new PlayerManager();
@@ -158,6 +159,7 @@ void keyReleased() {
 }
 
 void draw() {
+<<<<<<< HEAD
   switch (gamestate) {
     case 1:
     case 2:
@@ -174,4 +176,11 @@ void draw() {
     levelManager.levelSelector();
     break;
 }
+=======
+levelManager.levelSelector();
+enemyManager.enemySpawner();
+playerManager.drawPlayer();
+ticksElapsed++;
+ticksLastUpdate = millis();
+>>>>>>> df29561d3067f81a8150ecbb275841f001e607bb
 }
