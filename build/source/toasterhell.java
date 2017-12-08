@@ -870,10 +870,10 @@ class LevelManager{
   }
 }
 class MainMenu {
-  int avatarFrame, ticksLast, frameDuration, x1, x2, y, indicator, indicatorY;
+  int avatarFrame, ticksLast, frameDuration, x1, x2, y, indicator, indicatorY, backgroundyPos;
   float xpos, ypos, speed;
   boolean introDone, spacePressed;
-  PImage player1sheet, player2sheet;
+  PImage player1sheet, player2sheet, backgroundGrass;
 
   MainMenu() {
     avatarFrame = 0;
@@ -886,11 +886,14 @@ class MainMenu {
     y = 200;
     indicator = 1;
     indicatorY = 155;
+    backgroundyPos = 0;
     speed = 5;
     introDone = false;
     spacePressed = false;
     player1sheet = loadImage("player_avatar_1.png");
     player2sheet = loadImage("player_avatar_2.png");
+    backgroundGrass = loadImage("grass.png");
+    backgroundGrass.resize(width,0);
   }
 
   public void introAnimation() {
@@ -917,6 +920,12 @@ class MainMenu {
 
     public void drawMenu() {
       background(0);
+      image(backgroundGrass,width/2,backgroundyPos);
+      image(backgroundGrass,width/2,(backgroundyPos-backgroundGrass.height));
+      backgroundyPos++;
+      if(backgroundyPos >= backgroundGrass.height){
+        backgroundyPos = 0;
+      }
       if (!spacePressed) {
         if (!introDone) {
           introAnimation();
@@ -941,16 +950,16 @@ class MainMenu {
       public void menuTextSlide() {
         fill(255);
         textAlign(RIGHT);
-        textFont(font2, 50);
+        textFont(font1, 50);
         text("Welcome to", x1, y);
         textAlign(LEFT);
-        textFont(font2, 100);
+        textFont(font1, 75);
         text("TOASTERHELL", x2, y + 100);
         if (x1 < width / 2 && x2 > width / 5) {
           x1 += 5;
           x2 -= 10;
         }
-        textFont(font2, 40);
+        textFont(font1, 40);
         textAlign(CENTER, CENTER);
         if (millis() / 1000 % 2 == 0)
         text("Press SPACE", width / 2, height - 200);
@@ -959,7 +968,7 @@ class MainMenu {
       public void menuSelect() {
         fill(255);
         textAlign(LEFT, CENTER);
-        textFont(font2, 50);
+        textFont(font1, 50);
         text("CAMPAIGN", 100, 150);
         text("ENDLESS", 100, 250);
         text("HISCORES", 100, 350);
@@ -972,6 +981,16 @@ class MainMenu {
             indicatorY = 505;
           }
           rect(75, indicatorY, 10, 40);
+        }
+        PImage f = player1sheet.get((avatarFrame*60),0,60,66);
+        image(f, xpos, ypos);
+        int delta = millis() - ticksLast;
+        if (delta >= frameDuration) {
+          avatarFrame++;
+          if (avatarFrame >= 3) {
+            avatarFrame = 0;
+          }
+          ticksLast += delta;
         }
       }
     }
