@@ -1,5 +1,5 @@
 class BasicEnemy {
-  int timeStamp, shootRateModifier, shootCounter;
+  int timeStamp, shootRateModifier, shootCounter, ticksLast, cycleCount;
   float xpos, ypos, speed, size, leftSpeed, rightSpeed, upSpeed, downSpeed, speedModifier, brakeModifier;
   boolean alive, shooting;
   ArrayList<EnemyBullet> bullets;
@@ -10,6 +10,8 @@ class BasicEnemy {
   PImage enemyImage5;
 
   BasicEnemy() {
+    cycleCount = 0;
+    ticksLast = millis();
     shootCounter = 0;
     timeStamp = 0;
     shootRateModifier = 60;
@@ -86,42 +88,44 @@ class BasicEnemy {
 
     void shootHandler() {
       if (shooting) {
+        int delta = millis() - ticksLast;
         switch (gamestate){
           case 1:
-          shootRateModifier = 120;
-          if (ticksElapsed > timeStamp + shootRateModifier) {
+          shootRateModifier = 2000;
+          if (delta > shootRateModifier) {
             bullets.add(new EnemyBullet(xpos, ypos, 0, 150));
-            timeStamp = ticksElapsed;
+            ticksLast += delta;
           }
           break;
           case 2:
-          shootRateModifier = 200;
-          if (ticksElapsed > timeStamp + shootRateModifier) {
+          shootRateModifier = 2500;
+          if (delta > shootRateModifier) {
             bullets.add(new EnemyBullet(xpos, ypos, 100, 150));
             bullets.add(new EnemyBullet(xpos, ypos, -100, 150));
-            timeStamp = ticksElapsed;
+            ticksLast += delta;
           }
           break;
           case 3:
-          if (shootCounter == 10){
+          shootCounter = 500;
+          if (delta > shootCounter && cycleCount < 3){
             bullets.add(new EnemyBullet(xpos, ypos, 0, 150));
+            ticksLast += delta;
+            cycleCount++;
+            println(delta);
+            println(ticksLast);
           }
-          if (shootCounter == 20){
-            bullets.add(new EnemyBullet(xpos, ypos, 0, 150));
+          if (delta > shootCounter && cycleCount > 3){
+            ticksLast += delta;
+            cycleCount++;
+            println(delta);
+            println(ticksLast);
           }
-          if (shootCounter == 30){
-            bullets.add(new EnemyBullet(xpos, ypos, 0, 150));
+          if (delta > shootCounter && cycleCount > 10){
+            ticksLast += delta;
+            cycleCount = 0;
+            println(delta);
+            println(ticksLast);
           }
-          if (shootCounter == 40){
-            bullets.add(new EnemyBullet(xpos, ypos, 0, 150));
-          }
-          if (shootCounter == 50){
-            bullets.add(new EnemyBullet(xpos, ypos, 0, 150));
-          }
-          if (shootCounter == 300){
-            shootCounter = 0;
-          }
-          shootCounter ++;
           break;
           case 4:
           if (shootCounter == 20){
