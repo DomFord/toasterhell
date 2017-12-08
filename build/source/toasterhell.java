@@ -476,6 +476,7 @@ class PlayerManager{
       speedHandler();
       movePlayer();
       shootHandler();
+      displayScore();
 
       imageMode(CENTER);
       if(playerSelect == 1){
@@ -581,6 +582,7 @@ class PlayerManager{
       if (shooting) {
         if (ticksElapsed > timeStamp + shootRateModifier) {
           bullets.add(new PlayerBullet(xpos, ypos));
+          score--;
           timeStamp = ticksElapsed;
         }
       }
@@ -634,6 +636,12 @@ class PlayerManager{
         }
       }
     }
+  }
+
+  public void displayScore() {
+    fill(0);
+    textSize(32);
+    text(score, 40, height - 40);
   }
 
     public void death() {
