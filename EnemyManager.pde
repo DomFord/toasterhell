@@ -10,9 +10,8 @@ class EnemyManager {
   }
 
   void enemySpawner() {
-    //switch case here to spawn the correct numbers and types of enemies per level
     enemyKiller();
-    if (ticksElapsed > timeStamp + 100) {
+    if (ticksElapsed > timeStamp + 200) {
       basicEnemies.add(new BasicEnemy());
       timeStamp = ticksElapsed;
     }
