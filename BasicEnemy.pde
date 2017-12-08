@@ -15,7 +15,7 @@ class BasicEnemy {
     shootRateModifier = 60;
     xpos = random(0 + size, width - size);
     ypos = -100;
-    speed = 1;
+    speed = 50;
     size = 50;
     leftSpeed = 0;
     rightSpeed = 0;
@@ -66,7 +66,7 @@ class BasicEnemy {
     }
 
     void move() {
-      ypos += speed;
+      ypos += speed * float(millis() - ticksLastUpdate)*0.001;
     }
 
     void bulletCollision() {
@@ -90,33 +90,33 @@ class BasicEnemy {
           case 1:
           shootRateModifier = 120;
           if (ticksElapsed > timeStamp + shootRateModifier) {
-            bullets.add(new EnemyBullet(xpos, ypos, 0, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, 0, 150));
             timeStamp = ticksElapsed;
           }
           break;
           case 2:
           shootRateModifier = 200;
           if (ticksElapsed > timeStamp + shootRateModifier) {
-            bullets.add(new EnemyBullet(xpos, ypos, 2, 4));
-            bullets.add(new EnemyBullet(xpos, ypos, -2, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, 100, 150));
+            bullets.add(new EnemyBullet(xpos, ypos, -100, 150));
             timeStamp = ticksElapsed;
           }
           break;
           case 3:
           if (shootCounter == 10){
-            bullets.add(new EnemyBullet(xpos, ypos, 0, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, 0, 150));
           }
           if (shootCounter == 20){
-            bullets.add(new EnemyBullet(xpos, ypos, 0, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, 0, 150));
           }
           if (shootCounter == 30){
-            bullets.add(new EnemyBullet(xpos, ypos, 0, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, 0, 150));
           }
           if (shootCounter == 40){
-            bullets.add(new EnemyBullet(xpos, ypos, 0, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, 0, 150));
           }
           if (shootCounter == 50){
-            bullets.add(new EnemyBullet(xpos, ypos, 0, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, 0, 150));
           }
           if (shootCounter == 300){
             shootCounter = 0;
@@ -125,56 +125,57 @@ class BasicEnemy {
           break;
           case 4:
           if (shootCounter == 20){
-            bullets.add(new EnemyBullet(xpos, ypos, 2, 4));
-            bullets.add(new EnemyBullet(xpos, ypos, -2, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, 100, 150));
+            bullets.add(new EnemyBullet(xpos, ypos, -100, 150));
           }
           if (shootCounter == 40){
-            bullets.add(new EnemyBullet(xpos, ypos, 2, 4));
-            bullets.add(new EnemyBullet(xpos, ypos, -2, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, 100, 150));
+            bullets.add(new EnemyBullet(xpos, ypos, -100, 150));
           }
           if (shootCounter == 60){
-            bullets.add(new EnemyBullet(xpos, ypos, 2, 4));
-            bullets.add(new EnemyBullet(xpos, ypos, -2, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, 100, 150));
+            bullets.add(new EnemyBullet(xpos, ypos, -100, 150));
           }
           if (shootCounter == 80){
-            bullets.add(new EnemyBullet(xpos, ypos, 2, 4));
-            bullets.add(new EnemyBullet(xpos, ypos, -2, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, 100, 150));
+            bullets.add(new EnemyBullet(xpos, ypos, -100, 150));
           }
           if (shootCounter == 100){
-            bullets.add(new EnemyBullet(xpos, ypos, 2, 4));
-            bullets.add(new EnemyBullet(xpos, ypos, -2, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, 100, 150));
+            bullets.add(new EnemyBullet(xpos, ypos, -100, 150));
           }
           if (shootCounter == 400){
             shootCounter = 0;
           }
           shootCounter ++;
+          break;
           case 5:
           if (shootCounter == 10){
-            bullets.add(new EnemyBullet(xpos, ypos, 0, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, 0, 150));
           }
           if (shootCounter == 20){
-            bullets.add(new EnemyBullet(xpos, ypos, -3, 3));
+            bullets.add(new EnemyBullet(xpos, ypos, -100, 100));
           }
           if (shootCounter == 30){
-            bullets.add(new EnemyBullet(xpos, ypos, -4, 0));
+            bullets.add(new EnemyBullet(xpos, ypos, -150, 00));
           }
           if (shootCounter == 40){
-            bullets.add(new EnemyBullet(xpos, ypos, -3, -3));
+            bullets.add(new EnemyBullet(xpos, ypos, -100, -100));
           }
           if (shootCounter == 50){
-            bullets.add(new EnemyBullet(xpos, ypos, 0, -4));
+            bullets.add(new EnemyBullet(xpos, ypos, 0, -150));
           }
           if (shootCounter == 60){
-            bullets.add(new EnemyBullet(xpos, ypos, 3, -3));
+            bullets.add(new EnemyBullet(xpos, ypos, 100, -100));
           }
           if (shootCounter == 70){
-            bullets.add(new EnemyBullet(xpos, ypos, 4, 0));
+            bullets.add(new EnemyBullet(xpos, ypos, 150, 0));
           }
           if (shootCounter == 80){
-            bullets.add(new EnemyBullet(xpos, ypos, 3, 3));
+            bullets.add(new EnemyBullet(xpos, ypos, 100, 100));
           }
           if (shootCounter == 90){
-            bullets.add(new EnemyBullet(xpos, ypos, 0, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, 0, 150));
           }
           if (shootCounter == 300){
             shootCounter = 0;

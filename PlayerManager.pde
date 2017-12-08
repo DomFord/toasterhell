@@ -16,20 +16,20 @@ class PlayerManager{
     alive = true;
     xpos = width / 2;
     ypos = height - 75;
-    maxSpeed = 10;
+    maxSpeed = 400;
     size = 50;
     left = false;
     right = false;
     up = false;
     down = false;
     shooting = false;
-    leftSpeed = constrain(leftSpeed, 0, maxSpeed);
-    rightSpeed = constrain(rightSpeed, 0, maxSpeed);
-    upSpeed = constrain(upSpeed, 0, maxSpeed);
-    downSpeed = constrain(downSpeed, 0, maxSpeed);
+    leftSpeed = 0;
+    rightSpeed = 0;
+    upSpeed = 0;
+    downSpeed = 0;
     hitBlinkOpacity = 0;
-    speedModifier = 0.2;
-    brakeModifier = 0.5;
+    speedModifier = 20;
+    brakeModifier = 30;
     bullets = new ArrayList<PlayerBullet>();
     player1sheet = loadImage("player_avatar_1.png");
     player2sheet = loadImage("player_avatar_2.png");
@@ -95,25 +95,25 @@ class PlayerManager{
         leftSpeed = 0;
       }
       else {
-        xpos -= leftSpeed;
+        xpos -= leftSpeed * float(millis() - ticksLastUpdate) * 0.001;
       }
       if (xpos + size > width - 10) {
         rightSpeed = 0;
       }
       else {
-        xpos += rightSpeed;
+        xpos += rightSpeed * float(millis() - ticksLastUpdate) * 0.001;
       }
       if (ypos - size < 10) {
         upSpeed = 0;
       }
       else {
-        ypos -= upSpeed;
+        ypos -= upSpeed * float(millis() - ticksLastUpdate) * 0.001;
       }
       if (ypos + size > height - 10) {
         downSpeed = 0;
       }
       else {
-        ypos += downSpeed;
+        ypos += downSpeed * float(millis() - ticksLastUpdate) * 0.001;
       }
     }
 

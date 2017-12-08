@@ -8,13 +8,14 @@ LevelManager levelManager;
 PlayerManager playerManager;
 EnemyManager enemyManager;
 Star[] stars;
-int gamestate, ticksElapsed;
+int gamestate, ticksElapsed, ticksLastUpdate;
 
 void setup() {
   size(800,600);
   background(0);
   gamestate = 1;
   ticksElapsed = 0;
+  ticksLastUpdate = 0;
 
   levelManager = new LevelManager();
   playerManager = new PlayerManager();
@@ -111,5 +112,5 @@ levelManager.levelSelector();
 enemyManager.enemySpawner();
 playerManager.drawPlayer();
 ticksElapsed++;
-
+ticksLastUpdate = millis();
 }

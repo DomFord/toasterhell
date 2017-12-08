@@ -15,7 +15,7 @@ class EnemyBullet {
     fill(218, 44, 56);
     stroke(255, 255, 56);
     rect(xpos, ypos, size, size);
-    ypos += ySpeed;
-    xpos += xSpeed;
+    ypos += ySpeed * float(millis() - ticksLastUpdate)*0.001;
+    xpos += xSpeed * float(millis() - ticksLastUpdate)*0.001;
   }
 }

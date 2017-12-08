@@ -5,7 +5,7 @@ class PlayerBullet {
   PlayerBullet(float x, float y) {
     xpos = x;
     ypos = y;
-    speed = 15;
+    speed = 200;
     size = 3;
   }
 
@@ -16,7 +16,7 @@ class PlayerBullet {
     rect(xpos, ypos, size, size * 5);
 
     if (!collided) {
-      ypos -= speed;
+      ypos -= speed * float(millis() - ticksLastUpdate)*0.001;
     }
   }
 }

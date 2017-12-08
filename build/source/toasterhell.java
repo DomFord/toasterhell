@@ -24,13 +24,14 @@ LevelManager levelManager;
 PlayerManager playerManager;
 EnemyManager enemyManager;
 Star[] stars;
-int gamestate, ticksElapsed;
+int gamestate, ticksElapsed, ticksLastUpdate;
 
 public void setup() {
   
   background(0);
   gamestate = 1;
   ticksElapsed = 0;
+  ticksLastUpdate = 0;
 
   levelManager = new LevelManager();
   playerManager = new PlayerManager();
@@ -127,7 +128,7 @@ levelManager.levelSelector();
 enemyManager.enemySpawner();
 playerManager.drawPlayer();
 ticksElapsed++;
-
+ticksLastUpdate = millis();
 }
 class BasicEnemy {
   int timeStamp, shootRateModifier, shootCounter;
@@ -146,7 +147,7 @@ class BasicEnemy {
     shootRateModifier = 60;
     xpos = random(0 + size, width - size);
     ypos = -100;
-    speed = 1;
+    speed = 50;
     size = 50;
     leftSpeed = 0;
     rightSpeed = 0;
@@ -197,7 +198,7 @@ class BasicEnemy {
     }
 
     public void move() {
-      ypos += speed;
+      ypos += speed * PApplet.parseFloat(millis() - ticksLastUpdate)*0.001f;
     }
 
     public void bulletCollision() {
@@ -221,33 +222,33 @@ class BasicEnemy {
           case 1:
           shootRateModifier = 120;
           if (ticksElapsed > timeStamp + shootRateModifier) {
-            bullets.add(new EnemyBullet(xpos, ypos, 0, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, 0, 150));
             timeStamp = ticksElapsed;
           }
           break;
           case 2:
           shootRateModifier = 200;
           if (ticksElapsed > timeStamp + shootRateModifier) {
-            bullets.add(new EnemyBullet(xpos, ypos, 2, 4));
-            bullets.add(new EnemyBullet(xpos, ypos, -2, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, 100, 150));
+            bullets.add(new EnemyBullet(xpos, ypos, -100, 150));
             timeStamp = ticksElapsed;
           }
           break;
           case 3:
           if (shootCounter == 10){
-            bullets.add(new EnemyBullet(xpos, ypos, 0, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, 0, 150));
           }
           if (shootCounter == 20){
-            bullets.add(new EnemyBullet(xpos, ypos, 0, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, 0, 150));
           }
           if (shootCounter == 30){
-            bullets.add(new EnemyBullet(xpos, ypos, 0, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, 0, 150));
           }
           if (shootCounter == 40){
-            bullets.add(new EnemyBullet(xpos, ypos, 0, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, 0, 150));
           }
           if (shootCounter == 50){
-            bullets.add(new EnemyBullet(xpos, ypos, 0, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, 0, 150));
           }
           if (shootCounter == 300){
             shootCounter = 0;
@@ -256,56 +257,57 @@ class BasicEnemy {
           break;
           case 4:
           if (shootCounter == 20){
-            bullets.add(new EnemyBullet(xpos, ypos, 2, 4));
-            bullets.add(new EnemyBullet(xpos, ypos, -2, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, 100, 150));
+            bullets.add(new EnemyBullet(xpos, ypos, -100, 150));
           }
           if (shootCounter == 40){
-            bullets.add(new EnemyBullet(xpos, ypos, 2, 4));
-            bullets.add(new EnemyBullet(xpos, ypos, -2, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, 100, 150));
+            bullets.add(new EnemyBullet(xpos, ypos, -100, 150));
           }
           if (shootCounter == 60){
-            bullets.add(new EnemyBullet(xpos, ypos, 2, 4));
-            bullets.add(new EnemyBullet(xpos, ypos, -2, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, 100, 150));
+            bullets.add(new EnemyBullet(xpos, ypos, -100, 150));
           }
           if (shootCounter == 80){
-            bullets.add(new EnemyBullet(xpos, ypos, 2, 4));
-            bullets.add(new EnemyBullet(xpos, ypos, -2, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, 100, 150));
+            bullets.add(new EnemyBullet(xpos, ypos, -100, 150));
           }
           if (shootCounter == 100){
-            bullets.add(new EnemyBullet(xpos, ypos, 2, 4));
-            bullets.add(new EnemyBullet(xpos, ypos, -2, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, 100, 150));
+            bullets.add(new EnemyBullet(xpos, ypos, -100, 150));
           }
           if (shootCounter == 400){
             shootCounter = 0;
           }
           shootCounter ++;
+          break;
           case 5:
           if (shootCounter == 10){
-            bullets.add(new EnemyBullet(xpos, ypos, 0, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, 0, 150));
           }
           if (shootCounter == 20){
-            bullets.add(new EnemyBullet(xpos, ypos, -3, 3));
+            bullets.add(new EnemyBullet(xpos, ypos, -100, 100));
           }
           if (shootCounter == 30){
-            bullets.add(new EnemyBullet(xpos, ypos, -4, 0));
+            bullets.add(new EnemyBullet(xpos, ypos, -150, 00));
           }
           if (shootCounter == 40){
-            bullets.add(new EnemyBullet(xpos, ypos, -3, -3));
+            bullets.add(new EnemyBullet(xpos, ypos, -100, -100));
           }
           if (shootCounter == 50){
-            bullets.add(new EnemyBullet(xpos, ypos, 0, -4));
+            bullets.add(new EnemyBullet(xpos, ypos, 0, -150));
           }
           if (shootCounter == 60){
-            bullets.add(new EnemyBullet(xpos, ypos, 3, -3));
+            bullets.add(new EnemyBullet(xpos, ypos, 100, -100));
           }
           if (shootCounter == 70){
-            bullets.add(new EnemyBullet(xpos, ypos, 4, 0));
+            bullets.add(new EnemyBullet(xpos, ypos, 150, 0));
           }
           if (shootCounter == 80){
-            bullets.add(new EnemyBullet(xpos, ypos, 3, 3));
+            bullets.add(new EnemyBullet(xpos, ypos, 100, 100));
           }
           if (shootCounter == 90){
-            bullets.add(new EnemyBullet(xpos, ypos, 0, 4));
+            bullets.add(new EnemyBullet(xpos, ypos, 0, 150));
           }
           if (shootCounter == 300){
             shootCounter = 0;
@@ -339,8 +341,8 @@ class EnemyBullet {
     fill(218, 44, 56);
     stroke(255, 255, 56);
     rect(xpos, ypos, size, size);
-    ypos += ySpeed;
-    xpos += xSpeed;
+    ypos += ySpeed * PApplet.parseFloat(millis() - ticksLastUpdate)*0.001f;
+    xpos += xSpeed * PApplet.parseFloat(millis() - ticksLastUpdate)*0.001f;
   }
 }
 class EnemyManager {
@@ -384,14 +386,14 @@ class EnemyManager {
   public void enemyKiller() {
     for (int i = basicEnemies.size() - 1; i >= 0; i--) {
       if (!basicEnemies.get(i).alive) {
-        bullets.add(new EnemyBullet(basicEnemies.get(i).xpos, basicEnemies.get(i).ypos, 0, 4));
-        bullets.add(new EnemyBullet(basicEnemies.get(i).xpos, basicEnemies.get(i).ypos, 0, -4));
-        bullets.add(new EnemyBullet(basicEnemies.get(i).xpos, basicEnemies.get(i).ypos, 4, 0));
-        bullets.add(new EnemyBullet(basicEnemies.get(i).xpos, basicEnemies.get(i).ypos, -4, 0));
-        bullets.add(new EnemyBullet(basicEnemies.get(i).xpos, basicEnemies.get(i).ypos, -3, 3));
-        bullets.add(new EnemyBullet(basicEnemies.get(i).xpos, basicEnemies.get(i).ypos, -3, -3));
-        bullets.add(new EnemyBullet(basicEnemies.get(i).xpos, basicEnemies.get(i).ypos, 3, -3));
-        bullets.add(new EnemyBullet(basicEnemies.get(i).xpos, basicEnemies.get(i).ypos, 3, 3));
+        bullets.add(new EnemyBullet(basicEnemies.get(i).xpos, basicEnemies.get(i).ypos, 0, 150));
+        bullets.add(new EnemyBullet(basicEnemies.get(i).xpos, basicEnemies.get(i).ypos, 0, -150));
+        bullets.add(new EnemyBullet(basicEnemies.get(i).xpos, basicEnemies.get(i).ypos, 150, 0));
+        bullets.add(new EnemyBullet(basicEnemies.get(i).xpos, basicEnemies.get(i).ypos, -150, 0));
+        bullets.add(new EnemyBullet(basicEnemies.get(i).xpos, basicEnemies.get(i).ypos, -100, 100));
+        bullets.add(new EnemyBullet(basicEnemies.get(i).xpos, basicEnemies.get(i).ypos, -100, -100));
+        bullets.add(new EnemyBullet(basicEnemies.get(i).xpos, basicEnemies.get(i).ypos, 100, -100));
+        bullets.add(new EnemyBullet(basicEnemies.get(i).xpos, basicEnemies.get(i).ypos, 100, 100));
         basicEnemies.remove(i);
       }
     }
@@ -532,7 +534,7 @@ class PlayerBullet {
   PlayerBullet(float x, float y) {
     xpos = x;
     ypos = y;
-    speed = 15;
+    speed = 200;
     size = 3;
   }
 
@@ -543,7 +545,7 @@ class PlayerBullet {
     rect(xpos, ypos, size, size * 5);
 
     if (!collided) {
-      ypos -= speed;
+      ypos -= speed * PApplet.parseFloat(millis() - ticksLastUpdate)*0.001f;
     }
   }
 }
@@ -565,20 +567,20 @@ class PlayerManager{
     alive = true;
     xpos = width / 2;
     ypos = height - 75;
-    maxSpeed = 10;
+    maxSpeed = 400;
     size = 50;
     left = false;
     right = false;
     up = false;
     down = false;
     shooting = false;
-    leftSpeed = constrain(leftSpeed, 0, maxSpeed);
-    rightSpeed = constrain(rightSpeed, 0, maxSpeed);
-    upSpeed = constrain(upSpeed, 0, maxSpeed);
-    downSpeed = constrain(downSpeed, 0, maxSpeed);
+    leftSpeed = 0;
+    rightSpeed = 0;
+    upSpeed = 0;
+    downSpeed = 0;
     hitBlinkOpacity = 0;
-    speedModifier = 0.2f;
-    brakeModifier = 0.5f;
+    speedModifier = 20;
+    brakeModifier = 30;
     bullets = new ArrayList<PlayerBullet>();
     player1sheet = loadImage("player_avatar_1.png");
     player2sheet = loadImage("player_avatar_2.png");
@@ -644,25 +646,25 @@ class PlayerManager{
         leftSpeed = 0;
       }
       else {
-        xpos -= leftSpeed;
+        xpos -= leftSpeed * PApplet.parseFloat(millis() - ticksLastUpdate) * 0.001f;
       }
       if (xpos + size > width - 10) {
         rightSpeed = 0;
       }
       else {
-        xpos += rightSpeed;
+        xpos += rightSpeed * PApplet.parseFloat(millis() - ticksLastUpdate) * 0.001f;
       }
       if (ypos - size < 10) {
         upSpeed = 0;
       }
       else {
-        ypos -= upSpeed;
+        ypos -= upSpeed * PApplet.parseFloat(millis() - ticksLastUpdate) * 0.001f;
       }
       if (ypos + size > height - 10) {
         downSpeed = 0;
       }
       else {
-        ypos += downSpeed;
+        ypos += downSpeed * PApplet.parseFloat(millis() - ticksLastUpdate) * 0.001f;
       }
     }
 
