@@ -75,7 +75,24 @@ void keyPressed() {
   switch (menuIndex) {
     case 1:
       if (key == ' ') {
-        mainMenu.spacePressed = true;
+        if (mainMenu.spacePressed = true) {
+          switch (mainMenu.indicator) {
+            case 1:
+              menuIndex = 2;
+            break;
+            case 2:
+              menuIndex = 3;
+            break;
+            case 3:
+              menuIndex = 4;
+            break;
+            case 4:
+              exit();
+            break;
+          }
+        } else {
+          mainMenu.spacePressed = true;
+        }
       }
       switch (keyCode) {
         case UP:
