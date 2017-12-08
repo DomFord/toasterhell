@@ -13,6 +13,7 @@ LevelManager levelManager;
 PlayerManager playerManager;
 EnemyManager enemyManager;
 LeaderboardsInput leaderboardInput;
+MainMenu mainMenu;
 ArrayList<Score> highScoreList;
 Star[] stars;
 int gamestate, ticksElapsed, ticksLastUpdate, menuIndex;
@@ -32,6 +33,7 @@ void setup() {
   playerManager = new PlayerManager();
   enemyManager = new EnemyManager();
   leaderboardInput = new LeaderboardsInput();
+  mainMenu = new MainMenu();
 
   String[] tempScoreList = loadStrings("highscore.txt"); //load in the highscore list and "expand" it into an arraylist of 'Score' objects
   String tempScoreString = tempScoreList[0];
@@ -70,86 +72,122 @@ void keyPressed() {
     break;
   }
 
-  if(menuIndex == 4){
-    if(key == CODED){
-      if(keyCode == UP){
-        if(leaderboardInput.letterSelect < 35){
-          leaderboardInput.letterSelect++;
-          leaderboardInput.nameconstructor[leaderboardInput.curserPos] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+  switch (menuIndex) {
+    case 1:
+      if (key == ' ') {
+        mainMenu.spacePressed = true;
+      }
+      switch (keyCode) {
+        case UP:
+          if (mainMenu.indicator > 1) {
+            mainMenu.indicator--;
+          }
+        break;
+        case DOWN:
+          if (mainMenu.indicator < 4) {
+            mainMenu.indicator++;
+          }
+        break;
+        case ENTER:
+        case RETURN:
+          switch (mainMenu.indicator) {
+            case 1:
+              menuIndex = 2;
+            break;
+            case 2:
+              menuIndex = 3;
+            break;
+            case 3:
+              menuIndex = 4;
+            break;
+            case 4:
+              exit();
+            break;
+          }
+        break;
+      }
+    break;
+    case 4:
+      if(key == CODED){
+        if(keyCode == UP){
+          if(leaderboardInput.letterSelect < 35){
+            leaderboardInput.letterSelect++;
+            leaderboardInput.nameconstructor[leaderboardInput.curserPos] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+          }
+          else{
+            leaderboardInput.letterSelect = 0;
+            leaderboardInput.nameconstructor[leaderboardInput.curserPos] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+          }
         }
-        else{
-          leaderboardInput.letterSelect = 0;
-          leaderboardInput.nameconstructor[leaderboardInput.curserPos] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+        if(keyCode == DOWN){
+          if(leaderboardInput.letterSelect > 0){
+            leaderboardInput.letterSelect--;
+            leaderboardInput.nameconstructor[leaderboardInput.curserPos] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+          }
+          else{
+            leaderboardInput.letterSelect = 35;
+            leaderboardInput.nameconstructor[leaderboardInput.curserPos] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+          }
+        }
+        if(keyCode == RIGHT){
+          switch(leaderboardInput.curserPos){
+            case 0:
+              leaderboardInput.nameconstructor[0] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+              leaderboardInput.letter1 = leaderboardInput.letterSelect;
+              leaderboardInput.letterSelect = leaderboardInput.letter2;
+            break;
+
+            case 1:
+              leaderboardInput.nameconstructor[1] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+              leaderboardInput.letter2 = leaderboardInput.letterSelect;
+              leaderboardInput.letterSelect = leaderboardInput.letter3;
+            break;
+
+            case 2:
+              leaderboardInput.nameconstructor[2] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+              leaderboardInput.letter3 = leaderboardInput.letterSelect;
+              leaderboardInput.letterSelect = leaderboardInput.letter1;
+            break;
+          }
+          if(leaderboardInput.curserPos < 2){
+            leaderboardInput.curserPos++;
+          }
+          else{
+            leaderboardInput.curserPos = 0;
+          }
+        }
+        if(keyCode == LEFT){
+          switch(leaderboardInput.curserPos){
+            case 0:
+              leaderboardInput.nameconstructor[0] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+              leaderboardInput.letter1 = leaderboardInput.letterSelect;
+              leaderboardInput.letterSelect = leaderboardInput.letter3;
+            break;
+
+            case 1:
+              leaderboardInput.nameconstructor[1] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+              leaderboardInput.letter2 = leaderboardInput.letterSelect;
+              leaderboardInput.letterSelect = leaderboardInput.letter1;
+            break;
+
+            case 2:
+              leaderboardInput.nameconstructor[2] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+              leaderboardInput.letter3 = leaderboardInput.letterSelect;
+              leaderboardInput.letterSelect = leaderboardInput.letter2;
+            break;
+          }
+          if(leaderboardInput.curserPos > 0){
+            leaderboardInput.curserPos--;
+          }
+          else{
+            leaderboardInput.curserPos = 2;
+          }
         }
       }
-      if(keyCode == DOWN){
-        if(leaderboardInput.letterSelect > 0){
-          leaderboardInput.letterSelect--;
-          leaderboardInput.nameconstructor[leaderboardInput.curserPos] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
-        }
-        else{
-          leaderboardInput.letterSelect = 35;
-          leaderboardInput.nameconstructor[leaderboardInput.curserPos] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
-        }
+      if(key == ENTER){
+        leaderboardInput.saveScore();
       }
-      if(keyCode == RIGHT){
-        switch(leaderboardInput.curserPos){
-          case 0:
-            leaderboardInput.nameconstructor[0] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
-            leaderboardInput.letter1 = leaderboardInput.letterSelect;
-            leaderboardInput.letterSelect = leaderboardInput.letter2;
-          break;
-
-          case 1:
-            leaderboardInput.nameconstructor[1] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
-            leaderboardInput.letter2 = leaderboardInput.letterSelect;
-            leaderboardInput.letterSelect = leaderboardInput.letter3;
-          break;
-
-          case 2:
-            leaderboardInput.nameconstructor[2] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
-            leaderboardInput.letter3 = leaderboardInput.letterSelect;
-            leaderboardInput.letterSelect = leaderboardInput.letter1;
-          break;
-        }
-        if(leaderboardInput.curserPos < 2){
-          leaderboardInput.curserPos++;
-        }
-        else{
-          leaderboardInput.curserPos = 0;
-        }
-      }
-      if(keyCode == LEFT){
-        switch(leaderboardInput.curserPos){
-          case 0:
-            leaderboardInput.nameconstructor[0] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
-            leaderboardInput.letter1 = leaderboardInput.letterSelect;
-            leaderboardInput.letterSelect = leaderboardInput.letter3;
-          break;
-
-          case 1:
-            leaderboardInput.nameconstructor[1] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
-            leaderboardInput.letter2 = leaderboardInput.letterSelect;
-            leaderboardInput.letterSelect = leaderboardInput.letter1;
-          break;
-
-          case 2:
-            leaderboardInput.nameconstructor[2] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
-            leaderboardInput.letter3 = leaderboardInput.letterSelect;
-            leaderboardInput.letterSelect = leaderboardInput.letter2;
-          break;
-        }
-        if(leaderboardInput.curserPos > 0){
-          leaderboardInput.curserPos--;
-        }
-        else{
-          leaderboardInput.curserPos = 2;
-        }
-      }
-    }
-    if(key == ENTER){
-      leaderboardInput.saveScore();
-    }
+      break;
   }
 
 
@@ -215,6 +253,7 @@ void keyReleased() {
 void draw() {
   switch (menuIndex){
     case 1:
+      mainMenu.drawMenu();
     break;
     case 2:
       switch (gamestate) {
