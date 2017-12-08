@@ -1,7 +1,7 @@
 class MainMenu {
   int avatarFrame, ticksLast, frameDuration, x1, x2, y, indicator, indicatorY, backgroundyPos;
   float xpos, ypos, speed;
-  boolean introDone, spacePressed;
+  boolean introDone;
   PImage player1sheet, player2sheet, backgroundGrass;
 
   MainMenu() {
@@ -18,7 +18,6 @@ class MainMenu {
     backgroundyPos = 0;
     speed = 5;
     introDone = false;
-    spacePressed = false;
     player1sheet = loadImage("player_avatar_1.png");
     player2sheet = loadImage("player_avatar_2.png");
     backgroundGrass = loadImage("grass.png");
@@ -47,36 +46,41 @@ class MainMenu {
       }
     }
 
-    void drawMenu() {
-      background(0);
+    void drawBackground() {
       image(backgroundGrass,width/2,backgroundyPos);
       image(backgroundGrass,width/2,(backgroundyPos-backgroundGrass.height));
       backgroundyPos++;
-      if(backgroundyPos >= backgroundGrass.height){
+      if (backgroundyPos >= backgroundGrass.height) {
         backgroundyPos = 0;
       }
-      if (!spacePressed) {
+    }
+
+    void drawAvatar() {
+      PImage f = player1sheet.get((avatarFrame*60),0,60,66);
+      image(f, xpos, ypos);
+      int delta = millis() - ticksLast;
+      if (delta >= frameDuration) {
+        avatarFrame++;
+        if (avatarFrame >= 3) {
+          avatarFrame = 0;
+        }
+        ticksLast += delta;
+      }
+    }
+
+    void drawMenu() {
+        drawBackground();
         if (!introDone) {
           introAnimation();
           } else {
-            PImage f = player1sheet.get((avatarFrame*60),0,60,66);
-            image(f, xpos, ypos);
-            int delta = millis() - ticksLast;
-            if (delta >= frameDuration) {
-              avatarFrame++;
-              if (avatarFrame >= 3) {
-                avatarFrame = 0;
-              }
-              ticksLast += delta;
-            }
+            drawAvatar();
             menuTextSlide();
           }
-        } else {
-          menuSelect();
-        }
       }
 
       void menuTextSlide() {
+        drawBackground();
+        drawAvatar();
         fill(255);
         textAlign(RIGHT);
         textFont(font, 50);
@@ -95,6 +99,8 @@ class MainMenu {
       }
 
       void menuSelect() {
+        drawBackground();
+        drawAvatar();
         fill(255);
         textAlign(LEFT, CENTER);
         textFont(font, 50);
@@ -110,16 +116,6 @@ class MainMenu {
             indicatorY = 505;
           }
           rect(75, indicatorY, 10, 40);
-        }
-        PImage f = player1sheet.get((avatarFrame*60),0,60,66);
-        image(f, xpos, ypos);
-        int delta = millis() - ticksLast;
-        if (delta >= frameDuration) {
-          avatarFrame++;
-          if (avatarFrame >= 3) {
-            avatarFrame = 0;
-          }
-          ticksLast += delta;
         }
       }
     }

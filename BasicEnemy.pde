@@ -3,11 +3,7 @@ class BasicEnemy {
   float xpos, ypos, speed1, speed2, speed3, speed4, speed5, size, leftSpeed, rightSpeed, upSpeed, downSpeed, speedModifier, brakeModifier;
   boolean alive, shooting;
   ArrayList<EnemyBullet> bullets;
-  PImage enemyImage1;
-  PImage enemyImage2;
-  PImage enemyImage3;
-  PImage enemyImage4;
-  PImage enemyImage5;
+  PImage enemyImage1, enemyImage2, enemyImage3, enemyImage4, enemyImage5;
 
   BasicEnemy() {
     xMove = 0;
