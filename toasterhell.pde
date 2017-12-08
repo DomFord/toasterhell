@@ -129,8 +129,26 @@ void keyPressed() {
         case ' ':
           playerManager.shooting = true;
         break;
+        case '1':
+          gamestate = 1;
+        break;
+        case '2':
+          gamestate = 2;
+        break;
+        case '3':
+          gamestate = 3;
+        break;
+        case '4':
+          gamestate = 4;
+        break;
+        case '5':
+          gamestate = 5;
+        break;
+        case '6':
+          gamestate = 6;
+        break;
       }
-    break;
+      break;
     case 4:
     break;
     case 5:
@@ -215,12 +233,8 @@ void keyPressed() {
 }
 
 void keyReleased() {
-  switch (gamestate) {
-    case 1:
-    case 2:
+  switch (menuIndex) {
     case 3:
-    case 4:
-    case 5:
       switch (keyCode) {
         case LEFT:
           playerManager.left = false;

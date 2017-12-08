@@ -150,8 +150,26 @@ public void keyPressed() {
         case ' ':
           playerManager.shooting = true;
         break;
+        case '1':
+          gamestate = 1;
+        break;
+        case '2':
+          gamestate = 2;
+        break;
+        case '3':
+          gamestate = 3;
+        break;
+        case '4':
+          gamestate = 4;
+        break;
+        case '5':
+          gamestate = 5;
+        break;
+        case '6':
+          gamestate = 6;
+        break;
       }
-    break;
+      break;
     case 4:
     break;
     case 5:
@@ -236,12 +254,8 @@ public void keyPressed() {
 }
 
 public void keyReleased() {
-  switch (gamestate) {
-    case 1:
-    case 2:
+  switch (menuIndex) {
     case 3:
-    case 4:
-    case 5:
       switch (keyCode) {
         case LEFT:
           playerManager.left = false;
@@ -866,11 +880,8 @@ This script deals with levels; it handles what level is selected and how each le
 class LevelManager{
   int bgColour;
   int backgroundyPos;
-  PImage backgroundGrass;
-  PImage backgroundWater;
-  PImage backgroundRock;
-  PImage backgroundIce;
-  PImage backgroundLava;
+  PImage backgroundGrass, backgroundWater, backgroundRock, backgroundIce, backgroundLava, endlessLevelBackground;
+  PImage[] backgrounds;
 
   LevelManager() {
     backgroundyPos = 0;
@@ -884,59 +895,31 @@ class LevelManager{
     backgroundRock.resize(width,0);
     backgroundIce.resize(width,0);
     backgroundLava.resize(width,0);
+    backgrounds = new PImage[6];
+      backgrounds[0] = backgroundGrass;
+      backgrounds[1] = backgroundWater;
+      backgrounds[2] = backgroundRock;
+      backgrounds[3] = backgroundIce;
+      backgrounds[4] = backgroundLava;
+      backgrounds[5] = starParticles;
   }
 
   public void levelSelector() {
-    switch (gamestate) {
-      case 1:
-        image(backgroundGrass,width/2,backgroundyPos);
-        image(backgroundGrass,width/2,(backgroundyPos-backgroundGrass.height));
-        backgroundyPos++;
-        if(backgroundyPos >= backgroundGrass.height){
-          backgroundyPos = 0;
-        }
-        spaceLevel();
-      break;
-      case 2:
-        image(backgroundWater,width/2,backgroundyPos);
-        image(backgroundWater,width/2,(backgroundyPos-backgroundWater.height));
-        backgroundyPos++;
-        if(backgroundyPos >= backgroundWater.height){
-          backgroundyPos = 0;
-        }
-        spaceLevel();
-      break;
-      case 3:
-        image(backgroundRock,width/2,backgroundyPos);
-        image(backgroundRock,width/2,(backgroundyPos-backgroundRock.height));
-        backgroundyPos++;
-        if(backgroundyPos >= backgroundRock.height){
-          backgroundyPos = 0;
-        }
-        spaceLevel();
-      break;
-      case 4:
-        image(backgroundIce,width/2,backgroundyPos);
-        image(backgroundIce,width/2,(backgroundyPos-backgroundIce.height));
-        backgroundyPos++;
-        if(backgroundyPos >= backgroundIce.height){
-          backgroundyPos = 0;
-        }
-        spaceLevel();
-      break;
-      case 5:
-        image(backgroundLava,width/2,backgroundyPos);
-        image(backgroundLava,width/2,(backgroundyPos-backgroundLava.height));
-        backgroundyPos++;
-        if(backgroundyPos >= backgroundLava.height){
-          backgroundyPos = 0;
-        }
-        spaceLevel();
-      break;
-    }
+    background(0);
+        drawBackground(backgrounds[gamestate - 1]);
   }
 
-  public void spaceLevel() {
+  public void drawBackground(PImage level) {
+    image(level, width / 2, backgroundyPos);
+    image(level, width / 2, (backgroundyPos-level.height));
+    backgroundyPos++;
+    if(backgroundyPos >= level.height){
+      backgroundyPos = 0;
+    }
+    starParticles();
+  }
+
+  public void starParticles() {
     for (int i = 0; i < stars.length; i++) {
       stars[i].moveStar();
     }
