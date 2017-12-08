@@ -173,7 +173,7 @@ class PlayerManager{
   }
 
     void death() {
-      if (health == 0) {
+      if (health <= 0) {
 
       }
     }

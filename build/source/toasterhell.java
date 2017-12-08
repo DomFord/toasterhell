@@ -48,19 +48,19 @@ public void keyPressed() {
   switch (key) {
     case '1':
       gamestate = 1;
-      break;
+    break;
     case '2':
       gamestate = 2;
-      break;
+    break;
     case '3':
       gamestate = 3;
-      break;
+    break;
     case '4':
       gamestate = 4;
-      break;
+    break;
     case '5':
       gamestate = 5;
-      break;
+    break;
   }
 
   switch (gamestate) {
@@ -72,23 +72,23 @@ public void keyPressed() {
       switch (keyCode) {
         case LEFT:
           playerManager.left = true;
-          break;
+        break;
         case RIGHT:
           playerManager.right = true;
-          break;
+        break;
         case UP:
           playerManager.up = true;
-          break;
+        break;
         case DOWN:
           playerManager.down = true;
-          break;
+        break;
       }
       switch (key) {
         case ' ':
           playerManager.shooting = true;
-          break;
+        break;
       }
-      break;
+    break;
   }
 }
 
@@ -116,9 +116,9 @@ public void keyReleased() {
       switch (key) {
         case ' ':
           playerManager.shooting = false;
-          break;
+        break;
       }
-      break;
+    break;
   }
 }
 
@@ -142,7 +142,7 @@ class BasicEnemy {
 
   BasicEnemy() {
     timeStamp = 0;
-    shootRateModifier = 50;
+    shootRateModifier = 60;
     xpos = random(0 + size, width - size);
     ypos = -100;
     speed = 5;
@@ -236,7 +236,7 @@ class EnemyBullet {
   EnemyBullet(float x, float y) {
     xpos = x;
     ypos = y;
-    speed = 15;
+    speed = 10;
     size = 3;
   }
 
@@ -602,7 +602,7 @@ class PlayerManager{
   }
 
     public void death() {
-      if (health == 0) {
+      if (health <= 0) {
 
       }
     }

@@ -5,7 +5,7 @@ class EnemyBullet {
   EnemyBullet(float x, float y) {
     xpos = x;
     ypos = y;
-    speed = 15;
+    speed = 10;
     size = 3;
   }
 

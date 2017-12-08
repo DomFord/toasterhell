@@ -11,7 +11,7 @@ class BasicEnemy {
 
   BasicEnemy() {
     timeStamp = 0;
-    shootRateModifier = 50;
+    shootRateModifier = 60;
     xpos = random(0 + size, width - size);
     ypos = -100;
     speed = 5;
