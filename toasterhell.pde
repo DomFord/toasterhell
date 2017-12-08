@@ -27,7 +27,7 @@ void setup() {
   gamestate = 1;
   ticksElapsed = 0;
   ticksLastUpdate = 0;
-  menuIndex = 2;
+  menuIndex = 4;
 
   font = createFont("font.ttf", 100);
 
@@ -65,6 +65,89 @@ void keyPressed() {
       gamestate = 5;
     break;
   }
+
+  if(menuIndex == 4){
+    if(key == CODED){
+      if(keyCode == UP){
+        if(leaderboardInput.letterSelect < 35){
+          leaderboardInput.letterSelect++;
+          leaderboardInput.nameconstructor[leaderboardInput.curserPos] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+        }
+        else{
+          leaderboardInput.letterSelect = 0;
+          leaderboardInput.nameconstructor[leaderboardInput.curserPos] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+        }
+      }
+      if(keyCode == DOWN){
+        if(leaderboardInput.letterSelect > 0){
+          leaderboardInput.letterSelect--;
+          leaderboardInput.nameconstructor[leaderboardInput.curserPos] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+        }
+        else{
+          leaderboardInput.letterSelect = 35;
+          leaderboardInput.nameconstructor[leaderboardInput.curserPos] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+        }
+      }
+      if(keyCode == RIGHT){
+        switch(leaderboardInput.curserPos){
+          case 0:
+            leaderboardInput.nameconstructor[0] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+            leaderboardInput.letter1 = leaderboardInput.letterSelect;
+            leaderboardInput.letterSelect = leaderboardInput.letter2;
+          break;
+
+          case 1:
+            leaderboardInput.nameconstructor[1] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+            leaderboardInput.letter2 = leaderboardInput.letterSelect;
+            leaderboardInput.letterSelect = leaderboardInput.letter3;
+          break;
+
+          case 2:
+            leaderboardInput.nameconstructor[2] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+            leaderboardInput.letter3 = leaderboardInput.letterSelect;
+            leaderboardInput.letterSelect = leaderboardInput.letter1;
+          break;
+        }
+        if(leaderboardInput.curserPos < 2){
+          leaderboardInput.curserPos++;
+        }
+        else{
+          leaderboardInput.curserPos = 0;
+        }
+      }
+      if(keyCode == LEFT){
+        switch(leaderboardInput.curserPos){
+          case 0:
+            leaderboardInput.nameconstructor[0] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+            leaderboardInput.letter1 = leaderboardInput.letterSelect;
+            leaderboardInput.letterSelect = leaderboardInput.letter3;
+          break;
+
+          case 1:
+            leaderboardInput.nameconstructor[1] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+            leaderboardInput.letter2 = leaderboardInput.letterSelect;
+            leaderboardInput.letterSelect = leaderboardInput.letter1;
+          break;
+
+          case 2:
+            leaderboardInput.nameconstructor[2] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
+            leaderboardInput.letter3 = leaderboardInput.letterSelect;
+            leaderboardInput.letterSelect = leaderboardInput.letter2;
+          break;
+        }
+        if(leaderboardInput.curserPos > 0){
+          leaderboardInput.curserPos--;
+        }
+        else{
+          leaderboardInput.curserPos = 2;
+        }
+      }
+    }
+    if(key == ENTER){
+      leaderboardInput.saveScore();
+    }
+  }
+
 
   switch (gamestate) {
     case 1:
