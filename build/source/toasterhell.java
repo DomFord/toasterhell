@@ -3,6 +3,11 @@ import processing.data.*;
 import processing.event.*; 
 import processing.opengl.*; 
 
+import java.io.Serializable; 
+import java.io.*; 
+import java.util.Collections; 
+import java.util.Comparator; 
+
 import java.util.HashMap; 
 import java.util.ArrayList; 
 import java.io.File; 
@@ -20,9 +25,18 @@ Made by Dominic Francis Stephen Ford (dofo@itu.dk) and Frederik Boye Hansen (frb
 ITU 2017, Programming for Designers
 */
 
+  // Importing various Java libraries, used for saving, loading and sorting the highscoreEntry.
+
+
+
+
 LevelManager levelManager;
 PlayerManager playerManager;
 EnemyManager enemyManager;
+HighscoreEntry highscoreEntry;
+Highscores highscores;
+ArrayList<PlayerManager> players;
+ArrayList<Score> scores;
 Star[] stars;
 int gamestate, ticksElapsed, ticksLastUpdate;
 
@@ -36,6 +50,9 @@ public void setup() {
   levelManager = new LevelManager();
   playerManager = new PlayerManager();
   enemyManager = new EnemyManager();
+  highscoreEntry = new HighscoreEntry();
+  highscores = new Highscores();
+  scores = FileManager.loadScore("memes.dat");
 
   stars = new Star[10];
   for (int i = 0; i < 10; i++) {
@@ -61,6 +78,12 @@ public void keyPressed() {
     break;
     case '5':
       gamestate = 5;
+    break;
+    case '6':
+      gamestate = 6;
+    break;
+    case '7':
+      gamestate = 7;
     break;
   }
 
@@ -89,6 +112,39 @@ public void keyPressed() {
           playerManager.shooting = true;
         break;
       }
+    case 6:
+      switch (keyCode) {
+        case DOWN:
+          if (highscoreEntry.letterRoll == highscoreEntry.alphabet.length - 1) {
+            highscoreEntry.letterRoll = 0;
+          } else {
+            highscoreEntry.letterRoll++;
+          }
+        break;
+        case UP:
+          if (highscoreEntry.letterRoll <= 0) {
+            highscoreEntry.letterRoll = highscoreEntry.alphabet.length - 1;
+          } else {
+            highscoreEntry.letterRoll--;
+          }
+        break;
+        case ENTER:
+        case RETURN:
+          if (highscoreEntry.letterSelect <= 2) {
+            highscoreEntry.lockLetter(highscoreEntry.letterRoll);
+          } else {
+            highscoreEntry.setName();
+            gamestate++;
+          }
+        break;
+
+        case BACKSPACE:
+          if (highscoreEntry.letterSelect >= 0) {
+            highscoreEntry.deleteLetter();
+          }
+        break;
+        }
+
     break;
   }
 }
@@ -124,11 +180,22 @@ public void keyReleased() {
 }
 
 public void draw() {
-levelManager.levelSelector();
-enemyManager.enemySpawner();
-playerManager.drawPlayer();
-ticksElapsed++;
-ticksLastUpdate = millis();
+  switch (gamestate) {
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+    levelManager.levelSelector();
+    enemyManager.enemySpawner();
+    playerManager.drawPlayer();
+    ticksElapsed++;
+    break;
+    case 6:
+    case 7:
+    levelManager.levelSelector();
+    break;
+}
 }
 class BasicEnemy {
   int timeStamp, shootRateModifier, shootCounter, ticksLast, cycleCount;
@@ -403,7 +470,6 @@ class EnemyManager {
     }
   }
 }
-/*
 public static class FileManager {                                   // The class that will take care of saving and loading the highscores.
 
   public static void saveScore(String path, ArrayList<Score> data) { // Function to save the scores.
@@ -448,7 +514,155 @@ public static class FileManager {                                   // The class
     return data;                                                // The data variable (our loaded ArrayList) is then returned by the load function.
   }
 }
-*/
+class HighscoreEntry {
+  int letterSelect, letterRoll, lettersLocked, xpos, ypos;
+  String a, blank, savedName;
+  char[] alphabet, tag;
+
+  HighscoreEntry() {
+    a = "ABCDEFGHIJKLMNOPQRSTUVWXYX\u00c6\u00d8\u00c51234567890";
+    blank = "   ";
+    alphabet = a.toCharArray();
+    tag = blank.toCharArray();
+    letterSelect = 0;
+    letterRoll = 0;
+    lettersLocked = 0;
+    xpos = width / 2;
+    ypos = 400;
+  }
+
+  public void displayNameSelect() {
+    background(0);
+    fill(255);
+    textAlign(CENTER, CENTER);
+
+    if (letterSelect <= 2) {
+      text("ENTER YOUR NAME", width / 2, 200);
+      } else {
+        text("PRESS ENTER\n TO CONFIRM", width / 2, 200);
+      }
+
+      //letterSelectIndicator();
+
+      letterSelect();
+
+      String name = new String(tag);
+      displayLockedLetters();
+    }
+
+    public void letterSelect() {
+      switch (letterSelect) {
+        case 0:
+        text(alphabet[letterRoll], xpos - 50, ypos);
+        break;
+        case 1:
+        text(alphabet[letterRoll], xpos, ypos);
+        break;
+        case 2:
+        text(alphabet[letterRoll], xpos + 50, ypos);
+        break;
+      }
+    }
+
+    public void displayLockedLetters() {
+      if (lettersLocked > 0) {              // If the number of letters locked is above 0, then the first locked character is displayed along with the rectangle indicator.
+        text(tag[0], xpos - 50, ypos);
+        rect(xpos - 53, ypos + 25, 50, 10);
+      }
+
+      if (lettersLocked > 1) {              // If it's above 1, then also show the second letter.
+      text(tag[1], xpos, ypos);
+      rect(xpos - 3, ypos + 25, 50, 10);
+    }
+
+    if (lettersLocked > 2) {             // And if it's above 2, display the final letter as well.
+    text(tag[2], xpos + 50, ypos);
+    rect(xpos + 47, ypos + 25, 50, 10);
+  }
+}
+
+public void lockLetter(int letter) {
+  tag[letterSelect] = alphabet[letter];
+  lettersLocked++;
+  letterSelect++;
+  letterRoll = 0;
+}
+
+public void deleteLetter() {
+  tag[letterSelect] = 32;
+  lettersLocked--;
+  letterSelect--;
+}
+/*
+void letterSelectIndicator() {           // This function simply displays a flashing box to help indicate to the player which letter they're currently choosing.
+rectMode(CENTER);                      // Draw these rectangles from the centre rather than top left.
+
+if ( (millis() / 1000) % 2 == 0 ) {    // Using the same method of flashing as earlier to make the indicator blink.
+stroke(scoreBoardCol);
+fill(scoreBoardCol);
+} else {
+stroke(scoreBoardBGCol);
+fill(scoreBoardBGCol);
+}
+
+switch (letterSelect) {               // Depending on which letter the player is selecting, the box will appear underneath it.
+case 0:
+rect(xpos - 53, ypos + 25, 50, 10);
+break;
+case 1:
+rect(xpos - 3, ypos + 25, 50, 10);
+break;
+case 2:
+rect(xpos + 47, ypos + 25, 50, 10);
+break;
+}
+} */
+
+public void setName() {                                // And finally we need to save the player's chosen name.
+savedName = new String(tag);                  // Creates a new string from the tag character array.
+scores.add(new Score(savedName, playerManager.score)); // Creates a new Score object to the scores ArrayList with the player's name and score.
+FileManager.saveScore("memes.dat", scores);
+scores = FileManager.loadScore("memes.dat");
+Collections.sort(scores);
+Collections.reverse(scores);
+}
+  }
+class Highscores {
+  int xpos, ypos;
+  boolean printed;
+
+  Highscores() {
+    xpos = width / 2;
+    ypos = 100;
+    printed = false;
+  }
+
+  public void displayHighscores() {
+    //fill(scoreboard.scoreBoardBGCol);
+    background(255);
+    textAlign(CENTER);
+    text("HIGHSCORES", xpos, 50);
+
+    FileManager.saveScore("memes.dat", scores);
+    scores = FileManager.loadScore("memes.dat");
+    Collections.sort(scores);
+    //Collections.reverse(scores);
+
+    for (int i = scores.size() - 1; i >= scores.size() - 11; i--) {
+      textAlign(LEFT);
+      text(scores.get(i).playerName(), 100, height + 100 - (i * 30));
+      textAlign(RIGHT);
+      text(scores.get(i).playerScore(), width - 100, height + 100 - (i * 30));
+    }
+    if (!printed) {
+      println("HIGHSCORES: ");
+      for (int i = 0; i < scores.size(); i++) {
+        println("Score " + i + ": " + scores.get(i).playerName() + " " + scores.get(i).playerScore() + ".");
+      }
+      printed = true;
+  }
+}
+}
 /*
 This script deals with levels; it handles what level is selected and how each level plays out etc.
 */
@@ -521,6 +735,12 @@ class LevelManager{
           backgroundyPos = 0;
         }
         spaceLevel();
+      break;
+      case 6:
+        highscoreEntry.displayNameSelect();
+      break;
+      case 7:
+        highscores.displayHighscores();
       break;
     }
   }
@@ -783,9 +1003,7 @@ class PlayerManager{
   }
 
     public void death() {
-      if (health <= 0) {
 
-      }
     }
 
   }
