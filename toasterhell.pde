@@ -159,7 +159,6 @@ void keyReleased() {
 }
 
 void draw() {
-<<<<<<< HEAD
   switch (gamestate) {
     case 1:
     case 2:
@@ -176,11 +175,4 @@ void draw() {
     levelManager.levelSelector();
     break;
 }
-=======
-levelManager.levelSelector();
-enemyManager.enemySpawner();
-playerManager.drawPlayer();
-ticksElapsed++;
-ticksLastUpdate = millis();
->>>>>>> df29561d3067f81a8150ecbb275841f001e607bb
 }

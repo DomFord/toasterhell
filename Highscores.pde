@@ -1,12 +1,11 @@
 class Highscores {
-  int xpos, ypos, j;
+  int xpos, ypos;
   boolean printed;
 
   Highscores() {
     xpos = width / 2;
     ypos = 100;
     printed = false;
-    j = 1;
   }
 
   void displayHighscores() {

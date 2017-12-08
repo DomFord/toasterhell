@@ -180,7 +180,6 @@ public void keyReleased() {
 }
 
 public void draw() {
-<<<<<<< HEAD
   switch (gamestate) {
     case 1:
     case 2:
@@ -197,13 +196,6 @@ public void draw() {
     levelManager.levelSelector();
     break;
 }
-=======
-levelManager.levelSelector();
-enemyManager.enemySpawner();
-playerManager.drawPlayer();
-ticksElapsed++;
-ticksLastUpdate = millis();
->>>>>>> df29561d3067f81a8150ecbb275841f001e607bb
 }
 class BasicEnemy {
   int timeStamp, shootRateModifier, shootCounter;
@@ -632,14 +624,13 @@ Collections.reverse(scores);
 }
   }
 class Highscores {
-  int xpos, ypos, j;
+  int xpos, ypos;
   boolean printed;
 
   Highscores() {
     xpos = width / 2;
     ypos = 100;
     printed = false;
-    j = 1;
   }
 
   public void displayHighscores() {
