@@ -169,6 +169,7 @@ void draw() {
     enemyManager.enemySpawner();
     playerManager.drawPlayer();
     ticksElapsed++;
+    ticksLastUpdate = millis();
     break;
     case 6:
     case 7:
