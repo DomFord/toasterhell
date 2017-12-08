@@ -12,11 +12,8 @@ import java.util.Comparator;
 LevelManager levelManager;
 PlayerManager playerManager;
 EnemyManager enemyManager;
-HighscoreEntry highscoreEntry;
-Highscores highscores;
 LeaderboardsInput leaderboardInput;
-ArrayList<PlayerManager> players;
-ArrayList<Score> scores;
+ArrayList<Score> highScoreList;
 Star[] stars;
 int gamestate, ticksElapsed, ticksLastUpdate, menuIndex;
 PFont font;
@@ -27,17 +24,25 @@ void setup() {
   gamestate = 1;
   ticksElapsed = 0;
   ticksLastUpdate = 0;
-  menuIndex = 2;
+  menuIndex = 4;
 
   font = createFont("font.ttf", 100);
 
   levelManager = new LevelManager();
   playerManager = new PlayerManager();
   enemyManager = new EnemyManager();
-  highscoreEntry = new HighscoreEntry();
-  highscores = new Highscores();
   leaderboardInput = new LeaderboardsInput();
-  scores = FileManager.loadScore("memes.dat");
+
+  String[] tempScoreList = loadStrings("highscore.txt"); //load in the highscore list and "expand" it into an arraylist of 'Score' objects
+  String tempScoreString = tempScoreList[0];
+  String[] tempScoreArray = split(tempScoreString, ',');
+  highScoreList = new ArrayList<Score>();
+  for(int i = 0; i < tempScoreArray.length - 1; i++){
+    Score newScore = new Score();
+    newScore.tag = tempScoreArray[i].substring(0,3);
+    newScore.points = int(tempScoreArray[i].substring(4));
+    highScoreList.add(newScore);
+  }
 
   stars = new Star[10];
   for (int i = 0; i < 10; i++) {
@@ -234,7 +239,6 @@ void draw() {
       leaderboardInput.displayInput();
     break;
     case 5:
-      highscores.displayHighscores();
     break;
   }
 }
