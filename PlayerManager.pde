@@ -216,9 +216,7 @@ class PlayerManager{
   }
 
     void death() {
-      if (health <= 0) {
 
-      }
     }
 
   }

@@ -1,4 +1,3 @@
-/*
 public static class FileManager {                                   // The class that will take care of saving and loading the highscores.
 
   public static void saveScore(String path, ArrayList<Score> data) { // Function to save the scores.
@@ -43,4 +42,3 @@ public static class FileManager {                                   // The class
     return data;                                                // The data variable (our loaded ArrayList) is then returned by the load function.
   }
 }
-*/
