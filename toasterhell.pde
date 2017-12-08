@@ -14,6 +14,7 @@ PlayerManager playerManager;
 EnemyManager enemyManager;
 HighscoreEntry highscoreEntry;
 Highscores highscores;
+LeaderboardsInput leaderboardInput;
 ArrayList<PlayerManager> players;
 ArrayList<Score> scores;
 Star[] stars;
@@ -31,6 +32,7 @@ void setup() {
   enemyManager = new EnemyManager();
   highscoreEntry = new HighscoreEntry();
   highscores = new Highscores();
+  leaderboardInput = new LeaderboardsInput();
   scores = FileManager.loadScore("memes.dat");
 
   stars = new Star[10];

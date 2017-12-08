@@ -180,7 +180,6 @@ public void keyReleased() {
 }
 
 public void draw() {
-
   switch (gamestate) {
     case 1:
     case 2:
