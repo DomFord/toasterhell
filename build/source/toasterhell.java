@@ -34,11 +34,8 @@ MainMenu mainMenu;
 LevelManager levelManager;
 PlayerManager playerManager;
 EnemyManager enemyManager;
-HighscoreEntry highscoreEntry;
-Highscores highscores;
 LeaderboardsInput leaderboardInput;
-ArrayList<PlayerManager> players;
-ArrayList<Score> scores;
+ArrayList<Score> highScoreList;
 Star[] stars;
 int gamestate, ticksElapsed, ticksLastUpdate, menuIndex;
 PFont font1, font2;
@@ -49,11 +46,7 @@ public void setup() {
   gamestate = 1;
   ticksElapsed = 0;
   ticksLastUpdate = 0;
-<<<<<<< HEAD
-  menuIndex = 2;
-=======
-  menuIndex = 1;
->>>>>>> master
+  menuIndex = 4;
 
   font1 = createFont("font.ttf", 100);
   font2 = createFont("LondrinaShadow-Regular.ttf", 100);
@@ -62,10 +55,18 @@ public void setup() {
   levelManager = new LevelManager();
   playerManager = new PlayerManager();
   enemyManager = new EnemyManager();
-  highscoreEntry = new HighscoreEntry();
-  highscores = new Highscores();
   leaderboardInput = new LeaderboardsInput();
-  scores = FileManager.loadScore("memes.dat");
+
+  String[] tempScoreList = loadStrings("highscore.txt"); //load in the highscore list and "expand" it into an arraylist of 'Score' objects
+  String tempScoreString = tempScoreList[0];
+  String[] tempScoreArray = split(tempScoreString, ',');
+  highScoreList = new ArrayList<Score>();
+  for(int i = 0; i < tempScoreArray.length - 1; i++){
+    Score newScore = new Score();
+    newScore.tag = tempScoreArray[i].substring(0,3);
+    newScore.points = PApplet.parseInt(tempScoreArray[i].substring(4));
+    highScoreList.add(newScore);
+  }
 
   stars = new Star[10];
   for (int i = 0; i < 10; i++) {
@@ -91,93 +92,14 @@ public void keyPressed() {
     case '5':
       gamestate = 5;
     break;
+    case '6':
+      gamestate = 6;
+    break;
+    case '7':
+      gamestate = 7;
+    break;
   }
 
-<<<<<<< HEAD
-  if(menuIndex == 4){
-    if(key == CODED){
-      if(keyCode == UP){
-        if(leaderboardInput.letterSelect < 35){
-          leaderboardInput.letterSelect++;
-          leaderboardInput.nameconstructor[leaderboardInput.curserPos] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
-        }
-        else{
-          leaderboardInput.letterSelect = 0;
-          leaderboardInput.nameconstructor[leaderboardInput.curserPos] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
-        }
-      }
-      if(keyCode == DOWN){
-        if(leaderboardInput.letterSelect > 0){
-          leaderboardInput.letterSelect--;
-          leaderboardInput.nameconstructor[leaderboardInput.curserPos] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
-        }
-        else{
-          leaderboardInput.letterSelect = 35;
-          leaderboardInput.nameconstructor[leaderboardInput.curserPos] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
-        }
-      }
-      if(keyCode == RIGHT){
-        switch(leaderboardInput.curserPos){
-          case 0:
-            leaderboardInput.nameconstructor[0] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
-            leaderboardInput.letter1 = leaderboardInput.letterSelect;
-            leaderboardInput.letterSelect = leaderboardInput.letter2;
-          break;
-
-          case 1:
-            leaderboardInput.nameconstructor[1] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
-            leaderboardInput.letter2 = leaderboardInput.letterSelect;
-            leaderboardInput.letterSelect = leaderboardInput.letter3;
-          break;
-
-          case 2:
-            leaderboardInput.nameconstructor[2] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
-            leaderboardInput.letter3 = leaderboardInput.letterSelect;
-            leaderboardInput.letterSelect = leaderboardInput.letter1;
-          break;
-        }
-        if(leaderboardInput.curserPos < 2){
-          leaderboardInput.curserPos++;
-        }
-        else{
-          leaderboardInput.curserPos = 0;
-        }
-      }
-      if(keyCode == LEFT){
-        switch(leaderboardInput.curserPos){
-          case 0:
-            leaderboardInput.nameconstructor[0] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
-            leaderboardInput.letter1 = leaderboardInput.letterSelect;
-            leaderboardInput.letterSelect = leaderboardInput.letter3;
-          break;
-
-          case 1:
-            leaderboardInput.nameconstructor[1] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
-            leaderboardInput.letter2 = leaderboardInput.letterSelect;
-            leaderboardInput.letterSelect = leaderboardInput.letter1;
-          break;
-
-          case 2:
-            leaderboardInput.nameconstructor[2] = leaderboardInput.alphabet[leaderboardInput.letterSelect];
-            leaderboardInput.letter3 = leaderboardInput.letterSelect;
-            leaderboardInput.letterSelect = leaderboardInput.letter2;
-          break;
-        }
-        if(leaderboardInput.curserPos > 0){
-          leaderboardInput.curserPos--;
-        }
-        else{
-          leaderboardInput.curserPos = 2;
-        }
-      }
-    }
-    if(key == ENTER){
-      leaderboardInput.saveScore();
-    }
-  }
-
-
-=======
   switch (menuIndex) {
     case 1:
       if (key == ' ') {
@@ -215,7 +137,6 @@ public void keyPressed() {
     break;
   }
 
->>>>>>> master
   switch (gamestate) {
     case 1:
     case 2:
@@ -303,7 +224,6 @@ public void draw() {
       leaderboardInput.displayInput();
     break;
     case 5:
-      highscores.displayHighscores();
     break;
   }
 }
@@ -633,155 +553,6 @@ public static class FileManager {                                   // The class
     return data;                                                // The data variable (our loaded ArrayList) is then returned by the load function.
   }
 }
-class HighscoreEntry {
-  int letterSelect, letterRoll, lettersLocked, xpos, ypos;
-  String a, blank, savedName;
-  char[] alphabet, tag;
-
-  HighscoreEntry() {
-    a = "ABCDEFGHIJKLMNOPQRSTUVWXYX\u00c6\u00d8\u00c51234567890";
-    blank = "   ";
-    alphabet = a.toCharArray();
-    tag = blank.toCharArray();
-    letterSelect = 0;
-    letterRoll = 0;
-    lettersLocked = 0;
-    xpos = width / 2;
-    ypos = 400;
-  }
-
-  public void displayNameSelect() {
-    background(0);
-    fill(255);
-    textAlign(CENTER, CENTER);
-
-    if (letterSelect <= 2) {
-      text("ENTER YOUR NAME", width / 2, 200);
-      } else {
-        text("PRESS ENTER\n TO CONFIRM", width / 2, 200);
-      }
-
-      //letterSelectIndicator();
-
-      letterSelect();
-
-      String name = new String(tag);
-      displayLockedLetters();
-    }
-
-    public void letterSelect() {
-      switch (letterSelect) {
-        case 0:
-        text(alphabet[letterRoll], xpos - 50, ypos);
-        break;
-        case 1:
-        text(alphabet[letterRoll], xpos, ypos);
-        break;
-        case 2:
-        text(alphabet[letterRoll], xpos + 50, ypos);
-        break;
-      }
-    }
-
-    public void displayLockedLetters() {
-      if (lettersLocked > 0) {              // If the number of letters locked is above 0, then the first locked character is displayed along with the rectangle indicator.
-        text(tag[0], xpos - 50, ypos);
-        rect(xpos - 53, ypos + 25, 50, 10);
-      }
-
-      if (lettersLocked > 1) {              // If it's above 1, then also show the second letter.
-      text(tag[1], xpos, ypos);
-      rect(xpos - 3, ypos + 25, 50, 10);
-    }
-
-    if (lettersLocked > 2) {             // And if it's above 2, display the final letter as well.
-    text(tag[2], xpos + 50, ypos);
-    rect(xpos + 47, ypos + 25, 50, 10);
-  }
-}
-
-public void lockLetter(int letter) {
-  tag[letterSelect] = alphabet[letter];
-  lettersLocked++;
-  letterSelect++;
-  letterRoll = 0;
-}
-
-public void deleteLetter() {
-  tag[letterSelect] = 32;
-  lettersLocked--;
-  letterSelect--;
-}
-/*
-void letterSelectIndicator() {           // This function simply displays a flashing box to help indicate to the player which letter they're currently choosing.
-rectMode(CENTER);                      // Draw these rectangles from the centre rather than top left.
-
-if ( (millis() / 1000) % 2 == 0 ) {    // Using the same method of flashing as earlier to make the indicator blink.
-stroke(scoreBoardCol);
-fill(scoreBoardCol);
-} else {
-stroke(scoreBoardBGCol);
-fill(scoreBoardBGCol);
-}
-
-switch (letterSelect) {               // Depending on which letter the player is selecting, the box will appear underneath it.
-case 0:
-rect(xpos - 53, ypos + 25, 50, 10);
-break;
-case 1:
-rect(xpos - 3, ypos + 25, 50, 10);
-break;
-case 2:
-rect(xpos + 47, ypos + 25, 50, 10);
-break;
-}
-} */
-
-public void setName() {                                // And finally we need to save the player's chosen name.
-savedName = new String(tag);                  // Creates a new string from the tag character array.
-scores.add(new Score(savedName, playerManager.score)); // Creates a new Score object to the scores ArrayList with the player's name and score.
-FileManager.saveScore("memes.dat", scores);
-scores = FileManager.loadScore("memes.dat");
-Collections.sort(scores);
-Collections.reverse(scores);
-}
-  }
-class Highscores {
-  int xpos, ypos;
-  boolean printed;
-
-  Highscores() {
-    xpos = width / 2;
-    ypos = 100;
-    printed = false;
-  }
-
-  public void displayHighscores() {
-    //fill(scoreboard.scoreBoardBGCol);
-    background(255);
-    textAlign(CENTER);
-    text("HIGHSCORES", xpos, 50);
-
-    FileManager.saveScore("memes.dat", scores);
-    scores = FileManager.loadScore("memes.dat");
-    Collections.sort(scores);
-    //Collections.reverse(scores);
-
-    for (int i = scores.size() - 1; i >= scores.size() - 11; i--) {
-      textAlign(LEFT);
-      text(scores.get(i).playerName(), 100, height + 100 - (i * 30));
-      textAlign(RIGHT);
-      text(scores.get(i).playerScore(), width - 100, height + 100 - (i * 30));
-    }
-    if (!printed) {
-      println("HIGHSCORES: ");
-      for (int i = 0; i < scores.size(); i++) {
-        println("Score " + i + ": " + scores.get(i).playerName() + " " + scores.get(i).playerScore() + ".");
-      }
-      printed = true;
-  }
-}
-}
 /*
 Author: Frederik Boye
 Homepage: http://www.frederikboye.com
@@ -820,33 +591,24 @@ class LeaderboardsInput{
     fill(255);
     textFont(font1,(150));
     textAlign(CENTER);
-<<<<<<< HEAD
-    text(nameconstructor[0], 299, 340);
-    text(nameconstructor[1], 399, 340);
-    text(nameconstructor[2], 499, 340);
-    textFont(font,(15));
-    text("USE ARROW KEYS TO SET TAG",390, 480);
-    text("PRESS SPACE TO CONFIRM", 399, 520);
-=======
     text(nameconstructor[0], 149, 340);
     text(nameconstructor[1], 249, 340);
     text(nameconstructor[2], 349, 340);
     textFont(font1,(15));
     text("USE ARROW KEYS TO SET TAG", 240, 480);
     text("PRESS SPACE TO CONFIRM", 240, 520);
->>>>>>> master
     rectMode(CENTER);
     switch(curserPos){
       case 0:
-      rect(290, 353, 95, 15);
+      rect(140, 353, 95, 15);
       break;
 
       case 1:
-      rect(390, 353, 95, 15);
+      rect(240, 353, 95, 15);
       break;
 
       case 2:
-      rect(490, 353, 95, 15);
+      rect(340, 353, 95, 15);
       break;
     }
     rectMode(CORNER);
@@ -1296,6 +1058,24 @@ class PlayerManager{
     }
 
   }
+/*
+Author: Frederik Boye
+Homepage: http://www.frederikboye.com
+"If you're not weird, don't expect me to understand you"
+*/
+class Score{
+  int points;
+  String tag;
+
+  public @Override
+  String toString(){
+     return tag + ":" + points;
+  }
+
+  public int getPoints(){
+    return points;
+  }
+}
 class Star {
   float xpos, ypos, speed, size;
 
