@@ -18,7 +18,8 @@ LeaderboardsInput leaderboardInput;
 ArrayList<PlayerManager> players;
 ArrayList<Score> scores;
 Star[] stars;
-int gamestate, ticksElapsed, ticksLastUpdate;
+int gamestate, ticksElapsed, ticksLastUpdate, menuIndex;
+PFont font;
 
 void setup() {
   size(800,600);
@@ -26,6 +27,9 @@ void setup() {
   gamestate = 1;
   ticksElapsed = 0;
   ticksLastUpdate = 0;
+  menuIndex = 1;
+
+  font = createFont("font.ttf", 100);
 
   levelManager = new LevelManager();
   playerManager = new PlayerManager();
@@ -161,21 +165,33 @@ void keyReleased() {
 }
 
 void draw() {
-  switch (gamestate) {
+  switch (menuIndex){
     case 1:
+    break;
     case 2:
+      switch (gamestate) {
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        levelManager.levelSelector();
+        enemyManager.enemySpawner();
+        playerManager.drawPlayer();
+        ticksElapsed++;
+        ticksLastUpdate = millis();
+        break;
+      }
+    break;
     case 3:
+    break;
     case 4:
+      background(0);
+      leaderboardInput.showBoard();
+      leaderboardInput.displayInput();
+    break;
     case 5:
-    levelManager.levelSelector();
-    enemyManager.enemySpawner();
-    playerManager.drawPlayer();
-    ticksElapsed++;
-    ticksLastUpdate = millis();
+      highscores.displayHighscores();
     break;
-    case 6:
-    case 7:
-    levelManager.levelSelector();
-    break;
-}
+  }
 }

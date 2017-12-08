@@ -35,10 +35,12 @@ PlayerManager playerManager;
 EnemyManager enemyManager;
 HighscoreEntry highscoreEntry;
 Highscores highscores;
+LeaderboardsInput leaderboardInput;
 ArrayList<PlayerManager> players;
 ArrayList<Score> scores;
 Star[] stars;
 int gamestate, ticksElapsed, ticksLastUpdate;
+PFont font;
 
 public void setup() {
   
@@ -47,11 +49,14 @@ public void setup() {
   ticksElapsed = 0;
   ticksLastUpdate = 0;
 
+  font = createFont("font.ttf", 100);
+  
   levelManager = new LevelManager();
   playerManager = new PlayerManager();
   enemyManager = new EnemyManager();
   highscoreEntry = new HighscoreEntry();
   highscores = new Highscores();
+  leaderboardInput = new LeaderboardsInput();
   scores = FileManager.loadScore("memes.dat");
 
   stars = new Star[10];
@@ -186,13 +191,13 @@ public void draw() {
     case 3:
     case 4:
     case 5:
+    case 6:
     levelManager.levelSelector();
     enemyManager.enemySpawner();
     playerManager.drawPlayer();
     ticksElapsed++;
     ticksLastUpdate = millis();
     break;
-    case 6:
     case 7:
     levelManager.levelSelector();
     break;
@@ -665,6 +670,67 @@ class Highscores {
 }
 }
 /*
+Author: Frederik Boye
+Homepage: http://www.frederikboye.com
+"If you're not weird, don't expect me to understand you"
+*/
+class LeaderboardsInput{
+  String name;
+  int letter1;
+  int letter2;
+  int letter3;
+  int curserPos;
+  int letterSelect;
+  String[] nameconstructor = { "A", "A", "A"};
+  String[] alphabet = { "A", "B", "C", "D", "E", "F", "G", "H", "I",
+                        "J", "K", "L", "M", "N", "O", "P", "Q", "R",
+                        "S", "T", "U", "V", "W", "X", "Y", "Z", "1",
+                        "2", "3", "4", "5", "6", "7", "8", "9", "0"};
+
+  LeaderboardsInput(){
+    letterSelect = 0;
+    curserPos = 0;
+  }
+
+
+  public void showBoard(){
+    name = join(nameconstructor, "");
+  }
+
+  public void saveScore(){
+    scores.add(new Score(name, playerManager.score));
+    FileManager.saveScore("memes.dat", scores);
+    gamestate = 7;
+  }
+
+  public void displayInput(){
+    fill(255);
+    textFont(font,(150));
+    textAlign(CENTER);
+    text(nameconstructor[0], 149, 340);
+    text(nameconstructor[1], 249, 340);
+    text(nameconstructor[2], 349, 340);
+    textFont(font,(15));
+    text("USE ARROW KEYS TO SET TAG", 240, 480);
+    text("PRESS SPACE TO CONFIRM", 240, 520);
+    rectMode(CENTER);
+    switch(curserPos){
+      case 0:
+      rect(140, 353, 95, 15);
+      break;
+
+      case 1:
+      rect(240, 353, 95, 15);
+      break;
+
+      case 2:
+      rect(340, 353, 95, 15);
+      break;
+    }
+    rectMode(CORNER);
+  }
+}
+/*
 This script deals with levels; it handles what level is selected and how each level plays out etc.
 */
 class LevelManager{
@@ -738,7 +804,9 @@ class LevelManager{
         spaceLevel();
       break;
       case 6:
-        highscoreEntry.displayNameSelect();
+        background(0);
+        leaderboardInput.showBoard();
+        leaderboardInput.displayInput();
       break;
       case 7:
         highscores.displayHighscores();

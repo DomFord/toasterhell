@@ -71,12 +71,6 @@ class LevelManager{
         }
         spaceLevel();
       break;
-      case 6:
-        highscoreEntry.displayNameSelect();
-      break;
-      case 7:
-        highscores.displayHighscores();
-      break;
     }
   }
 

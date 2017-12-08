@@ -27,68 +27,13 @@ class LeaderboardsInput{
   }
 
   void saveScore(){
-    Score newScore = new Score();
-    newScore.tag = name;
-    newScore.points = score;
-    int placeCheck = 0;
-    while(placeCheck < 5){
-      switch(placeCheck){
-        case 0:
-          if(score > highScoreList.get(0).points){
-            highScoreList.add(0, newScore);
-            highScoreList.remove(5);
-            placeCheck = 5;
-          }
-          else{
-            placeCheck = 1;
-          }
-        break;
-        case 1:
-          if(score > highScoreList.get(1).points){
-            highScoreList.add(1, newScore);
-            highScoreList.remove(5);
-            placeCheck = 5;
-          }
-          else{
-            placeCheck = 2;
-          }
-        break;
-        case 2:
-          if(score > highScoreList.get(2).points){
-            highScoreList.add(2, newScore);
-            highScoreList.remove(5);
-            placeCheck = 5;
-          }
-          else{
-            placeCheck = 3;
-          }
-        break;
-        case 3:
-          if(score > highScoreList.get(3).points){
-            highScoreList.add(3, newScore);
-            highScoreList.remove(5);
-            placeCheck = 5;
-          }
-          else{
-            placeCheck = 4;
-          }
-        break;
-        case 4:
-          if(score > highScoreList.get(4).points){
-            highScoreList.add(4, newScore);
-            highScoreList.remove(5);
-            placeCheck = 5;
-          }
-          else{
-            placeCheck = 5;
-          }
-        break;
-      }
-    }
-    gamestate = 12;
+    scores.add(new Score(name, playerManager.score));
+    FileManager.saveScore("memes.dat", scores);
+    gamestate = 7;
   }
 
   void displayInput(){
+    fill(255);
     textFont(font,(150));
     textAlign(CENTER);
     text(nameconstructor[0], 149, 340);
