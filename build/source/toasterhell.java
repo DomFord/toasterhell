@@ -901,12 +901,11 @@ class LevelManager{
       backgrounds[2] = backgroundRock;
       backgrounds[3] = backgroundIce;
       backgrounds[4] = backgroundLava;
-      backgrounds[5] = starParticles;
+      backgrounds[5] = backgroundGrass;
   }
 
   public void levelSelector() {
-    background(0);
-        drawBackground(backgrounds[gamestate - 1]);
+      drawBackground(backgrounds[gamestate - 1]);
   }
 
   public void drawBackground(PImage level) {
@@ -1118,6 +1117,7 @@ class PlayerManager{
       movePlayer();
       shootHandler();
       displayScore();
+      displayCurrentLevel();
 
       imageMode(CENTER);
       if(playerSelect == 1){
@@ -1295,6 +1295,12 @@ class PlayerManager{
     fill(0);
     textSize(32);
     text(score, 40, height - 40);
+  }
+
+  public void displayCurrentLevel() {
+    fill(0);
+    textSize(24);
+    text("LEVEL " + gamestate, 40, 40);
   }
 
     public void death() {

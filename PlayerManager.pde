@@ -6,9 +6,7 @@ class PlayerManager{
   float xpos, ypos, maxSpeed, size, leftSpeed, rightSpeed, upSpeed, downSpeed, speedModifier, brakeModifier, hitBlinkOpacity;
   boolean alive, left, right, up, down, shooting;
   ArrayList<PlayerBullet> bullets;
-  PImage player1sheet;
-  PImage player2sheet;
-  PImage heart;
+  PImage player1sheet, player2sheet, heart;
 
   PlayerManager() {
     timeStamp = 0;
@@ -48,6 +46,7 @@ class PlayerManager{
       movePlayer();
       shootHandler();
       displayScore();
+      displayCurrentLevel();
 
       imageMode(CENTER);
       if(playerSelect == 1){
@@ -62,24 +61,18 @@ class PlayerManager{
           ticksLast += delta;
         }
       }
-      else if (playerSelect == 2){
+      else if (playerSelect == 2) {
         PImage f = player2sheet.get((avatarFrame*60),0,60,66);
         image(f,xpos,ypos);
         int delta = millis() - ticksLast;
-        if (delta >= frameDuration){
+        if (delta >= frameDuration) {
           avatarFrame++;
-          if(avatarFrame >= 3){
+          if(avatarFrame >= 3) {
             avatarFrame = 0;
           }
           ticksLast += delta;
         }
       }
-      /*noFill();
-      rectMode(CENTER);
-      rect(xpos, ypos, size, size);
-      movePlayer();
-      shoot();*/
-
       } else {
         death();
       }
@@ -225,6 +218,12 @@ class PlayerManager{
     fill(0);
     textSize(32);
     text(score, 40, height - 40);
+  }
+
+  void displayCurrentLevel() {
+    fill(0);
+    textSize(24);
+    text("LEVEL " + gamestate, 40, 40);
   }
 
     void death() {
