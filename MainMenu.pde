@@ -3,6 +3,7 @@ class MainMenu {
   float xpos, ypos, speed;
   boolean introDone;
   PImage player1sheet, player2sheet, backgroundGrass;
+  PImage[] avatars;
 
   MainMenu() {
     avatarFrame = 0;
@@ -20,6 +21,9 @@ class MainMenu {
     introDone = false;
     player1sheet = loadImage("player_avatar_1.png");
     player2sheet = loadImage("player_avatar_2.png");
+    avatars = new PImage[2];
+      avatars[0] = player1sheet;
+      avatars[1] = player2sheet;
     backgroundGrass = loadImage("grass.png");
     backgroundGrass.resize(width,0);
   }
@@ -55,13 +59,14 @@ class MainMenu {
       }
     }
 
-    void drawAvatar() {
-      PImage f = player1sheet.get((avatarFrame*60),0,60,66);
-      image(f, xpos, ypos);
+    void drawAvatar(PImage avatar) {
+      imageMode(CENTER);
+      PImage f = avatar.get((avatarFrame*60),0,60,66);
+      image(f,xpos,ypos);
       int delta = millis() - ticksLast;
-      if (delta >= frameDuration) {
+      if (delta >= frameDuration){
         avatarFrame++;
-        if (avatarFrame >= 3) {
+        if(avatarFrame >= 3){
           avatarFrame = 0;
         }
         ticksLast += delta;
@@ -73,14 +78,14 @@ class MainMenu {
         if (!introDone) {
           introAnimation();
           } else {
-            drawAvatar();
+            drawAvatar(avatars[playerManager.playerSelect - 1]);
             menuTextSlide();
           }
       }
 
       void menuTextSlide() {
         drawBackground();
-        drawAvatar();
+        drawAvatar(avatars[playerManager.playerSelect - 1]);
         fill(255);
         textAlign(RIGHT);
         textFont(font, 50);
@@ -100,7 +105,7 @@ class MainMenu {
 
       void menuSelect() {
         drawBackground();
-        drawAvatar();
+        drawAvatar(avatars[playerManager.playerSelect - 1]);
         fill(255);
         textAlign(LEFT, CENTER);
         textFont(font, 50);
@@ -108,8 +113,13 @@ class MainMenu {
         text("ENDLESS", 100, 250);
         text("HISCORES", 100, 350);
         text("EXIT", 100, 500);
+        textAlign(RIGHT, CENTER);
+        textFont(font, 32);
+        if (millis() / 100 % 20 != 0) {
+          text("press ENTER or SPACE to select\n arrow keys to change avatar", width - 20, 50);
+        }
         rectMode(CENTER);
-        if (millis() / 1000 % 2 == 0) {
+        if (millis() / 100 % 5 == 0) {
           if (indicator < 4) {
             indicatorY = 55 + (indicator * 100);
           } else {

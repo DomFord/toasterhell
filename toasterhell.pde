@@ -75,6 +75,20 @@ void keyPressed() {
             mainMenu.indicator++;
           }
         break;
+        case LEFT:
+          if (playerManager.playerSelect > 1) {
+            playerManager.playerSelect--;
+          } else {
+            playerManager.playerSelect = 2;
+          }
+        break;
+        case RIGHT:
+          if (playerManager.playerSelect < 2) {
+            playerManager.playerSelect++;
+          } else {
+            playerManager.playerSelect = 1;
+          }
+        break;
         case ENTER:
         case RETURN:
           switch (mainMenu.indicator) {
