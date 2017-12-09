@@ -185,6 +185,24 @@ public void keyPressed() {
       }
       break;
     case 4:
+      switch (keyCode) {
+        case LEFT:
+          playerManager.left = true;
+        break;
+        case RIGHT:
+          playerManager.right = true;
+        break;
+        case UP:
+          playerManager.up = true;
+        break;
+        case DOWN:
+          playerManager.down = true;
+        break;
+      }
+      if (key == ' ') {
+        gamestate++;
+        menuIndex--;
+      }
     break;
     case 5:
       switch (keyCode) {
@@ -270,6 +288,7 @@ public void keyPressed() {
 public void keyReleased() {
   switch (menuIndex) {
     case 3:
+    case 4:
       switch (keyCode) {
         case LEFT:
           playerManager.left = false;
@@ -313,10 +332,16 @@ public void draw() {
           playerManager.drawPlayer();
           ticksElapsed++;
           ticksLastUpdate = millis();
+          fill(255);
+          text(enemyManager.enemyCounter, width / 2, height / 2);
         break;
       }
     break;
     case 4:
+    levelManager.levelSelector();
+    playerManager.drawPlayer();
+    ticksElapsed++;
+    ticksLastUpdate = millis();
     break;
     case 5:
       background(0);
@@ -333,6 +358,7 @@ class BasicEnemy {
   boolean alive, shooting;
   ArrayList<EnemyBullet> bullets;
   PImage enemyImage1, enemyImage2, enemyImage3, enemyImage4, enemyImage5;
+  PImage[] enemyImages;
 
   BasicEnemy() {
     xMove = 0;
@@ -364,6 +390,12 @@ class BasicEnemy {
     enemyImage3 = loadImage("enemy_rock.png");
     enemyImage4 = loadImage("enemy_ice.png");
     enemyImage5 = loadImage("enemy_lava.png");
+    enemyImages = new PImage[5];
+      enemyImages[0] = enemyImage1;
+      enemyImages[1] = enemyImage2;
+      enemyImages[2] = enemyImage3;
+      enemyImages[3] = enemyImage4;
+      enemyImages[4] = enemyImage5;
   }
 
   public void drawEnemy() {
@@ -372,27 +404,7 @@ class BasicEnemy {
       bulletCollision();
       shootHandler();
       imageMode(CENTER);
-      switch (gamestate){
-        case 1:
-        image(enemyImage1,xpos,ypos);
-        break;
-        case 2:
-        image(enemyImage2,xpos,ypos);
-        break;
-        case 3:
-        image(enemyImage3,xpos,ypos);
-        break;
-        case 4:
-        image(enemyImage4,xpos,ypos);
-        break;
-        case 5:
-        image(enemyImage5,xpos,ypos);
-        break;
-      }
-      /*noFill();
-      rectMode(CENTER);
-      rect(xpos, ypos, size, size);*/
-
+      image(enemyImages[gamestate - 1], xpos, ypos);
       } else {
         //death();
       }
@@ -664,7 +676,7 @@ class EnemyBullet {
 class EnemyManager {
   ArrayList<BasicEnemy> basicEnemies;
   ArrayList<EnemyBullet> bullets;
-  int timeStamp;
+  int timeStamp, enemyCounter;
 
   EnemyManager() {
     basicEnemies = new ArrayList<BasicEnemy>();
@@ -675,13 +687,27 @@ class EnemyManager {
   public void enemySpawner() {
     //switch case here to spawn the correct numbers and types of enemies per level
     enemyKiller();
-    if (ticksElapsed > timeStamp + 100) {
-      basicEnemies.add(new BasicEnemy());
-      timeStamp = ticksElapsed;
+
+    if (enemyCounter >= 5) {
+      for (int i = basicEnemies.size() - 1; i >= 0; i--) {
+        basicEnemies.remove(i);
+      }
+      for (int i = bullets.size() - 1; i >= 0; i--) {
+        bullets.remove(i);
+      }
+      menuIndex++;
+      enemyCounter = 0;
+    } else {
+      if (ticksElapsed > timeStamp + 100) {
+        basicEnemies.add(new BasicEnemy());
+        timeStamp = ticksElapsed;
+      }
     }
+
     for (int i = basicEnemies.size() - 1; i >= 0; i--) {
       basicEnemies.get(i).drawEnemy();
     }
+
     for (int i = bullets.size() - 1; i >= 0; i--) {
       bullets.get(i).drawBullet();
       if (bullets.get(i).ypos > height) {
@@ -711,6 +737,13 @@ class EnemyManager {
         bullets.add(new EnemyBullet(basicEnemies.get(i).xpos, basicEnemies.get(i).ypos, 100, -100));
         bullets.add(new EnemyBullet(basicEnemies.get(i).xpos, basicEnemies.get(i).ypos, 100, 100));
         basicEnemies.remove(i);
+        enemyCounter++;
+      }
+    }
+    for (int i = basicEnemies.size() - 1; i >= 0; i--) {
+      if (basicEnemies.get(i).ypos > height + 100) {
+        basicEnemies.remove(i);
+        enemyCounter++;
       }
     }
   }
@@ -893,12 +926,13 @@ This script deals with levels; it handles what level is selected and how each le
 */
 class LevelManager{
   int bgColour;
-  int backgroundyPos;
+  int backgroundyPos, a, switchScreenX, switchScreenX2;
   PImage backgroundGrass, backgroundWater, backgroundRock, backgroundIce, backgroundLava, endlessLevelBackground;
   PImage[] backgrounds;
 
   LevelManager() {
     backgroundyPos = 0;
+    a = 0;
     backgroundGrass = loadImage("grass.png");
     backgroundWater = loadImage("water.png");
     backgroundRock = loadImage("rocks.png");
@@ -919,7 +953,14 @@ class LevelManager{
   }
 
   public void levelSelector() {
-      drawBackground(backgrounds[gamestate - 1]);
+      switch (menuIndex) {
+      case 3:
+        drawBackground(backgrounds[gamestate - 1]);
+      break;
+      case 4:
+        advanceGamestate();
+      break;
+    }
   }
 
   public void drawBackground(PImage level) {
@@ -930,6 +971,28 @@ class LevelManager{
       backgroundyPos = 0;
     }
     starParticles();
+  }
+
+  public void advanceGamestate() {
+    int nextLevel = gamestate + 1;
+    background(0, 0, 0, a);
+    textFont(font, 50);
+    fill (255, 255, 255, a);
+    textAlign(CENTER, CENTER);
+    text("LEVEL " + nextLevel, switchScreenX, height / 2);
+    textAlign(CENTER, CENTER);
+    if (millis() / 1000 % 2 == 0) {
+      text("press SPACE to continue", width / 2, height - 200);
+    }
+    if (a < 255) {
+      a++;
+    }
+    if (switchScreenX < width / 2) {
+      switchScreenX += 5;
+    }
+    if (switchScreenX2 > width / 2) {
+      switchScreenX2 += 10;
+    }
   }
 
   public void starParticles() {
@@ -1056,7 +1119,7 @@ class MainMenu {
         textAlign(RIGHT, CENTER);
         textFont(font, 32);
         if (millis() / 100 % 20 != 0) {
-          text("press ENTER or SPACE to select\n arrow keys to change avatar", width - 20, 50);
+          text("press ENTER or SPACE to select\n arrow keys to change avatar", width - 50, 50);
         }
         rectMode(CENTER);
         if (millis() / 100 % 5 == 0) {

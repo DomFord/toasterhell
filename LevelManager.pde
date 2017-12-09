@@ -3,12 +3,13 @@ This script deals with levels; it handles what level is selected and how each le
 */
 class LevelManager{
   color bgColour;
-  int backgroundyPos;
+  int backgroundyPos, a, switchScreenX, switchScreenX2;
   PImage backgroundGrass, backgroundWater, backgroundRock, backgroundIce, backgroundLava, endlessLevelBackground;
   PImage[] backgrounds;
 
   LevelManager() {
     backgroundyPos = 0;
+    a = 0;
     backgroundGrass = loadImage("grass.png");
     backgroundWater = loadImage("water.png");
     backgroundRock = loadImage("rocks.png");
@@ -29,7 +30,14 @@ class LevelManager{
   }
 
   void levelSelector() {
-      drawBackground(backgrounds[gamestate - 1]);
+      switch (menuIndex) {
+      case 3:
+        drawBackground(backgrounds[gamestate - 1]);
+      break;
+      case 4:
+        advanceGamestate();
+      break;
+    }
   }
 
   void drawBackground(PImage level) {
@@ -40,6 +48,28 @@ class LevelManager{
       backgroundyPos = 0;
     }
     starParticles();
+  }
+
+  void advanceGamestate() {
+    int nextLevel = gamestate + 1;
+    background(0, 0, 0, a);
+    textFont(font, 50);
+    fill (255, 255, 255, a);
+    textAlign(CENTER, CENTER);
+    text("LEVEL " + nextLevel, switchScreenX, height / 2);
+    textAlign(CENTER, CENTER);
+    if (millis() / 1000 % 2 == 0) {
+      text("press SPACE to continue", width / 2, height - 200);
+    }
+    if (a < 255) {
+      a++;
+    }
+    if (switchScreenX < width / 2) {
+      switchScreenX += 5;
+    }
+    if (switchScreenX2 > width / 2) {
+      switchScreenX2 += 10;
+    }
   }
 
   void starParticles() {

@@ -116,7 +116,7 @@ class MainMenu {
         textAlign(RIGHT, CENTER);
         textFont(font, 32);
         if (millis() / 100 % 20 != 0) {
-          text("press ENTER or SPACE to select\n arrow keys to change avatar", width - 20, 50);
+          text("press ENTER or SPACE to select\n arrow keys to change avatar", width - 50, 50);
         }
         rectMode(CENTER);
         if (millis() / 100 % 5 == 0) {

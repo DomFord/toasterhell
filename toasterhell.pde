@@ -164,6 +164,24 @@ void keyPressed() {
       }
       break;
     case 4:
+      switch (keyCode) {
+        case LEFT:
+          playerManager.left = true;
+        break;
+        case RIGHT:
+          playerManager.right = true;
+        break;
+        case UP:
+          playerManager.up = true;
+        break;
+        case DOWN:
+          playerManager.down = true;
+        break;
+      }
+      if (key == ' ') {
+        gamestate++;
+        menuIndex--;
+      }
     break;
     case 5:
       switch (keyCode) {
@@ -249,6 +267,7 @@ void keyPressed() {
 void keyReleased() {
   switch (menuIndex) {
     case 3:
+    case 4:
       switch (keyCode) {
         case LEFT:
           playerManager.left = false;
@@ -292,10 +311,16 @@ void draw() {
           playerManager.drawPlayer();
           ticksElapsed++;
           ticksLastUpdate = millis();
+          fill(255);
+          text(enemyManager.enemyCounter, width / 2, height / 2);
         break;
       }
     break;
     case 4:
+    levelManager.levelSelector();
+    playerManager.drawPlayer();
+    ticksElapsed++;
+    ticksLastUpdate = millis();
     break;
     case 5:
       background(0);

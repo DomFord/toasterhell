@@ -4,6 +4,7 @@ class BasicEnemy {
   boolean alive, shooting;
   ArrayList<EnemyBullet> bullets;
   PImage enemyImage1, enemyImage2, enemyImage3, enemyImage4, enemyImage5;
+  PImage[] enemyImages;
 
   BasicEnemy() {
     xMove = 0;
@@ -35,6 +36,12 @@ class BasicEnemy {
     enemyImage3 = loadImage("enemy_rock.png");
     enemyImage4 = loadImage("enemy_ice.png");
     enemyImage5 = loadImage("enemy_lava.png");
+    enemyImages = new PImage[5];
+      enemyImages[0] = enemyImage1;
+      enemyImages[1] = enemyImage2;
+      enemyImages[2] = enemyImage3;
+      enemyImages[3] = enemyImage4;
+      enemyImages[4] = enemyImage5;
   }
 
   void drawEnemy() {
@@ -43,27 +50,7 @@ class BasicEnemy {
       bulletCollision();
       shootHandler();
       imageMode(CENTER);
-      switch (gamestate){
-        case 1:
-        image(enemyImage1,xpos,ypos);
-        break;
-        case 2:
-        image(enemyImage2,xpos,ypos);
-        break;
-        case 3:
-        image(enemyImage3,xpos,ypos);
-        break;
-        case 4:
-        image(enemyImage4,xpos,ypos);
-        break;
-        case 5:
-        image(enemyImage5,xpos,ypos);
-        break;
-      }
-      /*noFill();
-      rectMode(CENTER);
-      rect(xpos, ypos, size, size);*/
-
+      image(enemyImages[gamestate - 1], xpos, ypos);
       } else {
         //death();
       }
