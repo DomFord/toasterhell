@@ -249,16 +249,32 @@ class PlayerManager{
     if (gamestate < 6) {
       text("LEVEL " + gamestate, 150, 40);
     } else {
-      text("ENDLESS LEVEL", 150, 40);
+      text("ENDLESS LEVEL", 200, 40);
     }
   }
 
     void death() {
-      if(playerManager.score > highScoreList.get(9).points){  //checks if the player has set a new highscore better than the lowest one currently on the list
-        menuIndex = 5;
-      }
-      else{
-        menuIndex = 6;
+      switch (gamestate){
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+          if(playerManager.score > highScoreList.get(9).points){  //checks if the player has set a new highscore better than the lowest one currently on the list
+            menuIndex = 5;
+          }
+          else{
+            menuIndex = 6;
+          }
+        break;
+        case 6:
+          if(playerManager.score > highScoreListEndless.get(9).points){  //checks if the player has set a new highscore better than the lowest one currently on the list
+            menuIndex = 7;
+          }
+          else{
+            menuIndex = 8;
+          }
+        break;
       }
     }
   }

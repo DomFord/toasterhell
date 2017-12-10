@@ -37,6 +37,7 @@ PowerUpManager powerUpManager;
 LeaderboardsInput leaderboardInput;
 MainMenu mainMenu;
 ArrayList<Score> highScoreList;
+ArrayList<Score> highScoreListEndless;
 Star[] stars;
 int gamestate, ticksElapsed, ticksLastUpdate, menuIndex;
 PFont font;
@@ -69,16 +70,19 @@ public void setup() {
     newScore.points = PApplet.parseInt(tempScoreArray[i].substring(4));
     highScoreList.add(newScore);
   }
-  println(highScoreList.get(0));
-  println(highScoreList.get(1));
-  println(highScoreList.get(2));
-  println(highScoreList.get(3));
-  println(highScoreList.get(4));
-  println(highScoreList.get(5));
-  println(highScoreList.get(6));
-  println(highScoreList.get(7));
-  println(highScoreList.get(8));
-  println(highScoreList.get(9));
+
+  String[] tempScoreListEndless = loadStrings("highscoreendless.txt"); //load in the highscore list and "expand" it into an arraylist of 'Score' objects
+  String tempScoreStringEndless = tempScoreListEndless[0];
+  String[] tempScoreArrayEndless = split(tempScoreStringEndless, ',');
+  highScoreListEndless = new ArrayList<Score>();
+  println(tempScoreArrayEndless.length);
+  for(int i = 0; i < tempScoreArrayEndless.length - 1; i++){
+    Score newScoreEndless = new Score();
+    newScoreEndless.tag = tempScoreArrayEndless[i].substring(0,3);
+    newScoreEndless.points = PApplet.parseInt(tempScoreArrayEndless[i].substring(4));
+    highScoreListEndless.add(newScoreEndless);
+  }
+
 
   stars = new Star[10];
   for (int i = 0; i < 10; i++) {
@@ -105,7 +109,7 @@ public void keyPressed() {
           }
         break;
         case DOWN:
-          if (mainMenu.indicator < 4) {
+          if (mainMenu.indicator < 5) {
             mainMenu.indicator++;
           }
         break;
@@ -139,6 +143,9 @@ public void keyPressed() {
               menuIndex = 5;
             break;
             case 4:
+              menuIndex = 8;
+            break;
+            case 5:
               exit();
             break;
           }
@@ -154,9 +161,12 @@ public void keyPressed() {
           menuIndex = 3;
         break;
         case 3:
-          menuIndex = 5;
+          menuIndex = 6;
         break;
         case 4:
+          menuIndex = 8;
+        break;
+        case 5:
           exit();
         break;
       }
@@ -222,6 +232,7 @@ public void keyPressed() {
       }
     break;
     case 5:
+    case 7:
       switch (keyCode) {
         case UP:
           if (leaderboardInput.letterSelect < 35) {
@@ -295,11 +306,18 @@ public void keyPressed() {
         break;
         case ENTER:
         case RETURN:
-          leaderboardInput.saveScore();
+        case ' ':
+          if (gamestate < 5){
+            leaderboardInput.saveScore();
+          }
+          else if (gamestate == 6){
+            leaderboardInput.saveScoreEndless();
+          }
         break;
       }
       break;
       case 6:
+      case 8:
         menuIndex = 2;
       break;
   }
@@ -373,6 +391,15 @@ public void draw() {
     case 6:
       background(0);
       leaderboardInput.showHighScores();
+    break;
+    case 7:
+      background(0);
+      leaderboardInput.showBoard();
+      leaderboardInput.displayInput();
+    break;
+    case 8:
+      background(0);
+      leaderboardInput.showHighScoresEndless();
     break;
   }
 }
@@ -922,6 +949,125 @@ class LeaderboardsInput{
     menuIndex = 6;
   }
 
+  public void saveScoreEndless(){
+    Score newScore = new Score();
+    newScore.tag = name;
+    newScore.points = playerManager.score;
+    int placeCheck = 0;
+    while(placeCheck < 10){
+      switch(placeCheck){
+        case 0:
+          if(playerManager.score > highScoreListEndless.get(0).points){
+            highScoreListEndless.add(0, newScore);
+            highScoreListEndless.remove(10);
+            placeCheck = 10;
+          }
+          else{
+            placeCheck = 1;
+          }
+        break;
+        case 1:
+          if(playerManager.score > highScoreListEndless.get(1).points){
+            highScoreListEndless.add(1, newScore);
+            highScoreListEndless.remove(10);
+            placeCheck = 10;
+          }
+          else{
+            placeCheck = 2;
+          }
+        break;
+        case 2:
+          if(playerManager.score > highScoreListEndless.get(2).points){
+            highScoreListEndless.add(2, newScore);
+            highScoreListEndless.remove(10);
+            placeCheck = 10;
+          }
+          else{
+            placeCheck = 3;
+          }
+        break;
+        case 3:
+          if(playerManager.score > highScoreListEndless.get(3).points){
+            highScoreListEndless.add(3, newScore);
+            highScoreListEndless.remove(10);
+            placeCheck = 10;
+          }
+          else{
+            placeCheck = 4;
+          }
+        break;
+        case 4:
+          if(playerManager.score > highScoreListEndless.get(4).points){
+            highScoreListEndless.add(4, newScore);
+            highScoreListEndless.remove(10);
+            placeCheck = 10;
+          }
+          else{
+            placeCheck = 5;
+          }
+        break;
+        case 5:
+          if(playerManager.score > highScoreListEndless.get(5).points){
+            highScoreListEndless.add(5, newScore);
+            highScoreListEndless.remove(10);
+            placeCheck = 10;
+          }
+          else{
+            placeCheck = 6;
+          }
+        break;
+        case 6:
+          if(playerManager.score > highScoreListEndless.get(6).points){
+            highScoreListEndless.add(6, newScore);
+            highScoreListEndless.remove(10);
+            placeCheck = 10;
+          }
+          else{
+            placeCheck = 7;
+          }
+        break;
+        case 7:
+          if(playerManager.score > highScoreListEndless.get(7).points){
+            highScoreListEndless.add(7, newScore);
+            highScoreListEndless.remove(10);
+            placeCheck = 10;
+          }
+          else{
+            placeCheck = 8;
+          }
+        break;
+        case 8:
+          if(playerManager.score > highScoreListEndless.get(8).points){
+            highScoreListEndless.add(8, newScore);
+            highScoreListEndless.remove(10);
+            placeCheck = 10;
+          }
+          else{
+            placeCheck = 9;
+          }
+        break;
+        case 9:
+          if(playerManager.score > highScoreListEndless.get(9).points){
+            highScoreListEndless.add(9, newScore);
+            highScoreListEndless.remove(10);
+            placeCheck = 10;
+          }
+          else{
+            placeCheck = 10;
+          }
+        break;
+      }
+    }
+    String scoreString = "";
+    String[] scoreArray = new String[1];
+    for (int i = 0;  i < highScoreListEndless.size(); i++){
+      scoreString += (highScoreListEndless.get(i).toString() + ",");
+    }
+    scoreArray[0] = scoreString;
+    saveStrings("highscoreendless.txt", scoreArray);
+    menuIndex = 8;
+  }
+
   public void displayInput(){
     fill(255);
     textFont(font,(150));
@@ -965,6 +1111,26 @@ class LeaderboardsInput{
     text(highScoreList.get(7).toString(), 400, 420);
     text(highScoreList.get(8).toString(), 400, 460);
     text(highScoreList.get(9).toString(), 400, 500);
+    textFont(font,(15));
+    text("PRESS 'SPACE' TO RETURN TO MAIN MENU!", 400, 580);
+  }
+
+  public void showHighScoresEndless(){
+    fill(255);
+    textFont(font,(40));
+    textAlign(CENTER);
+    text("ENDLESS LEADERBOARDS", 400, 80);
+    textFont(font,(30));
+    text(highScoreListEndless.get(0).toString(), 400, 140);
+    text(highScoreListEndless.get(1).toString(), 400, 180);
+    text(highScoreListEndless.get(2).toString(), 400, 220);
+    text(highScoreListEndless.get(3).toString(), 400, 260);
+    text(highScoreListEndless.get(4).toString(), 400, 300);
+    text(highScoreListEndless.get(5).toString(), 400, 340);
+    text(highScoreListEndless.get(6).toString(), 400, 380);
+    text(highScoreListEndless.get(7).toString(), 400, 420);
+    text(highScoreListEndless.get(8).toString(), 400, 460);
+    text(highScoreListEndless.get(9).toString(), 400, 500);
     textFont(font,(15));
     text("PRESS 'SPACE' TO RETURN TO MAIN MENU!", 400, 580);
   }
@@ -1175,7 +1341,8 @@ class MainMenu {
         text("CAMPAIGN", 100, 150);
         text("ENDLESS", 100, 250);
         text("HISCORES", 100, 350);
-        text("EXIT", 100, 500);
+        text("ENDLESS HISCORES", 100, 450);
+        text("EXIT", 100, 550);
         textAlign(RIGHT, CENTER);
         textFont(font, 32);
         if (millis() / 100 % 20 != 0) {
@@ -1183,10 +1350,10 @@ class MainMenu {
         }
         rectMode(CENTER);
         if (millis() / 100 % 5 == 0) {
-          if (indicator < 4) {
+          if (indicator < 5) {
             indicatorY = 55 + (indicator * 100);
           } else {
-            indicatorY = 505;
+            indicatorY = 555;
           }
           rect(75, indicatorY, 10, 40);
         }
@@ -1465,16 +1632,32 @@ class PlayerManager{
     if (gamestate < 6) {
       text("LEVEL " + gamestate, 150, 40);
     } else {
-      text("ENDLESS LEVEL", 150, 40);
+      text("ENDLESS LEVEL", 200, 40);
     }
   }
 
     public void death() {
-      if(playerManager.score > highScoreList.get(9).points){  //checks if the player has set a new highscore better than the lowest one currently on the list
-        menuIndex = 5;
-      }
-      else{
-        menuIndex = 6;
+      switch (gamestate){
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+          if(playerManager.score > highScoreList.get(9).points){  //checks if the player has set a new highscore better than the lowest one currently on the list
+            menuIndex = 5;
+          }
+          else{
+            menuIndex = 6;
+          }
+        break;
+        case 6:
+          if(playerManager.score > highScoreListEndless.get(9).points){  //checks if the player has set a new highscore better than the lowest one currently on the list
+            menuIndex = 7;
+          }
+          else{
+            menuIndex = 8;
+          }
+        break;
       }
     }
   }

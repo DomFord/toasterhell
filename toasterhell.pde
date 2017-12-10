@@ -16,6 +16,7 @@ PowerUpManager powerUpManager;
 LeaderboardsInput leaderboardInput;
 MainMenu mainMenu;
 ArrayList<Score> highScoreList;
+ArrayList<Score> highScoreListEndless;
 Star[] stars;
 int gamestate, ticksElapsed, ticksLastUpdate, menuIndex;
 PFont font;
@@ -48,16 +49,19 @@ void setup() {
     newScore.points = int(tempScoreArray[i].substring(4));
     highScoreList.add(newScore);
   }
-  println(highScoreList.get(0));
-  println(highScoreList.get(1));
-  println(highScoreList.get(2));
-  println(highScoreList.get(3));
-  println(highScoreList.get(4));
-  println(highScoreList.get(5));
-  println(highScoreList.get(6));
-  println(highScoreList.get(7));
-  println(highScoreList.get(8));
-  println(highScoreList.get(9));
+
+  String[] tempScoreListEndless = loadStrings("highscoreendless.txt"); //load in the highscore list and "expand" it into an arraylist of 'Score' objects
+  String tempScoreStringEndless = tempScoreListEndless[0];
+  String[] tempScoreArrayEndless = split(tempScoreStringEndless, ',');
+  highScoreListEndless = new ArrayList<Score>();
+  println(tempScoreArrayEndless.length);
+  for(int i = 0; i < tempScoreArrayEndless.length - 1; i++){
+    Score newScoreEndless = new Score();
+    newScoreEndless.tag = tempScoreArrayEndless[i].substring(0,3);
+    newScoreEndless.points = int(tempScoreArrayEndless[i].substring(4));
+    highScoreListEndless.add(newScoreEndless);
+  }
+
 
   stars = new Star[10];
   for (int i = 0; i < 10; i++) {
@@ -84,7 +88,7 @@ void keyPressed() {
           }
         break;
         case DOWN:
-          if (mainMenu.indicator < 4) {
+          if (mainMenu.indicator < 5) {
             mainMenu.indicator++;
           }
         break;
@@ -118,6 +122,9 @@ void keyPressed() {
               menuIndex = 5;
             break;
             case 4:
+              menuIndex = 8;
+            break;
+            case 5:
               exit();
             break;
           }
@@ -133,9 +140,12 @@ void keyPressed() {
           menuIndex = 3;
         break;
         case 3:
-          menuIndex = 5;
+          menuIndex = 6;
         break;
         case 4:
+          menuIndex = 8;
+        break;
+        case 5:
           exit();
         break;
       }
@@ -201,6 +211,7 @@ void keyPressed() {
       }
     break;
     case 5:
+    case 7:
       switch (keyCode) {
         case UP:
           if (leaderboardInput.letterSelect < 35) {
@@ -274,11 +285,18 @@ void keyPressed() {
         break;
         case ENTER:
         case RETURN:
-          leaderboardInput.saveScore();
+        case ' ':
+          if (gamestate < 5){
+            leaderboardInput.saveScore();
+          }
+          else if (gamestate == 6){
+            leaderboardInput.saveScoreEndless();
+          }
         break;
       }
       break;
       case 6:
+      case 8:
         menuIndex = 2;
       break;
   }
@@ -352,6 +370,15 @@ void draw() {
     case 6:
       background(0);
       leaderboardInput.showHighScores();
+    break;
+    case 7:
+      background(0);
+      leaderboardInput.showBoard();
+      leaderboardInput.displayInput();
+    break;
+    case 8:
+      background(0);
+      leaderboardInput.showHighScoresEndless();
     break;
   }
 }

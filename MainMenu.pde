@@ -112,7 +112,8 @@ class MainMenu {
         text("CAMPAIGN", 100, 150);
         text("ENDLESS", 100, 250);
         text("HISCORES", 100, 350);
-        text("EXIT", 100, 500);
+        text("ENDLESS HISCORES", 100, 450);
+        text("EXIT", 100, 550);
         textAlign(RIGHT, CENTER);
         textFont(font, 32);
         if (millis() / 100 % 20 != 0) {
@@ -120,10 +121,10 @@ class MainMenu {
         }
         rectMode(CENTER);
         if (millis() / 100 % 5 == 0) {
-          if (indicator < 4) {
+          if (indicator < 5) {
             indicatorY = 55 + (indicator * 100);
           } else {
-            indicatorY = 505;
+            indicatorY = 555;
           }
           rect(75, indicatorY, 10, 40);
         }
