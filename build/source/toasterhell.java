@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.io.*; 
 import java.util.Collections; 
 import java.util.Comparator; 
+import processing.sound.*; 
 
 import java.util.HashMap; 
 import java.util.ArrayList; 
@@ -26,6 +27,7 @@ ITU 2017, Programming for Designers
 */
 
   // Importing various Java libraries, used for saving, loading and sorting the highscoreEntry.
+
 
 
 
@@ -1211,6 +1213,7 @@ class PlayerManager{
   boolean alive, left, right, up, down, shooting;
   ArrayList<PlayerBullet> bullets;
   PImage player1sheet, player2sheet, heart;
+  SoundFile shoot;
 
   PlayerManager() {
     timeStamp = 0;
@@ -1240,6 +1243,7 @@ class PlayerManager{
     ticksLast = millis();
     frameDuration = 100;
     score = 0;
+<<<<<<< Updated upstream
   }
 
   public void avatarStatSetter() {
@@ -1250,6 +1254,10 @@ class PlayerManager{
       health = 5;
       shootRateModifier = 25;
     }
+=======
+    health = 3;
+    shoot = new SoundFile(this,lasershot.wav);
+>>>>>>> Stashed changes
   }
 
   public void drawPlayer() {
@@ -1361,6 +1369,7 @@ class PlayerManager{
       if (ticksElapsed > timeStamp + shootRateModifier) {
         bullets.add(new PlayerBullet(xpos, ypos));
         score--;
+        shoot.play();
         timeStamp = ticksElapsed;
       }
     }
