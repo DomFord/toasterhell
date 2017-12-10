@@ -10,7 +10,6 @@ class PlayerManager{
 
   PlayerManager() {
     timeStamp = 0;
-    shootRateModifier = 10;
     alive = true;
     xpos = width / 2;
     ypos = height - 75;
@@ -37,7 +36,16 @@ class PlayerManager{
     ticksLast = millis();
     frameDuration = 100;
     score = 0;
-    health = 3;
+  }
+
+  void avatarStatSetter() {
+    if (playerSelect == 1) {
+      health = 3;
+      shootRateModifier = 10;
+    } else {
+      health = 5;
+      shootRateModifier = 25;
+    }
   }
 
   void drawPlayer() {

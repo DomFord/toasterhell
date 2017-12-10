@@ -115,6 +115,7 @@ public void keyPressed() {
           } else {
             playerManager.playerSelect = 2;
           }
+          playerManager.avatarStatSetter();
         break;
         case RIGHT:
           if (playerManager.playerSelect < 2) {
@@ -122,6 +123,7 @@ public void keyPressed() {
           } else {
             playerManager.playerSelect = 1;
           }
+          playerManager.avatarStatSetter();
         break;
         case ENTER:
         case RETURN:
@@ -1212,7 +1214,6 @@ class PlayerManager{
 
   PlayerManager() {
     timeStamp = 0;
-    shootRateModifier = 10;
     alive = true;
     xpos = width / 2;
     ypos = height - 75;
@@ -1239,7 +1240,16 @@ class PlayerManager{
     ticksLast = millis();
     frameDuration = 100;
     score = 0;
-    health = 3;
+  }
+
+  public void avatarStatSetter() {
+    if (playerSelect == 1) {
+      health = 3;
+      shootRateModifier = 10;
+    } else {
+      health = 5;
+      shootRateModifier = 25;
+    }
   }
 
   public void drawPlayer() {
@@ -1392,15 +1402,6 @@ class PlayerManager{
 
   public void powerUpCollision() {
     for (int i = powerUpManager.powerUps.size() - 1; i >= 0; i--) {
-      /*
-      if (powerUpManager.powerUps.get(i).xpos - 50 > xpos - size / 2
-          && powerUpManager.powerUps.get(i).xpos + 50 < xpos + size / 2
-          && powerUpManager.powerUps.get(i).ypos - 50 > ypos - size / 2
-          && powerUpManager.powerUps.get(i).ypos + 50 < ypos + size / 2) {
-            health++;
-            powerUpManager.powerUps.remove(i);
-          } */
-
       if (powerUpManager.powerUps.get(i).ypos > ypos - size) {
         if (powerUpManager.powerUps.get(i).xpos > xpos - size
             && powerUpManager.powerUps.get(i).xpos < xpos + size) {

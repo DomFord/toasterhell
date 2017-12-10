@@ -94,6 +94,7 @@ void keyPressed() {
           } else {
             playerManager.playerSelect = 2;
           }
+          playerManager.avatarStatSetter();
         break;
         case RIGHT:
           if (playerManager.playerSelect < 2) {
@@ -101,6 +102,7 @@ void keyPressed() {
           } else {
             playerManager.playerSelect = 1;
           }
+          playerManager.avatarStatSetter();
         break;
         case ENTER:
         case RETURN:
