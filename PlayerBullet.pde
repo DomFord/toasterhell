@@ -9,7 +9,7 @@ class PlayerBullet {
     size = 3;
   }
 
-  void drawBullet() {
+  void drawBullet() { //draws a simple player bullet
     rectMode(CENTER);
     fill(255);
     stroke(0,120,255);

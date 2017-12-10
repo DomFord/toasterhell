@@ -1,9 +1,4 @@
-/*
-Author: Frederik Boye
-Homepage: http://www.frederikboye.com
-"If you're not weird, don't expect me to understand you"
-*/
-class Score{
+class Score{ //simple score object for the highscore array lists
   int points;
   String tag;
 

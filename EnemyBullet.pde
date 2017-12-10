@@ -10,7 +10,7 @@ class EnemyBullet {
     size = 10;
   }
 
-  void drawBullet() {
+  void drawBullet() { //draws a simple bullet for the enemies
     rectMode(CENTER);
     fill(218, 44, 56);
     stroke(255, 255, 56);

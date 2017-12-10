@@ -90,7 +90,7 @@ public void setup() {
   }
 }
 
-public void keyPressed() {
+public void keyPressed() { //handles all the keyboard input for the different screens
   switch (menuIndex) {
     case 1:
       if (key == ' ') {
@@ -133,9 +133,11 @@ public void keyPressed() {
         case RETURN:
           switch (mainMenu.indicator) {
             case 1:
+              playerManager.avatarStatSetter();
               menuIndex = 3;
             break;
             case 2:
+              playerManager.avatarStatSetter();
               gamestate = 6;
               menuIndex = 3;
             break;
@@ -154,9 +156,11 @@ public void keyPressed() {
     if (key == ' ') {
       switch (mainMenu.indicator) {
         case 1:
+          playerManager.avatarStatSetter();
           menuIndex = 3;
         break;
         case 2:
+          playerManager.avatarStatSetter();
           gamestate = 6;
           menuIndex = 3;
         break;
@@ -323,7 +327,7 @@ public void keyPressed() {
   }
 }
 
-public void keyReleased() {
+public void keyReleased() { //checks keyrelease to enable continious movement of the player
   switch (menuIndex) {
     case 3:
     case 4:
@@ -350,7 +354,7 @@ public void keyReleased() {
   }
 }
 
-public void draw() {
+public void draw() { //draws the corresponding elements for the different game states
   switch (menuIndex) {
     case 1:
       mainMenu.drawMenu();
@@ -439,7 +443,7 @@ class BasicEnemy {
       enemyImages[4] = enemyImage5;
   }
 
-  public void drawEnemy() {
+  public void drawEnemy() { //draws the enemy depending on level selected shows different images
     if (alive) {
       move();
       bulletCollision();
@@ -451,7 +455,7 @@ class BasicEnemy {
       }
     }
 
-    public void move() {
+    public void move() { //handles the different movement patterns for the various enemies
       switch (enemyState){
         case 1:
           ypos += speed1 * PApplet.parseFloat(millis() - ticksLastUpdate)*0.001f;
@@ -560,7 +564,7 @@ class BasicEnemy {
       }
     }
 
-    public void bulletCollision() {
+    public void bulletCollision() { //checks collision with player bullets and calls to kill the enemy and remove the player bullet
         for (int i = playerManager.bullets.size() - 1; i >= 0; i--) {
           if (playerManager.bullets.get(i).xpos - playerManager.bullets.get(i).size / 2 > xpos - size / 2
               && playerManager.bullets.get(i).xpos + playerManager.bullets.get(i).size / 2 < xpos + size / 2
@@ -575,7 +579,7 @@ class BasicEnemy {
         }
     }
 
-    public void shootHandler() {
+    public void shootHandler() { //controls the various shooting patterns for the different enemy types
       if (shooting) {
         int delta = millis() - ticksLast;
         switch (enemyState){
@@ -705,7 +709,7 @@ class EnemyBullet {
     size = 10;
   }
 
-  public void drawBullet() {
+  public void drawBullet() { //draws a simple bullet for the enemies
     rectMode(CENTER);
     fill(218, 44, 56);
     stroke(255, 255, 56);
@@ -726,7 +730,7 @@ class EnemyManager {
     timeStamp = 0;
   }
 
-  public void enemySpawner() {
+  public void enemySpawner() { //handles spawning of enemies at regular intervals depending on game mode selected and removes them when they get out of screen bounds
     enemyKiller();
     if (gamestate < 6) {
       if (enemyCounter >= 20) {
@@ -773,7 +777,7 @@ class EnemyManager {
     }
   }
 
-  public void enemyKiller() {
+  public void enemyKiller() { //removes the enemy when it gets shot and creates a deathblossom of bullets
     for (int i = basicEnemies.size() - 1; i >= 0; i--) {
       if (!basicEnemies.get(i).alive) {
         bullets.add(new EnemyBullet(basicEnemies.get(i).xpos, basicEnemies.get(i).ypos, 0, 150));
@@ -815,11 +819,11 @@ class LeaderboardsInput{
   }
 
 
-  public void showBoard(){
+  public void showBoard(){ //this is just merging the selected letters into a single string
     name = join(nameconstructor, "");
   }
 
-  public void saveScore(){
+  public void saveScore(){ //here, the score is iterated through the list and put in its appropriate place. After that is done, it deletes the 11th entry and saves the list to a file.
     Score newScore = new Score();
     newScore.tag = name;
     newScore.points = playerManager.score;
@@ -938,7 +942,7 @@ class LeaderboardsInput{
     menuIndex = 6;
   }
 
-  public void saveScoreEndless(){
+  public void saveScoreEndless(){ //here, the endless score is iterated through the list and put in its appropriate place. After that is done, it deletes the 11th entry and saves the list to a file.
     Score newScore = new Score();
     newScore.tag = name;
     newScore.points = playerManager.score;
@@ -1057,7 +1061,7 @@ class LeaderboardsInput{
     menuIndex = 8;
   }
 
-  public void displayInput(){
+  public void displayInput(){ //This displays the input screen where you can dial in your name tag.
     fill(255);
     textFont(font,(150));
     textAlign(CENTER);
@@ -1084,7 +1088,7 @@ class LeaderboardsInput{
     rectMode(CORNER);
   }
 
-  public void showHighScores(){
+  public void showHighScores(){ //this displays the 10 entries on the highscore list
     fill(255);
     textFont(font,(40));
     textAlign(CENTER);
@@ -1104,7 +1108,7 @@ class LeaderboardsInput{
     text("PRESS 'SPACE' TO RETURN TO MAIN MENU!", 400, 580);
   }
 
-  public void showHighScoresEndless(){
+  public void showHighScoresEndless(){ //this displays the ten entries on the endless highscore list
     fill(255);
     textFont(font,(40));
     textAlign(CENTER);
@@ -1156,8 +1160,8 @@ class LevelManager{
       backgrounds[4] = backgroundLava;
       backgrounds[5] = backgroundCrystal;
   }
-  
-  public void levelSelector() {
+
+  public void levelSelector() { //handles the advance in levels from 1-6 and checks your highscore at the end
       switch (menuIndex) {
       case 3:
         drawBackground(backgrounds[gamestate - 1]);
@@ -1178,7 +1182,7 @@ class LevelManager{
     }
   }
 
-  public void drawBackground(PImage level) {
+  public void drawBackground(PImage level) { //draws a continuously scrolling background
     image(level, width / 2, backgroundyPos);
     image(level, width / 2, (backgroundyPos-level.height));
     backgroundyPos++;
@@ -1188,7 +1192,7 @@ class LevelManager{
     starParticles();
   }
 
-  public void advanceGamestate() {
+  public void advanceGamestate() { //shows a fancy animation between levels
     int nextLevel = gamestate + 1;
     background(0, 0, 0, a);
     textFont(font, 50);
@@ -1210,7 +1214,7 @@ class LevelManager{
     }
   }
 
-  public void starParticles() {
+  public void starParticles() { //shows little particles to emulate wind and a feeling of flying forwards
     for (int i = 0; i < stars.length; i++) {
       stars[i].moveStar();
     }
@@ -1246,7 +1250,7 @@ class MainMenu {
     backgroundGrass.resize(width,0);
   }
 
-  public void introAnimation() {
+  public void introAnimation() { //shows a cool title screen animation
     PImage f = player1sheet.get((avatarFrame*60),0,60,66);
     imageMode(CENTER);
     image(f, xpos, ypos);
@@ -1268,7 +1272,7 @@ class MainMenu {
       }
     }
 
-    public void drawBackground() {
+    public void drawBackground() { //draws the background on the intro screen
       image(backgroundGrass,width/2,backgroundyPos);
       image(backgroundGrass,width/2,(backgroundyPos-backgroundGrass.height));
       backgroundyPos++;
@@ -1277,7 +1281,7 @@ class MainMenu {
       }
     }
 
-    public void drawAvatar(PImage avatar) {
+    public void drawAvatar(PImage avatar) { //animates a little toaster to fly in
       imageMode(CENTER);
       PImage f = avatar.get((avatarFrame*60),0,60,66);
       image(f,xpos,ypos);
@@ -1291,7 +1295,7 @@ class MainMenu {
       }
     }
 
-    public void drawMenu() {
+    public void drawMenu() { //decides whether to show the intro animation or show the menu selection
         drawBackground();
         if (!introDone) {
           introAnimation();
@@ -1301,7 +1305,7 @@ class MainMenu {
           }
       }
 
-      public void menuTextSlide() {
+      public void menuTextSlide() { //slides in the title
         drawBackground();
         drawAvatar(avatars[playerManager.playerSelect - 1]);
         fill(255);
@@ -1321,7 +1325,7 @@ class MainMenu {
         text("Press SPACE", width / 2, height - 200);
       }
 
-      public void menuSelect() {
+      public void menuSelect() { //shows the menu selections
         drawBackground();
         drawAvatar(avatars[playerManager.playerSelect - 1]);
         fill(255);
@@ -1359,7 +1363,7 @@ class PlayerBullet {
     size = 3;
   }
 
-  public void drawBullet() {
+  public void drawBullet() { //draws a simple player bullet
     rectMode(CENTER);
     fill(255);
     stroke(0,120,255);
@@ -1412,19 +1416,25 @@ class PlayerManager{
     shootRateModifier = 10;
   }
 
-  public void avatarStatSetter() {
+  public void avatarStatSetter() { //this deals with the stats of the two different player avatars - health, speed and shoot rate.
     if (playerSelect == 1) {
+      alive = true;
+      score = 0;
+      timeStamp = 0;
+      avatarFrame = 0;
       health = 3;
       shootRateModifier = 10;
       speedModifier = 20;
     } else {
+      alive = true;
+      score = 0;
       health = 5;
       shootRateModifier = 25;
       speedModifier = 10;
     }
   }
 
-  public void drawPlayer() {
+  public void drawPlayer() { //this draws the player at the location defined by the movePlayer function, shows a different picture for the two avatars.
     if (alive) {
       speedHandler();
       movePlayer();
@@ -1463,7 +1473,7 @@ class PlayerManager{
       }
     }
 
-  public void movePlayer() {
+  public void movePlayer() { //here, movement is controlled and some movement related functions are called.
     speedHandler();
     shootHandler();
     bulletCollision();
@@ -1496,7 +1506,7 @@ class PlayerManager{
     }
   }
 
-  public void speedHandler() {
+  public void speedHandler() { //this handles acceleration and braking of speed for the movePlayer function
     if (left) {
       leftSpeed = constrain(leftSpeed, 0, maxSpeed) + speedModifier;
     } else if (!left) {
@@ -1519,16 +1529,7 @@ class PlayerManager{
     }
   }
 
-  public void speedDebug() {
-    if (millis() / 1000 % 2 == 0) {
-      println("Left: " + leftSpeed);
-      println("Right: " + rightSpeed);
-      println("Up: " + upSpeed);
-      println("Down: " + downSpeed);
-    }
-  }
-
-  public void shootHandler() {
+  public void shootHandler() { //here, the shooting happens!
     if (shooting) {
       if (ticksElapsed > timeStamp + shootRateModifier) {
         bullets.add(new PlayerBullet(xpos, ypos));
@@ -1544,7 +1545,7 @@ class PlayerManager{
     }
   }
 
-  public void bulletCollision() {
+  public void bulletCollision() { //collision is checked with each bullet from each enemy
     for (int k = enemyManager.bullets.size() - 1; k >= 0; k--) {
       if (enemyManager.bullets.get(k).xpos - enemyManager.bullets.get(k).size / 2 > xpos - size
           && enemyManager.bullets.get(k).xpos + enemyManager.bullets.get(k).size / 2 < xpos + size
@@ -1572,7 +1573,7 @@ class PlayerManager{
     }
   }
 
-  public void powerUpCollision() {
+  public void powerUpCollision() { //and here we check if the player has picked up some health
     for (int i = powerUpManager.powerUps.size() - 1; i >= 0; i--) {
       if (powerUpManager.powerUps.get(i).ypos > ypos - size) {
         if (powerUpManager.powerUps.get(i).xpos > xpos - size
@@ -1584,7 +1585,7 @@ class PlayerManager{
 }
 }
 
-  public void hitBlinker() {
+  public void hitBlinker() { //this flashes the screen when the player gets hit
     fill(218, 44, 56, hitBlinkOpacity);
     rectMode(CENTER);
     rect(width / 2, height / 2, width, height);
@@ -1593,7 +1594,7 @@ class PlayerManager{
     }
   }
 
-  public void displayLife() {
+  public void displayLife() { //displays hearts in the lower right corner to show health left
     for (int i = 0; i <= health - 1; i++) {
       if (health >= 3) {
         if (millis() / 100 % 10 != 0) {
@@ -1611,28 +1612,24 @@ class PlayerManager{
     }
   }
 
-  public void displayScore() {
+  public void displayScore() { //displays score in bottom left corner
     fill(255);
     textSize(32);
     text(score, 80, height - 80);
   }
 
-  public void displayCurrentLevel() {
+  public void displayCurrentLevel() { //displays current level in top left corner
     fill(255);
     textSize(24);
     textAlign(LEFT, CENTER);
     if (gamestate < 6) {
       text("LEVEL " + gamestate, 30, 40);
     } else {
-<<<<<<< HEAD
       text("ENDLESS LEVEL", 200, 40);
-=======
-      text("ENDLESS LEVEL", 30, 40);
->>>>>>> master
     }
   }
 
-    public void death() {
+    public void death() { //decides what happens when the player dies; depending on game mode (campaign or endless), it checks if the score is higher than the last entry on the list and sends you to either tag input or highscore screen
       switch (gamestate){
         case 1:
         case 2:
@@ -1668,13 +1665,13 @@ class PowerUp {
     speed = 75;
   }
 
-  public void drawPowerUp() {
+  public void drawPowerUp() { //draws a heart at the powerup location
     move();
     imageMode(CENTER);
     image(heart, xpos, ypos);
   }
 
-  public void move() {
+  public void move() { //moves the powerup downwards
     ypos += speed * PApplet.parseFloat(millis() - ticksLastUpdate)*0.001f;
   }
 }
@@ -1687,7 +1684,7 @@ class PowerUpManager {
     timeStamp = 0;
   }
 
-  public void powerUpSpawner() {
+  public void powerUpSpawner() { //spawns powerups at regular intervals
     if (ticksElapsed > timeStamp + 400) {
       powerUps.add(new PowerUp());
       timeStamp = ticksElapsed;
@@ -1698,12 +1695,7 @@ class PowerUpManager {
     }
   }
 }
-/*
-Author: Frederik Boye
-Homepage: http://www.frederikboye.com
-"If you're not weird, don't expect me to understand you"
-*/
-class Score{
+class Score{ //simple score object for the highscore array lists
   int points;
   String tag;
 
@@ -1716,7 +1708,7 @@ class Score{
     return points;
   }
 }
-class Star {
+class Star { //simple particles moving down to simulate wind
   float xpos, ypos, speed, size;
 
   Star() {

@@ -17,11 +17,11 @@ class LeaderboardsInput{
   }
 
 
-  void showBoard(){
+  void showBoard(){ //this is just merging the selected letters into a single string
     name = join(nameconstructor, "");
   }
 
-  void saveScore(){
+  void saveScore(){ //here, the score is iterated through the list and put in its appropriate place. After that is done, it deletes the 11th entry and saves the list to a file.
     Score newScore = new Score();
     newScore.tag = name;
     newScore.points = playerManager.score;
@@ -140,7 +140,7 @@ class LeaderboardsInput{
     menuIndex = 6;
   }
 
-  void saveScoreEndless(){
+  void saveScoreEndless(){ //here, the endless score is iterated through the list and put in its appropriate place. After that is done, it deletes the 11th entry and saves the list to a file.
     Score newScore = new Score();
     newScore.tag = name;
     newScore.points = playerManager.score;
@@ -259,7 +259,7 @@ class LeaderboardsInput{
     menuIndex = 8;
   }
 
-  void displayInput(){
+  void displayInput(){ //This displays the input screen where you can dial in your name tag.
     fill(255);
     textFont(font,(150));
     textAlign(CENTER);
@@ -286,7 +286,7 @@ class LeaderboardsInput{
     rectMode(CORNER);
   }
 
-  void showHighScores(){
+  void showHighScores(){ //this displays the 10 entries on the highscore list
     fill(255);
     textFont(font,(40));
     textAlign(CENTER);
@@ -306,7 +306,7 @@ class LeaderboardsInput{
     text("PRESS 'SPACE' TO RETURN TO MAIN MENU!", 400, 580);
   }
 
-  void showHighScoresEndless(){
+  void showHighScoresEndless(){ //this displays the ten entries on the endless highscore list
     fill(255);
     textFont(font,(40));
     textAlign(CENTER);

@@ -30,8 +30,8 @@ class LevelManager{
       backgrounds[4] = backgroundLava;
       backgrounds[5] = backgroundCrystal;
   }
-  
-  void levelSelector() {
+
+  void levelSelector() { //handles the advance in levels from 1-6 and checks your highscore at the end
       switch (menuIndex) {
       case 3:
         drawBackground(backgrounds[gamestate - 1]);
@@ -52,7 +52,7 @@ class LevelManager{
     }
   }
 
-  void drawBackground(PImage level) {
+  void drawBackground(PImage level) { //draws a continuously scrolling background
     image(level, width / 2, backgroundyPos);
     image(level, width / 2, (backgroundyPos-level.height));
     backgroundyPos++;
@@ -62,7 +62,7 @@ class LevelManager{
     starParticles();
   }
 
-  void advanceGamestate() {
+  void advanceGamestate() { //shows a fancy animation between levels
     int nextLevel = gamestate + 1;
     background(0, 0, 0, a);
     textFont(font, 50);
@@ -84,7 +84,7 @@ class LevelManager{
     }
   }
 
-  void starParticles() {
+  void starParticles() { //shows little particles to emulate wind and a feeling of flying forwards
     for (int i = 0; i < stars.length; i++) {
       stars[i].moveStar();
     }

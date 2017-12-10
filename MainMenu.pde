@@ -28,7 +28,7 @@ class MainMenu {
     backgroundGrass.resize(width,0);
   }
 
-  void introAnimation() {
+  void introAnimation() { //shows a cool title screen animation
     PImage f = player1sheet.get((avatarFrame*60),0,60,66);
     imageMode(CENTER);
     image(f, xpos, ypos);
@@ -50,7 +50,7 @@ class MainMenu {
       }
     }
 
-    void drawBackground() {
+    void drawBackground() { //draws the background on the intro screen
       image(backgroundGrass,width/2,backgroundyPos);
       image(backgroundGrass,width/2,(backgroundyPos-backgroundGrass.height));
       backgroundyPos++;
@@ -59,7 +59,7 @@ class MainMenu {
       }
     }
 
-    void drawAvatar(PImage avatar) {
+    void drawAvatar(PImage avatar) { //animates a little toaster to fly in
       imageMode(CENTER);
       PImage f = avatar.get((avatarFrame*60),0,60,66);
       image(f,xpos,ypos);
@@ -73,7 +73,7 @@ class MainMenu {
       }
     }
 
-    void drawMenu() {
+    void drawMenu() { //decides whether to show the intro animation or show the menu selection
         drawBackground();
         if (!introDone) {
           introAnimation();
@@ -83,7 +83,7 @@ class MainMenu {
           }
       }
 
-      void menuTextSlide() {
+      void menuTextSlide() { //slides in the title
         drawBackground();
         drawAvatar(avatars[playerManager.playerSelect - 1]);
         fill(255);
@@ -103,7 +103,7 @@ class MainMenu {
         text("Press SPACE", width / 2, height - 200);
       }
 
-      void menuSelect() {
+      void menuSelect() { //shows the menu selections
         drawBackground();
         drawAvatar(avatars[playerManager.playerSelect - 1]);
         fill(255);

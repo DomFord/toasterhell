@@ -7,7 +7,7 @@ class PowerUpManager {
     timeStamp = 0;
   }
 
-  void powerUpSpawner() {
+  void powerUpSpawner() { //spawns powerups at regular intervals
     if (ticksElapsed > timeStamp + 400) {
       powerUps.add(new PowerUp());
       timeStamp = ticksElapsed;

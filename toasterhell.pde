@@ -69,7 +69,7 @@ void setup() {
   }
 }
 
-void keyPressed() {
+void keyPressed() { //handles all the keyboard input for the different screens
   switch (menuIndex) {
     case 1:
       if (key == ' ') {
@@ -112,9 +112,11 @@ void keyPressed() {
         case RETURN:
           switch (mainMenu.indicator) {
             case 1:
+              playerManager.avatarStatSetter();
               menuIndex = 3;
             break;
             case 2:
+              playerManager.avatarStatSetter();
               gamestate = 6;
               menuIndex = 3;
             break;
@@ -133,9 +135,11 @@ void keyPressed() {
     if (key == ' ') {
       switch (mainMenu.indicator) {
         case 1:
+          playerManager.avatarStatSetter();
           menuIndex = 3;
         break;
         case 2:
+          playerManager.avatarStatSetter();
           gamestate = 6;
           menuIndex = 3;
         break;
@@ -302,7 +306,7 @@ void keyPressed() {
   }
 }
 
-void keyReleased() {
+void keyReleased() { //checks keyrelease to enable continious movement of the player
   switch (menuIndex) {
     case 3:
     case 4:
@@ -329,7 +333,7 @@ void keyReleased() {
   }
 }
 
-void draw() {
+void draw() { //draws the corresponding elements for the different game states
   switch (menuIndex) {
     case 1:
       mainMenu.drawMenu();

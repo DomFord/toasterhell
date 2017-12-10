@@ -1,4 +1,4 @@
-class Star {
+class Star { //simple particles moving down to simulate wind
   float xpos, ypos, speed, size;
 
   Star() {

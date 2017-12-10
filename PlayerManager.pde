@@ -40,19 +40,23 @@ class PlayerManager{
     shootRateModifier = 10;
   }
 
-  void avatarStatSetter() {
+  void avatarStatSetter() { //this deals with the stats of the two different player avatars - health, speed and shoot rate.
     if (playerSelect == 1) {
+      alive = true;
+      score = 0;
       health = 3;
       shootRateModifier = 10;
       speedModifier = 20;
     } else {
+      alive = true;
+      score = 0;
       health = 5;
       shootRateModifier = 25;
       speedModifier = 10;
     }
   }
 
-  void drawPlayer() {
+  void drawPlayer() { //this draws the player at the location defined by the movePlayer function, shows a different picture for the two avatars.
     if (alive) {
       speedHandler();
       movePlayer();
@@ -91,7 +95,7 @@ class PlayerManager{
       }
     }
 
-  void movePlayer() {
+  void movePlayer() { //here, movement is controlled and some movement related functions are called.
     speedHandler();
     shootHandler();
     bulletCollision();
@@ -124,7 +128,7 @@ class PlayerManager{
     }
   }
 
-  void speedHandler() {
+  void speedHandler() { //this handles acceleration and braking of speed for the movePlayer function
     if (left) {
       leftSpeed = constrain(leftSpeed, 0, maxSpeed) + speedModifier;
     } else if (!left) {
@@ -147,16 +151,7 @@ class PlayerManager{
     }
   }
 
-  void speedDebug() {
-    if (millis() / 1000 % 2 == 0) {
-      println("Left: " + leftSpeed);
-      println("Right: " + rightSpeed);
-      println("Up: " + upSpeed);
-      println("Down: " + downSpeed);
-    }
-  }
-
-  void shootHandler() {
+  void shootHandler() { //here, the shooting happens!
     if (shooting) {
       if (ticksElapsed > timeStamp + shootRateModifier) {
         bullets.add(new PlayerBullet(xpos, ypos));
@@ -172,7 +167,7 @@ class PlayerManager{
     }
   }
 
-  void bulletCollision() {
+  void bulletCollision() { //collision is checked with each bullet from each enemy
     for (int k = enemyManager.bullets.size() - 1; k >= 0; k--) {
       if (enemyManager.bullets.get(k).xpos - enemyManager.bullets.get(k).size / 2 > xpos - size
           && enemyManager.bullets.get(k).xpos + enemyManager.bullets.get(k).size / 2 < xpos + size
@@ -200,7 +195,7 @@ class PlayerManager{
     }
   }
 
-  void powerUpCollision() {
+  void powerUpCollision() { //and here we check if the player has picked up some health
     for (int i = powerUpManager.powerUps.size() - 1; i >= 0; i--) {
       if (powerUpManager.powerUps.get(i).ypos > ypos - size) {
         if (powerUpManager.powerUps.get(i).xpos > xpos - size
@@ -212,7 +207,7 @@ class PlayerManager{
 }
 }
 
-  void hitBlinker() {
+  void hitBlinker() { //this flashes the screen when the player gets hit
     fill(218, 44, 56, hitBlinkOpacity);
     rectMode(CENTER);
     rect(width / 2, height / 2, width, height);
@@ -221,7 +216,7 @@ class PlayerManager{
     }
   }
 
-  void displayLife() {
+  void displayLife() { //displays hearts in the lower right corner to show health left
     for (int i = 0; i <= health - 1; i++) {
       if (health >= 3) {
         if (millis() / 100 % 10 != 0) {
@@ -239,13 +234,13 @@ class PlayerManager{
     }
   }
 
-  void displayScore() {
+  void displayScore() { //displays score in bottom left corner
     fill(255);
     textSize(32);
     text(score, 80, height - 80);
   }
 
-  void displayCurrentLevel() {
+  void displayCurrentLevel() { //displays current level in top left corner
     fill(255);
     textSize(24);
     textAlign(LEFT, CENTER);
@@ -256,7 +251,7 @@ class PlayerManager{
     }
   }
 
-    void death() {
+    void death() { //decides what happens when the player dies; depending on game mode (campaign or endless), it checks if the score is higher than the last entry on the list and sends you to either tag input or highscore screen
       switch (gamestate){
         case 1:
         case 2:

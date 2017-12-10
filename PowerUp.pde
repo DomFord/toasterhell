@@ -9,13 +9,13 @@ class PowerUp {
     speed = 75;
   }
 
-  void drawPowerUp() {
+  void drawPowerUp() { //draws a heart at the powerup location
     move();
     imageMode(CENTER);
     image(heart, xpos, ypos);
   }
 
-  void move() {
+  void move() { //moves the powerup downwards
     ypos += speed * float(millis() - ticksLastUpdate)*0.001;
   }
 }

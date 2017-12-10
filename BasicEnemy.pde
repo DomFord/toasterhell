@@ -45,7 +45,7 @@ class BasicEnemy {
       enemyImages[4] = enemyImage5;
   }
 
-  void drawEnemy() {
+  void drawEnemy() { //draws the enemy depending on level selected shows different images
     if (alive) {
       move();
       bulletCollision();
@@ -57,7 +57,7 @@ class BasicEnemy {
       }
     }
 
-    void move() {
+    void move() { //handles the different movement patterns for the various enemies
       switch (enemyState){
         case 1:
           ypos += speed1 * float(millis() - ticksLastUpdate)*0.001;
@@ -166,7 +166,7 @@ class BasicEnemy {
       }
     }
 
-    void bulletCollision() {
+    void bulletCollision() { //checks collision with player bullets and calls to kill the enemy and remove the player bullet
         for (int i = playerManager.bullets.size() - 1; i >= 0; i--) {
           if (playerManager.bullets.get(i).xpos - playerManager.bullets.get(i).size / 2 > xpos - size / 2
               && playerManager.bullets.get(i).xpos + playerManager.bullets.get(i).size / 2 < xpos + size / 2
@@ -181,7 +181,7 @@ class BasicEnemy {
         }
     }
 
-    void shootHandler() {
+    void shootHandler() { //controls the various shooting patterns for the different enemy types
       if (shooting) {
         int delta = millis() - ticksLast;
         switch (enemyState){

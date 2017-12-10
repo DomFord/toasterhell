@@ -10,7 +10,7 @@ class EnemyManager {
     timeStamp = 0;
   }
 
-  void enemySpawner() {
+  void enemySpawner() { //handles spawning of enemies at regular intervals depending on game mode selected and removes them when they get out of screen bounds
     enemyKiller();
     if (gamestate < 6) {
       if (enemyCounter >= 20) {
@@ -57,7 +57,7 @@ class EnemyManager {
     }
   }
 
-  void enemyKiller() {
+  void enemyKiller() { //removes the enemy when it gets shot and creates a deathblossom of bullets
     for (int i = basicEnemies.size() - 1; i >= 0; i--) {
       if (!basicEnemies.get(i).alive) {
         bullets.add(new EnemyBullet(basicEnemies.get(i).xpos, basicEnemies.get(i).ypos, 0, 150));
