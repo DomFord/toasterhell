@@ -1433,11 +1433,6 @@ class PlayerManager{
     shooting = false;
     score = 0;
     if (playerSelect == 1) {
-<<<<<<< Updated upstream
-      alive = true;
-      score = 0;
-=======
->>>>>>> Stashed changes
       health = 3;
       shootRateModifier = 10;
       speedModifier = 20;
@@ -1665,6 +1660,9 @@ class PlayerManager{
             menuIndex = 8;
           }
         break;
+      }
+      for (int i = enemyManager.basicEnemies.size() - 1; i >= 0; i--) {
+        enemyManager.basicEnemies.remove(i);
       }
     }
   }

@@ -111,8 +111,6 @@ class PlayerManager{
     powerUpCollision();
     hitBlinker();
     displayLife();
-    println(xpos);
-    println(ypos);
     if (xpos - size < 0) {
       leftSpeed = 0;
     }
