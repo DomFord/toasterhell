@@ -153,9 +153,6 @@ public void keyPressed() {
         case 4:
           exit();
         break;
-        case 6:
-          menuIndex = 2;
-          break;
       }
     }
     break;
@@ -295,6 +292,9 @@ public void keyPressed() {
           leaderboardInput.saveScore();
         break;
       }
+      break;
+      case 6:
+        menuIndex = 2;
       break;
   }
 }
@@ -692,7 +692,7 @@ class EnemyBullet {
 class EnemyManager {
   ArrayList<BasicEnemy> basicEnemies;
   ArrayList<EnemyBullet> bullets;
-  int timeStamp, enemyCounter;
+  int timeStamp, enemyCounter, maxEnemies;
 
   EnemyManager() {
     enemyCounter = 0;
@@ -702,10 +702,9 @@ class EnemyManager {
   }
 
   public void enemySpawner() {
-    //switch case here to spawn the correct numbers and types of enemies per level
     enemyKiller();
 
-    if (enemyCounter >= 5) {
+    if (enemyCounter >= 20) {
       for (int i = basicEnemies.size() - 1; i >= 0; i--) {
         basicEnemies.remove(i);
       }
@@ -715,9 +714,10 @@ class EnemyManager {
       menuIndex++;
       enemyCounter = 0;
     } else {
-      if (ticksElapsed > timeStamp + 100) {
+      if (ticksElapsed > timeStamp + 100 && maxEnemies < 20) {
         basicEnemies.add(new BasicEnemy());
         timeStamp = ticksElapsed;
+        maxEnemies ++;
       }
     }
 
@@ -935,8 +935,6 @@ class LeaderboardsInput{
   }
 
   public void showHighScores(){
-    fill(0, 150);
-    rect(20, 20, 440, 600);
     fill(255);
     textFont(font,(40));
     textAlign(CENTER);
@@ -1216,7 +1214,7 @@ class PlayerManager{
     xpos = width / 2;
     ypos = height - 75;
     maxSpeed = 400;
-    size = 50;
+    size = 30;
     left = false;
     right = false;
     up = false;
@@ -1249,6 +1247,9 @@ class PlayerManager{
       displayScore();
       displayCurrentLevel();
 
+      if(health == 0){
+        death();
+      }
       imageMode(CENTER);
       if(playerSelect == 1){
         PImage f = player1sheet.get((avatarFrame*60),0,60,66);
@@ -1272,120 +1273,118 @@ class PlayerManager{
             avatarFrame = 0;
           }
           ticksLast += delta;
+          }
         }
       }
-      } else {
-        death();
-      }
     }
 
-    public void movePlayer() {
-      speedHandler();
-      shootHandler();
-      bulletCollision();
-      hitBlinker();
-      displayLife();
-      if (xpos - size < 10) {
-        leftSpeed = 0;
-      }
-      else {
-        xpos -= leftSpeed * PApplet.parseFloat(millis() - ticksLastUpdate) * 0.001f;
-      }
-      if (xpos + size > width - 10) {
-        rightSpeed = 0;
-      }
-      else {
-        xpos += rightSpeed * PApplet.parseFloat(millis() - ticksLastUpdate) * 0.001f;
-      }
-      if (ypos - size < 10) {
-        upSpeed = 0;
-      }
-      else {
-        ypos -= upSpeed * PApplet.parseFloat(millis() - ticksLastUpdate) * 0.001f;
-      }
-      if (ypos + size > height - 10) {
-        downSpeed = 0;
-      }
-      else {
-        ypos += downSpeed * PApplet.parseFloat(millis() - ticksLastUpdate) * 0.001f;
+  public void movePlayer() {
+    speedHandler();
+    shootHandler();
+    bulletCollision();
+    hitBlinker();
+    displayLife();
+    if (xpos - size < 0) {
+      leftSpeed = 0;
+    }
+    else {
+      xpos -= leftSpeed * PApplet.parseFloat(millis() - ticksLastUpdate) * 0.001f;
+    }
+    if (xpos + size > width) {
+      rightSpeed = 0;
+    }
+    else {
+      xpos += rightSpeed * PApplet.parseFloat(millis() - ticksLastUpdate) * 0.001f;
+    }
+    if (ypos - size < 0) {
+      upSpeed = 0;
+    }
+    else {
+      ypos -= upSpeed * PApplet.parseFloat(millis() - ticksLastUpdate) * 0.001f;
+    }
+    if (ypos + size > height) {
+      downSpeed = 0;
+    }
+    else {
+      ypos += downSpeed * PApplet.parseFloat(millis() - ticksLastUpdate) * 0.001f;
+    }
+  }
+
+  public void speedHandler() {
+    if (left) {
+      leftSpeed = constrain(leftSpeed, 0, maxSpeed) + speedModifier;
+    } else if (!left) {
+      leftSpeed = constrain(leftSpeed, brakeModifier, maxSpeed) - brakeModifier;
+    }
+    if (right) {
+      rightSpeed = constrain(rightSpeed, 0, maxSpeed) + speedModifier;
+    } else if (!right) {
+      rightSpeed = constrain(rightSpeed, brakeModifier, maxSpeed) - brakeModifier;
+    }
+    if (up) {
+      upSpeed = constrain(upSpeed, 0, maxSpeed) + speedModifier;
+    } else if (!up) {
+      upSpeed = constrain(upSpeed, brakeModifier, maxSpeed) - brakeModifier;
+    }
+    if (down) {
+      downSpeed = constrain(downSpeed, 0, maxSpeed) + speedModifier;
+    } else if (!down) {
+      downSpeed = constrain(downSpeed, brakeModifier, maxSpeed) - brakeModifier;
+    }
+  }
+
+  public void speedDebug() {
+    if (millis() / 1000 % 2 == 0) {
+      println("Left: " + leftSpeed);
+      println("Right: " + rightSpeed);
+      println("Up: " + upSpeed);
+      println("Down: " + downSpeed);
+    }
+  }
+
+  public void shootHandler() {
+    if (shooting) {
+      if (ticksElapsed > timeStamp + shootRateModifier) {
+        bullets.add(new PlayerBullet(xpos, ypos));
+        score--;
+        timeStamp = ticksElapsed;
       }
     }
-
-    public void speedHandler() {
-      if (left) {
-        leftSpeed = constrain(leftSpeed, 0, maxSpeed) + speedModifier;
-      } else if (!left) {
-        leftSpeed = constrain(leftSpeed, brakeModifier, maxSpeed) - brakeModifier;
+    for (int i = bullets.size() - 1; i >= 0; i--) {
+      bullets.get(i).drawBullet();
+      if (bullets.get(i).ypos < 0) {
+        bullets.remove(i);
       }
-      if (right) {
-        rightSpeed = constrain(rightSpeed, 0, maxSpeed) + speedModifier;
-      } else if (!right) {
-        rightSpeed = constrain(rightSpeed, brakeModifier, maxSpeed) - brakeModifier;
-      }
-      if (up) {
-        upSpeed = constrain(upSpeed, 0, maxSpeed) + speedModifier;
-      } else if (!up) {
-        upSpeed = constrain(upSpeed, brakeModifier, maxSpeed) - brakeModifier;
-      }
-      if (down) {
-        downSpeed = constrain(downSpeed, 0, maxSpeed) + speedModifier;
-      } else if (!down) {
-        downSpeed = constrain(downSpeed, brakeModifier, maxSpeed) - brakeModifier;
-      }
-    }
-
-    public void speedDebug() {
-      if (millis() / 1000 % 2 == 0) {
-        println("Left: " + leftSpeed);
-        println("Right: " + rightSpeed);
-        println("Up: " + upSpeed);
-        println("Down: " + downSpeed);
-      }
-    }
-
-    public void shootHandler() {
-      if (shooting) {
-        if (ticksElapsed > timeStamp + shootRateModifier) {
-          bullets.add(new PlayerBullet(xpos, ypos));
-          score--;
-          timeStamp = ticksElapsed;
-        }
-      }
-      for (int i = bullets.size() - 1; i >= 0; i--) {
-        bullets.get(i).drawBullet();
-        if (bullets.get(i).ypos < 0) {
-          bullets.remove(i);
-        }
     }
   }
 
   public void bulletCollision() {
     for (int k = enemyManager.bullets.size() - 1; k >= 0; k--) {
-      if (enemyManager.bullets.get(k).xpos - enemyManager.bullets.get(k).size / 2 > xpos - size / 2
-          && enemyManager.bullets.get(k).xpos + enemyManager.bullets.get(k).size / 2 < xpos + size / 2
-          && enemyManager.bullets.get(k).ypos - enemyManager.bullets.get(k).size / 2 > ypos - size / 2
-          && enemyManager.bullets.get(k).ypos + enemyManager.bullets.get(k).size / 2 < ypos + size / 2) {
+      if (enemyManager.bullets.get(k).xpos - enemyManager.bullets.get(k).size / 2 > xpos - size
+          && enemyManager.bullets.get(k).xpos + enemyManager.bullets.get(k).size / 2 < xpos + size
+          && enemyManager.bullets.get(k).ypos - enemyManager.bullets.get(k).size / 2 > ypos - size
+          && enemyManager.bullets.get(k).ypos + enemyManager.bullets.get(k).size / 2 < ypos + size) {
             println("Player hit!");
             enemyManager.bullets.remove(k);
             hitBlinkOpacity = 255 / 2;
             health--;
             println(health);
-        }
       }
+    }
     for (int i = enemyManager.basicEnemies.size() - 1; i >= 0; i--) {
       for (int j = enemyManager.basicEnemies.get(i).bullets.size() - 1; j >= 0; j--) {
-        if (enemyManager.basicEnemies.get(i).bullets.get(j).xpos - enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 > xpos - size / 2
-            && enemyManager.basicEnemies.get(i).bullets.get(j).xpos + enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 < xpos + size / 2
-            && enemyManager.basicEnemies.get(i).bullets.get(j).ypos - enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 > ypos - size / 2
-            && enemyManager.basicEnemies.get(i).bullets.get(j).ypos + enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 < ypos + size / 2) {
+        if (enemyManager.basicEnemies.get(i).bullets.get(j).xpos - enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 > xpos - size
+            && enemyManager.basicEnemies.get(i).bullets.get(j).xpos + enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 < xpos + size
+            && enemyManager.basicEnemies.get(i).bullets.get(j).ypos - enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 > ypos - size
+            && enemyManager.basicEnemies.get(i).bullets.get(j).ypos + enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 < ypos + size) {
               println("Player hit!");
               enemyManager.basicEnemies.get(i).bullets.remove(j);
               hitBlinkOpacity = 255 / 2;
               health--;
               println(health);
-          }
         }
       }
+    }
   }
 
   public void hitBlinker() {
@@ -1416,21 +1415,25 @@ class PlayerManager{
   }
 
   public void displayScore() {
-    fill(0);
+    fill(255);
     textSize(32);
-    text(score, 40, height - 40);
+    text(score, 80, height - 80);
   }
 
   public void displayCurrentLevel() {
-    fill(0);
+    fill(255);
     textSize(24);
-    text("LEVEL " + gamestate, 40, 40);
+    text("LEVEL " + gamestate, 150, 40);
   }
 
     public void death() {
-
+      if(playerManager.score > highScoreList.get(9).points){  //checks if the player has set a new highscore better than the lowest one currently on the list
+        menuIndex = 5;
+      }
+      else{
+        menuIndex = 6;
+      }
     }
-
   }
 /*
 Author: Frederik Boye

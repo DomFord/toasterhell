@@ -132,9 +132,6 @@ void keyPressed() {
         case 4:
           exit();
         break;
-        case 6:
-          menuIndex = 2;
-          break;
       }
     }
     break;
@@ -274,6 +271,9 @@ void keyPressed() {
           leaderboardInput.saveScore();
         break;
       }
+      break;
+      case 6:
+        menuIndex = 2;
       break;
   }
 }

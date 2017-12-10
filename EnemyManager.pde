@@ -1,7 +1,7 @@
 class EnemyManager {
   ArrayList<BasicEnemy> basicEnemies;
   ArrayList<EnemyBullet> bullets;
-  int timeStamp, enemyCounter;
+  int timeStamp, enemyCounter, maxEnemies;
 
   EnemyManager() {
     enemyCounter = 0;
@@ -11,10 +11,9 @@ class EnemyManager {
   }
 
   void enemySpawner() {
-    //switch case here to spawn the correct numbers and types of enemies per level
     enemyKiller();
 
-    if (enemyCounter >= 5) {
+    if (enemyCounter >= 20) {
       for (int i = basicEnemies.size() - 1; i >= 0; i--) {
         basicEnemies.remove(i);
       }
@@ -24,9 +23,10 @@ class EnemyManager {
       menuIndex++;
       enemyCounter = 0;
     } else {
-      if (ticksElapsed > timeStamp + 100) {
+      if (ticksElapsed > timeStamp + 100 && maxEnemies < 20) {
         basicEnemies.add(new BasicEnemy());
         timeStamp = ticksElapsed;
+        maxEnemies ++;
       }
     }
 
