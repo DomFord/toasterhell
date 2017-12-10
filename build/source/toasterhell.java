@@ -1281,43 +1281,11 @@ class PlayerManager{
       }
     }
 
-<<<<<<< HEAD
-    public void movePlayer() {
-      speedHandler();
-      shootHandler();
-      bulletCollision();
-      powerUpCollision();
-      hitBlinker();
-      displayLife();
-      if (xpos - size < 10) {
-        leftSpeed = 0;
-      }
-      else {
-        xpos -= leftSpeed * PApplet.parseFloat(millis() - ticksLastUpdate) * 0.001f;
-      }
-      if (xpos + size > width - 10) {
-        rightSpeed = 0;
-      }
-      else {
-        xpos += rightSpeed * PApplet.parseFloat(millis() - ticksLastUpdate) * 0.001f;
-      }
-      if (ypos - size < 10) {
-        upSpeed = 0;
-      }
-      else {
-        ypos -= upSpeed * PApplet.parseFloat(millis() - ticksLastUpdate) * 0.001f;
-      }
-      if (ypos + size > height - 10) {
-        downSpeed = 0;
-      }
-      else {
-        ypos += downSpeed * PApplet.parseFloat(millis() - ticksLastUpdate) * 0.001f;
-      }
-=======
   public void movePlayer() {
     speedHandler();
     shootHandler();
     bulletCollision();
+    powerUpCollision();
     hitBlinker();
     displayLife();
     if (xpos - size < 0) {
@@ -1334,7 +1302,6 @@ class PlayerManager{
     }
     if (ypos - size < 0) {
       upSpeed = 0;
->>>>>>> 0f2aaf30cda9aa434fe0704ec05521658897a7af
     }
     else {
       ypos -= upSpeed * PApplet.parseFloat(millis() - ticksLastUpdate) * 0.001f;
@@ -1418,7 +1385,6 @@ class PlayerManager{
               enemyManager.basicEnemies.get(i).bullets.remove(j);
               hitBlinkOpacity = 255 / 2;
               health--;
-              println(health);
         }
       }
     }
@@ -1436,10 +1402,13 @@ class PlayerManager{
           } */
 
       if (powerUpManager.powerUps.get(i).ypos > ypos - size) {
-        health++;
-        powerUpManager.powerUps.remove(i);
+        if (powerUpManager.powerUps.get(i).xpos > xpos - size
+            && powerUpManager.powerUps.get(i).xpos < xpos + size) {
+            health++;
+            powerUpManager.powerUps.remove(i);
     }
   }
+}
 }
 
   public void hitBlinker() {
