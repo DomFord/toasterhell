@@ -277,5 +277,8 @@ class PlayerManager{
       for (int i = enemyManager.basicEnemies.size() - 1; i >= 0; i--) {
         enemyManager.basicEnemies.remove(i);
       }
+      for (int i = powerUpManager.powerUps.size() - 1; i >= 0; i--) {
+        powerUpManager.powerUps.remove(i);
+      }
     }
   }
