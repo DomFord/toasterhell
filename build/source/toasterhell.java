@@ -1181,9 +1181,8 @@ class LevelManager{
       break;
       case 4:
         if(gamestate <= 4){
-          advanceGamestate();
-          enemyManager.enemyCounter = 20;
           enemyManager.maxEnemies = 0;
+          advanceGamestate();
         }
         else{
           if(playerManager.score > highScoreList.get(9).points){  //checks if the player has set a new highscore better than the lowest one currently on the list
