@@ -321,7 +321,7 @@ public void keyPressed() { //handles all the keyboard input for the different sc
         break;
         case ENTER:
         case RETURN:
-          if (gamestate < 5){
+          if (gamestate <= 5){
             leaderboardInput.saveScore();
           }
           else if (gamestate == 6){
