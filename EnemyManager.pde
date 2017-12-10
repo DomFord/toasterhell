@@ -20,6 +20,9 @@ class EnemyManager {
         for (int i = bullets.size() - 1; i >= 0; i--) {
           bullets.remove(i);
         }
+        for (int i = powerUpManager.powerUps.size() - 1; i >= 0; i--) {
+          powerUpManager.powerUps.remove(i);
+        }
         menuIndex++;
         enemyCounter = 0;
       } else {
