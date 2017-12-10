@@ -212,17 +212,18 @@ class PlayerManager{
 
   void powerUpCollision() { //and here we check if the player has picked up some health
     for (int i = powerUpManager.powerUps.size() - 1; i >= 0; i--) {
-      if (powerUpManager.powerUps.get(i).ypos > ypos - size) {
-        if (powerUpManager.powerUps.get(i).xpos > xpos - size
-            && powerUpManager.powerUps.get(i).xpos < xpos + size) {
-              if (health < maxHealth){
-                health++;
-                powerUpManager.powerUps.remove(i);
-              }
+      if (powerUpManager.powerUps.get(i).ypos > ypos - size
+       && powerUpManager.powerUps.get(i).ypos < ypos + size
+       && powerUpManager.powerUps.get(i).xpos > xpos - size
+       && powerUpManager.powerUps.get(i).xpos < xpos + size) {
+        if (health < maxHealth){
+          health++;
+            powerUpManager.powerUps.remove(i);
         }
       }
     }
   }
+
 
   void hitBlinker() { //this flashes the screen when the player gets hit
     fill(218, 44, 56, hitBlinkOpacity);
