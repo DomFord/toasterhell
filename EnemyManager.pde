@@ -4,6 +4,7 @@ class EnemyManager {
   int timeStamp, enemyCounter;
 
   EnemyManager() {
+    enemyCounter = 0;
     basicEnemies = new ArrayList<BasicEnemy>();
     bullets = new ArrayList<EnemyBullet>();
     timeStamp = 0;

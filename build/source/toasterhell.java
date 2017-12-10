@@ -60,12 +60,23 @@ public void setup() {
   String tempScoreString = tempScoreList[0];
   String[] tempScoreArray = split(tempScoreString, ',');
   highScoreList = new ArrayList<Score>();
+  println(tempScoreArray.length);
   for(int i = 0; i < tempScoreArray.length - 1; i++){
     Score newScore = new Score();
     newScore.tag = tempScoreArray[i].substring(0,3);
     newScore.points = PApplet.parseInt(tempScoreArray[i].substring(4));
     highScoreList.add(newScore);
   }
+  println(highScoreList.get(0));
+  println(highScoreList.get(1));
+  println(highScoreList.get(2));
+  println(highScoreList.get(3));
+  println(highScoreList.get(4));
+  println(highScoreList.get(5));
+  println(highScoreList.get(6));
+  println(highScoreList.get(7));
+  println(highScoreList.get(8));
+  println(highScoreList.get(9));
 
   stars = new Star[10];
   for (int i = 0; i < 10; i++) {
@@ -142,6 +153,9 @@ public void keyPressed() {
         case 4:
           exit();
         break;
+        case 6:
+          menuIndex = 2;
+          break;
       }
     }
     break;
@@ -349,6 +363,8 @@ public void draw() {
       leaderboardInput.displayInput();
     break;
     case 6:
+      background(0);
+      leaderboardInput.showHighScores();
     break;
   }
 }
@@ -679,6 +695,7 @@ class EnemyManager {
   int timeStamp, enemyCounter;
 
   EnemyManager() {
+    enemyCounter = 0;
     basicEnemies = new ArrayList<BasicEnemy>();
     bullets = new ArrayList<EnemyBullet>();
     timeStamp = 0;
@@ -748,11 +765,6 @@ class EnemyManager {
     }
   }
 }
-/*
-Author: Frederik Boye
-Homepage: http://www.frederikboye.com
-"If you're not weird, don't expect me to understand you"
-*/
 class LeaderboardsInput{
   String name;
   int letter1;
@@ -892,6 +904,7 @@ class LeaderboardsInput{
     }
     scoreArray[0] = scoreString;
     saveStrings("highscore.txt", scoreArray);
+    menuIndex = 6;
   }
 
   public void displayInput(){
@@ -919,6 +932,28 @@ class LeaderboardsInput{
       break;
     }
     rectMode(CORNER);
+  }
+
+  public void showHighScores(){
+    fill(0, 150);
+    rect(20, 20, 440, 600);
+    fill(255);
+    textFont(font,(40));
+    textAlign(CENTER);
+    text("LEADERBOARDS", 400, 80);
+    textFont(font,(30));
+    text(highScoreList.get(0).toString(), 400, 140);
+    text(highScoreList.get(1).toString(), 400, 180);
+    text(highScoreList.get(2).toString(), 400, 220);
+    text(highScoreList.get(3).toString(), 400, 260);
+    text(highScoreList.get(4).toString(), 400, 300);
+    text(highScoreList.get(5).toString(), 400, 340);
+    text(highScoreList.get(6).toString(), 400, 380);
+    text(highScoreList.get(7).toString(), 400, 420);
+    text(highScoreList.get(8).toString(), 400, 460);
+    text(highScoreList.get(9).toString(), 400, 500);
+    textFont(font,(15));
+    text("PRESS 'SPACE' TO RETURN TO MAIN MENU!", 400, 580);
   }
 }
 /*
@@ -958,7 +993,17 @@ class LevelManager{
         drawBackground(backgrounds[gamestate - 1]);
       break;
       case 4:
-        advanceGamestate();
+        if(gamestate <= 4){
+          advanceGamestate();
+        }
+        else{
+          if(playerManager.score > highScoreList.get(9).points){  //checks if the player has set a new highscore better than the lowest one currently on the list
+            menuIndex = 5;
+          }
+          else{
+            menuIndex = 6;
+          }
+        }
       break;
     }
   }
