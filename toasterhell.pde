@@ -8,7 +8,6 @@ import java.io.Serializable;  // Importing various Java libraries, used for savi
 import java.io.*;
 import java.util.Collections;
 import java.util.Comparator;
-import processing.sound.*;
 
 LevelManager levelManager;
 PlayerManager playerManager;
@@ -327,6 +326,7 @@ void draw() {
         case 3:
         case 4:
         case 5:
+        case 6:
           levelManager.levelSelector();
           enemyManager.enemySpawner();
           powerUpManager.powerUpSpawner();

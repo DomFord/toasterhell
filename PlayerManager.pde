@@ -246,7 +246,11 @@ class PlayerManager{
   void displayCurrentLevel() {
     fill(255);
     textSize(24);
-    text("LEVEL " + gamestate, 150, 40);
+    if (gamestate < 6) {
+      text("LEVEL " + gamestate, 150, 40);
+    } else {
+      text("ENDLESS LEVEL", 150, 40);
+    }
   }
 
     void death() {

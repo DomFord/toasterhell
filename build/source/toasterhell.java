@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.io.*; 
 import java.util.Collections; 
 import java.util.Comparator; 
-import processing.sound.*; 
 
 import java.util.HashMap; 
 import java.util.ArrayList; 
@@ -27,7 +26,6 @@ ITU 2017, Programming for Designers
 */
 
   // Importing various Java libraries, used for saving, loading and sorting the highscoreEntry.
-
 
 
 
@@ -349,6 +347,7 @@ public void draw() {
         case 3:
         case 4:
         case 5:
+        case 6:
           levelManager.levelSelector();
           enemyManager.enemySpawner();
           powerUpManager.powerUpSpawner();
@@ -554,7 +553,7 @@ class BasicEnemy {
                 println("Enemy hit!");
                 alive = false;
                 playerManager.bullets.remove(i);
-                playerManager.score += 10;
+                playerManager.score += enemyState * 10;
                 println(playerManager.score);
               }
         }
@@ -976,7 +975,7 @@ This script deals with levels; it handles what level is selected and how each le
 class LevelManager{
   int bgColour;
   int backgroundyPos, a, switchScreenX, switchScreenX2;
-  PImage backgroundGrass, backgroundWater, backgroundRock, backgroundIce, backgroundLava, endlessLevelBackground;
+  PImage backgroundGrass, backgroundWater, backgroundRock, backgroundIce, backgroundLava, backgroundCrystal;
   PImage[] backgrounds;
 
   LevelManager() {
@@ -987,20 +986,22 @@ class LevelManager{
     backgroundRock = loadImage("rocks.png");
     backgroundIce = loadImage("ice.png");
     backgroundLava = loadImage("lava.png");
+    backgroundCrystal = loadImage("crystal.png");
     backgroundGrass.resize(width,0);
     backgroundWater.resize(width,0);
     backgroundRock.resize(width,0);
     backgroundIce.resize(width,0);
     backgroundLava.resize(width,0);
+    backgroundCrystal.resize(width,0);
     backgrounds = new PImage[6];
       backgrounds[0] = backgroundGrass;
       backgrounds[1] = backgroundWater;
       backgrounds[2] = backgroundRock;
       backgrounds[3] = backgroundIce;
       backgrounds[4] = backgroundLava;
-      backgrounds[5] = backgroundGrass;
+      backgrounds[5] = backgroundCrystal;
   }
-
+  
   public void levelSelector() {
       switch (menuIndex) {
       case 3:
@@ -1222,7 +1223,6 @@ class PlayerManager{
   boolean alive, left, right, up, down, shooting;
   ArrayList<PlayerBullet> bullets;
   PImage player1sheet, player2sheet, heart;
-  SoundFile shoot;
 
   PlayerManager() {
     timeStamp = 0;
@@ -1252,12 +1252,8 @@ class PlayerManager{
     ticksLast = millis();
     frameDuration = 100;
     score = 0;
-<<<<<<< HEAD
     health = 3;
     shootRateModifier = 10;
-=======
-<<<<<<< Updated upstream
->>>>>>> c8917b869ec72c88e4fc2641b2c61fc002fc6d01
   }
 
   public void avatarStatSetter() {
@@ -1268,10 +1264,6 @@ class PlayerManager{
       health = 5;
       shootRateModifier = 25;
     }
-=======
-    health = 3;
-    shoot = new SoundFile(this,lasershot.wav);
->>>>>>> Stashed changes
   }
 
   public void drawPlayer() {
@@ -1383,7 +1375,6 @@ class PlayerManager{
       if (ticksElapsed > timeStamp + shootRateModifier) {
         bullets.add(new PlayerBullet(xpos, ypos));
         score--;
-        shoot.play();
         timeStamp = ticksElapsed;
       }
     }
@@ -1471,7 +1462,11 @@ class PlayerManager{
   public void displayCurrentLevel() {
     fill(255);
     textSize(24);
-    text("LEVEL " + gamestate, 150, 40);
+    if (gamestate < 6) {
+      text("LEVEL " + gamestate, 150, 40);
+    } else {
+      text("ENDLESS LEVEL", 150, 40);
+    }
   }
 
     public void death() {

@@ -4,7 +4,7 @@ This script deals with levels; it handles what level is selected and how each le
 class LevelManager{
   color bgColour;
   int backgroundyPos, a, switchScreenX, switchScreenX2;
-  PImage backgroundGrass, backgroundWater, backgroundRock, backgroundIce, backgroundLava, endlessLevelBackground;
+  PImage backgroundGrass, backgroundWater, backgroundRock, backgroundIce, backgroundLava, backgroundCrystal;
   PImage[] backgrounds;
 
   LevelManager() {
@@ -15,20 +15,22 @@ class LevelManager{
     backgroundRock = loadImage("rocks.png");
     backgroundIce = loadImage("ice.png");
     backgroundLava = loadImage("lava.png");
+    backgroundCrystal = loadImage("crystal.png");
     backgroundGrass.resize(width,0);
     backgroundWater.resize(width,0);
     backgroundRock.resize(width,0);
     backgroundIce.resize(width,0);
     backgroundLava.resize(width,0);
+    backgroundCrystal.resize(width,0);
     backgrounds = new PImage[6];
       backgrounds[0] = backgroundGrass;
       backgrounds[1] = backgroundWater;
       backgrounds[2] = backgroundRock;
       backgrounds[3] = backgroundIce;
       backgrounds[4] = backgroundLava;
-      backgrounds[5] = backgroundGrass;
+      backgrounds[5] = backgroundCrystal;
   }
-
+  
   void levelSelector() {
       switch (menuIndex) {
       case 3:
