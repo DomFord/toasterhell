@@ -2,7 +2,7 @@
 This script handles the player, both what player is selected, player life, weapon, controls etc.
 */
 class PlayerManager{
-  int timeStamp, shootRateModifier, playerSelect, avatarFrame, ticksLast, frameDuration, score, health;
+  int timeStamp, shootRateModifier, playerSelect, avatarFrame, ticksLast, frameDuration, score, health, maxHealth;
   float xpos, ypos, maxSpeed, size, leftSpeed, rightSpeed, upSpeed, downSpeed, speedModifier, brakeModifier, hitBlinkOpacity;
   boolean left, right, up, down, shooting;
   ArrayList<PlayerBullet> bullets;
@@ -58,10 +58,12 @@ class PlayerManager{
     shooting = false;
     score = 0;
     if (playerSelect == 1) {
+      maxHealth = 3;
       health = 3;
       shootRateModifier = 10;
       speedModifier = 20;
     } else {
+      maxHealth = 5;
       health = 5;
       shootRateModifier = 25;
       speedModifier = 10;
@@ -180,23 +182,23 @@ class PlayerManager{
   void bulletCollision() { //collision is checked with each bullet from each enemy
     for (int k = enemyManager.bullets.size() - 1; k >= 0; k--) {
       if (enemyManager.bullets.get(k).xpos - enemyManager.bullets.get(k).size / 2 > xpos - size
-          && enemyManager.bullets.get(k).xpos + enemyManager.bullets.get(k).size / 2 < xpos + size
-          && enemyManager.bullets.get(k).ypos - enemyManager.bullets.get(k).size / 2 > ypos - size
-          && enemyManager.bullets.get(k).ypos + enemyManager.bullets.get(k).size / 2 < ypos + size) {
-            enemyManager.bullets.remove(k);
-            hitBlinkOpacity = 255 / 2;
-            health--;
+       && enemyManager.bullets.get(k).xpos + enemyManager.bullets.get(k).size / 2 < xpos + size
+       && enemyManager.bullets.get(k).ypos - enemyManager.bullets.get(k).size / 2 > ypos - size
+       && enemyManager.bullets.get(k).ypos + enemyManager.bullets.get(k).size / 2 < ypos + size) {
+         enemyManager.bullets.remove(k);
+         hitBlinkOpacity = 255 / 2;
+         health--;
       }
     }
     for (int i = enemyManager.basicEnemies.size() - 1; i >= 0; i--) {
       for (int j = enemyManager.basicEnemies.get(i).bullets.size() - 1; j >= 0; j--) {
         if (enemyManager.basicEnemies.get(i).bullets.get(j).xpos - enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 > xpos - size
-            && enemyManager.basicEnemies.get(i).bullets.get(j).xpos + enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 < xpos + size
-            && enemyManager.basicEnemies.get(i).bullets.get(j).ypos - enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 > ypos - size
-            && enemyManager.basicEnemies.get(i).bullets.get(j).ypos + enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 < ypos + size) {
-              enemyManager.basicEnemies.get(i).bullets.remove(j);
-              hitBlinkOpacity = 255 / 2;
-              health--;
+         && enemyManager.basicEnemies.get(i).bullets.get(j).xpos + enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 < xpos + size
+         && enemyManager.basicEnemies.get(i).bullets.get(j).ypos - enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 > ypos - size
+         && enemyManager.basicEnemies.get(i).bullets.get(j).ypos + enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 < ypos + size) {
+           enemyManager.basicEnemies.get(i).bullets.remove(j);
+           hitBlinkOpacity = 255 / 2;
+           health--;
         }
       }
     }
@@ -207,12 +209,14 @@ class PlayerManager{
       if (powerUpManager.powerUps.get(i).ypos > ypos - size) {
         if (powerUpManager.powerUps.get(i).xpos > xpos - size
             && powerUpManager.powerUps.get(i).xpos < xpos + size) {
-            health++;
-            powerUpManager.powerUps.remove(i);
+              if (health < maxHealth){
+                health++;
+                powerUpManager.powerUps.remove(i);
+              }
+        }
+      }
     }
   }
-}
-}
 
   void hitBlinker() { //this flashes the screen when the player gets hit
     fill(218, 44, 56, hitBlinkOpacity);
@@ -258,34 +262,34 @@ class PlayerManager{
     }
   }
 
-    void death() { //decides what happens when the player dies; depending on game mode (campaign or endless), it checks if the score is higher than the last entry on the list and sends you to either tag input or highscore screen
-      switch (gamestate){
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-        case 5:
-          if(playerManager.score > highScoreList.get(9).points){  //checks if the player has set a new highscore better than the lowest one currently on the list
-            menuIndex = 5;
-          }
-          else{
-            menuIndex = 6;
-          }
-        break;
-        case 6:
-          if(playerManager.score > highScoreListEndless.get(9).points){  //checks if the player has set a new highscore better than the lowest one currently on the list
-            menuIndex = 7;
-          }
-          else{
-            menuIndex = 8;
-          }
-        break;
-      }
-      for (int i = enemyManager.basicEnemies.size() - 1; i >= 0; i--) {
-        enemyManager.basicEnemies.remove(i);
-      }
-      for (int i = powerUpManager.powerUps.size() - 1; i >= 0; i--) {
-        powerUpManager.powerUps.remove(i);
-      }
+  void death() { //decides what happens when the player dies; depending on game mode (campaign or endless), it checks if the score is higher than the last entry on the list and sends you to either tag input or highscore screen
+    switch (gamestate){
+      case 1:
+      case 2:
+      case 3:
+      case 4:
+      case 5:
+        if(playerManager.score > highScoreList.get(9).points){  //checks if the player has set a new highscore better than the lowest one currently on the list
+          menuIndex = 5;
+        }
+        else{
+          menuIndex = 6;
+        }
+      break;
+      case 6:
+        if(playerManager.score > highScoreListEndless.get(9).points){  //checks if the player has set a new highscore better than the lowest one currently on the list
+          menuIndex = 7;
+        }
+        else{
+          menuIndex = 8;
+        }
+      break;
+    }
+    for (int i = enemyManager.basicEnemies.size() - 1; i >= 0; i--) {
+      enemyManager.basicEnemies.remove(i);
+    }
+    for (int i = powerUpManager.powerUps.size() - 1; i >= 0; i--) {
+      powerUpManager.powerUps.remove(i);
     }
   }
+}

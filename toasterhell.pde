@@ -7,6 +7,7 @@ ITU 2017, Programming for Designers
 import java.io.Serializable;  // Importing various Java libraries, used for saving, loading and sorting the highscoreEntry.
 import java.io.*;
 import java.util.Collections;
+import java.util.List;
 import java.util.Comparator;
 
 LevelManager levelManager;
