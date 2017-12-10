@@ -25,11 +25,13 @@ class EnemyManager {
         }
         menuIndex++;
         enemyCounter = 0;
+        maxEnemies = 0;
       } else {
         if (ticksElapsed > timeStamp + 100 && maxEnemies < 20) {
           basicEnemies.add(new BasicEnemy(gamestate));
           timeStamp = ticksElapsed;
           maxEnemies ++;
+          println(maxEnemies);
         }
       }
   } else {

@@ -747,11 +747,13 @@ class EnemyManager {
         }
         menuIndex++;
         enemyCounter = 0;
+        maxEnemies = 0;
       } else {
         if (ticksElapsed > timeStamp + 100 && maxEnemies < 20) {
           basicEnemies.add(new BasicEnemy(gamestate));
           timeStamp = ticksElapsed;
           maxEnemies ++;
+          println(maxEnemies);
         }
       }
   } else {
@@ -1174,6 +1176,7 @@ class LevelManager{
       case 4:
         if(gamestate <= 4){
           advanceGamestate();
+          enemyManager.enemyCounter = 0;
         }
         else{
           if(playerManager.score > highScoreList.get(9).points){  //checks if the player has set a new highscore better than the lowest one currently on the list
