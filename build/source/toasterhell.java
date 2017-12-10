@@ -314,7 +314,6 @@ public void keyPressed() { //handles all the keyboard input for the different sc
         break;
         case ENTER:
         case RETURN:
-        case ' ':
           if (gamestate < 5){
             leaderboardInput.saveScore();
           }
@@ -322,6 +321,14 @@ public void keyPressed() { //handles all the keyboard input for the different sc
             leaderboardInput.saveScoreEndless();
           }
         break;
+      }
+      if (key == ' ') {
+        if (gamestate < 5){
+          leaderboardInput.saveScore();
+        }
+        else if (gamestate == 6){
+          leaderboardInput.saveScoreEndless();
+        }
       }
       break;
       case 6:
