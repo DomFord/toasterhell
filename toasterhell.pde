@@ -292,7 +292,7 @@ void keyPressed() { //handles all the keyboard input for the different screens
         break;
         case ENTER:
         case RETURN:
-          if (gamestate < 5){
+          if (gamestate <= 5){
             leaderboardInput.saveScore();
           }
           else if (gamestate == 6){
@@ -301,7 +301,7 @@ void keyPressed() { //handles all the keyboard input for the different screens
         break;
       }
       if (key == ' ') {
-        if (gamestate < 5){
+        if (gamestate <= 5){
           leaderboardInput.saveScore();
         }
         else if (gamestate == 6){
