@@ -40,6 +40,8 @@ class PlayerManager{
   }
 
   void avatarStatSetter() { //this deals with the stats of the two different player avatars - health, speed and shoot rate.
+    enemyManager.enemyCounter = 0;
+    enemyManager.maxEnemies = 0;
     gamestate = 1;
     leftSpeed = 0;
     rightSpeed = 0;
@@ -77,7 +79,7 @@ class PlayerManager{
     displayScore();
     displayCurrentLevel();
 
-    if(health == 0){
+    if(health <= 0){
       death();
     }
     imageMode(CENTER);

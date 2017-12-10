@@ -760,7 +760,6 @@ class EnemyManager {
           basicEnemies.add(new BasicEnemy(gamestate));
           timeStamp = ticksElapsed;
           maxEnemies ++;
-          println(maxEnemies);
         }
       }
   } else {
@@ -1183,7 +1182,8 @@ class LevelManager{
       case 4:
         if(gamestate <= 4){
           advanceGamestate();
-          enemyManager.enemyCounter = 0;
+          enemyManager.enemyCounter = 20;
+          enemyManager.maxEnemies = 0;
         }
         else{
           if(playerManager.score > highScoreList.get(9).points){  //checks if the player has set a new highscore better than the lowest one currently on the list
@@ -1431,6 +1431,8 @@ class PlayerManager{
   }
 
   public void avatarStatSetter() { //this deals with the stats of the two different player avatars - health, speed and shoot rate.
+    enemyManager.enemyCounter = 0;
+    enemyManager.maxEnemies = 0;
     gamestate = 1;
     leftSpeed = 0;
     rightSpeed = 0;
@@ -1468,7 +1470,7 @@ class PlayerManager{
     displayScore();
     displayCurrentLevel();
 
-    if(health == 0){
+    if(health <= 0){
       death();
     }
     imageMode(CENTER);

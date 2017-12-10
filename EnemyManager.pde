@@ -31,7 +31,6 @@ class EnemyManager {
           basicEnemies.add(new BasicEnemy(gamestate));
           timeStamp = ticksElapsed;
           maxEnemies ++;
-          println(maxEnemies);
         }
       }
   } else {
