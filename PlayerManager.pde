@@ -44,9 +44,11 @@ class PlayerManager{
     if (playerSelect == 1) {
       health = 3;
       shootRateModifier = 10;
+      speedModifier = 20;
     } else {
       health = 5;
       shootRateModifier = 25;
+      speedModifier = 10;
     }
   }
 
@@ -246,8 +248,9 @@ class PlayerManager{
   void displayCurrentLevel() {
     fill(255);
     textSize(24);
+    textAlign(LEFT, CENTER);
     if (gamestate < 6) {
-      text("LEVEL " + gamestate, 150, 40);
+      text("LEVEL " + gamestate, 30, 40);
     } else {
       text("ENDLESS LEVEL", 200, 40);
     }
