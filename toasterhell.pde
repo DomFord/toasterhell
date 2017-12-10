@@ -69,6 +69,13 @@ void setup() {
 }
 
 void keyPressed() { //handles all the keyboard input for the different screens
+  if (key == '0') {
+    if (playerManager.godmode) {
+      playerManager.godmode = false;
+    } else {
+      playerManager.godmode = true;
+    }
+  }
   switch (menuIndex) {
     case 1:
       if (key == ' ') {
@@ -301,7 +308,7 @@ void keyPressed() { //handles all the keyboard input for the different screens
         break;
       }
       if (key == ' ') {
-        if (gamestate < 5){
+        if (gamestate <= 5){
           leaderboardInput.saveScore();
         }
         else if (gamestate == 6){

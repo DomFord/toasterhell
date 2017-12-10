@@ -4,7 +4,7 @@ This script handles the player, both what player is selected, player life, weapo
 class PlayerManager{
   int timeStamp, shootRateModifier, playerSelect, avatarFrame, ticksLast, frameDuration, score, health, maxHealth;
   float xpos, ypos, maxSpeed, size, leftSpeed, rightSpeed, upSpeed, downSpeed, speedModifier, brakeModifier, hitBlinkOpacity;
-  boolean left, right, up, down, shooting;
+  boolean left, right, up, down, shooting, godmode;
   ArrayList<PlayerBullet> bullets;
   PImage player1sheet, player2sheet, heart;
 
@@ -189,7 +189,9 @@ class PlayerManager{
        && enemyManager.bullets.get(k).ypos + enemyManager.bullets.get(k).size / 2 < ypos + size) {
          enemyManager.bullets.remove(k);
          hitBlinkOpacity = 255 / 2;
+         if (!godmode) {
          health--;
+       }
       }
     }
     for (int i = enemyManager.basicEnemies.size() - 1; i >= 0; i--) {
@@ -200,7 +202,9 @@ class PlayerManager{
          && enemyManager.basicEnemies.get(i).bullets.get(j).ypos + enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 < ypos + size) {
            enemyManager.basicEnemies.get(i).bullets.remove(j);
            hitBlinkOpacity = 255 / 2;
+           if (!godmode) {
            health--;
+         }
         }
       }
     }
