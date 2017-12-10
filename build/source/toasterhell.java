@@ -341,29 +341,18 @@ public void draw() {
       mainMenu.menuSelect();
     break;
     case 3:
-      switch (gamestate) {
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-        case 5:
-        case 6:
-          levelManager.levelSelector();
-          enemyManager.enemySpawner();
-          powerUpManager.powerUpSpawner();
-          playerManager.drawPlayer();
-          ticksElapsed++;
-          ticksLastUpdate = millis();
-          fill(255);
-          text(enemyManager.enemyCounter, width / 2, height / 2);
-        break;
-      }
+      levelManager.levelSelector();
+      enemyManager.enemySpawner();
+      powerUpManager.powerUpSpawner();
+      playerManager.drawPlayer();
+      ticksElapsed++;
+      ticksLastUpdate = millis();
     break;
     case 4:
-    levelManager.levelSelector();
-    playerManager.drawPlayer();
-    ticksElapsed++;
-    ticksLastUpdate = millis();
+      levelManager.levelSelector();
+      playerManager.drawPlayer();
+      ticksElapsed++;
+      ticksLastUpdate = millis();
     break;
     case 5:
       background(0);
@@ -1260,9 +1249,11 @@ class PlayerManager{
     if (playerSelect == 1) {
       health = 3;
       shootRateModifier = 10;
+      speedModifier = 20;
     } else {
       health = 5;
       shootRateModifier = 25;
+      speedModifier = 10;
     }
   }
 
@@ -1462,10 +1453,11 @@ class PlayerManager{
   public void displayCurrentLevel() {
     fill(255);
     textSize(24);
+    textAlign(LEFT, CENTER);
     if (gamestate < 6) {
-      text("LEVEL " + gamestate, 150, 40);
+      text("LEVEL " + gamestate, 30, 40);
     } else {
-      text("ENDLESS LEVEL", 150, 40);
+      text("ENDLESS LEVEL", 30, 40);
     }
   }
 

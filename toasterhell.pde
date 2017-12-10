@@ -320,29 +320,18 @@ void draw() {
       mainMenu.menuSelect();
     break;
     case 3:
-      switch (gamestate) {
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-        case 5:
-        case 6:
-          levelManager.levelSelector();
-          enemyManager.enemySpawner();
-          powerUpManager.powerUpSpawner();
-          playerManager.drawPlayer();
-          ticksElapsed++;
-          ticksLastUpdate = millis();
-          fill(255);
-          text(enemyManager.enemyCounter, width / 2, height / 2);
-        break;
-      }
+      levelManager.levelSelector();
+      enemyManager.enemySpawner();
+      powerUpManager.powerUpSpawner();
+      playerManager.drawPlayer();
+      ticksElapsed++;
+      ticksLastUpdate = millis();
     break;
     case 4:
-    levelManager.levelSelector();
-    playerManager.drawPlayer();
-    ticksElapsed++;
-    ticksLastUpdate = millis();
+      levelManager.levelSelector();
+      playerManager.drawPlayer();
+      ticksElapsed++;
+      ticksLastUpdate = millis();
     break;
     case 5:
       background(0);
