@@ -36,6 +36,8 @@ class PlayerManager{
     ticksLast = millis();
     frameDuration = 100;
     score = 0;
+    health = 3;
+    shootRateModifier = 10;
   }
 
   void avatarStatSetter() {

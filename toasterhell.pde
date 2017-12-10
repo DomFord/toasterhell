@@ -111,7 +111,8 @@ void keyPressed() {
               menuIndex = 3;
             break;
             case 2:
-              menuIndex = 4;
+              gamestate = 6;
+              menuIndex = 3;
             break;
             case 3:
               menuIndex = 5;
@@ -128,7 +129,8 @@ void keyPressed() {
           menuIndex = 3;
         break;
         case 2:
-          menuIndex = 4;
+          gamestate = 6;
+          menuIndex = 3;
         break;
         case 3:
           menuIndex = 5;

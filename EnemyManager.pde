@@ -12,23 +12,29 @@ class EnemyManager {
 
   void enemySpawner() {
     enemyKiller();
-
-    if (enemyCounter >= 20) {
-      for (int i = basicEnemies.size() - 1; i >= 0; i--) {
-        basicEnemies.remove(i);
+    if (gamestate < 6) {
+      if (enemyCounter >= 20) {
+        for (int i = basicEnemies.size() - 1; i >= 0; i--) {
+          basicEnemies.remove(i);
+        }
+        for (int i = bullets.size() - 1; i >= 0; i--) {
+          bullets.remove(i);
+        }
+        menuIndex++;
+        enemyCounter = 0;
+      } else {
+        if (ticksElapsed > timeStamp + 100 && maxEnemies < 20) {
+          basicEnemies.add(new BasicEnemy(gamestate));
+          timeStamp = ticksElapsed;
+          maxEnemies ++;
+        }
       }
-      for (int i = bullets.size() - 1; i >= 0; i--) {
-        bullets.remove(i);
-      }
-      menuIndex++;
-      enemyCounter = 0;
-    } else {
-      if (ticksElapsed > timeStamp + 100 && maxEnemies < 20) {
-        basicEnemies.add(new BasicEnemy());
-        timeStamp = ticksElapsed;
-        maxEnemies ++;
-      }
+  } else {
+    if (ticksElapsed > timeStamp + 100) {
+      basicEnemies.add(new BasicEnemy((int)random(1, 5)));
+      timeStamp = ticksElapsed;
     }
+  }
 
     for (int i = basicEnemies.size() - 1; i >= 0; i--) {
       basicEnemies.get(i).drawEnemy();

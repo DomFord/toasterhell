@@ -132,7 +132,8 @@ public void keyPressed() {
               menuIndex = 3;
             break;
             case 2:
-              menuIndex = 4;
+              gamestate = 6;
+              menuIndex = 3;
             break;
             case 3:
               menuIndex = 5;
@@ -149,7 +150,8 @@ public void keyPressed() {
           menuIndex = 3;
         break;
         case 2:
-          menuIndex = 4;
+          gamestate = 6;
+          menuIndex = 3;
         break;
         case 3:
           menuIndex = 5;
@@ -374,16 +376,17 @@ public void draw() {
   }
 }
 class BasicEnemy {
-  int timeStamp, shootRateModifier, shootCounter, ticksLast, cycleCount,xMove, yMove;
+  int timeStamp, shootRateModifier, shootCounter, ticksLast, cycleCount,xMove, yMove, enemyState;
   float xpos, ypos, speed1, speed2, speed3, speed4, speed5, size, leftSpeed, rightSpeed, upSpeed, downSpeed, speedModifier, brakeModifier;
   boolean alive, shooting;
   ArrayList<EnemyBullet> bullets;
   PImage enemyImage1, enemyImage2, enemyImage3, enemyImage4, enemyImage5;
   PImage[] enemyImages;
 
-  BasicEnemy() {
+  BasicEnemy(int level) {
     xMove = 0;
     yMove = 0;
+    enemyState = level;
     cycleCount = 0;
     ticksLast = millis();
     shootCounter = 0;
@@ -425,14 +428,14 @@ class BasicEnemy {
       bulletCollision();
       shootHandler();
       imageMode(CENTER);
-      image(enemyImages[gamestate - 1], xpos, ypos);
+      image(enemyImages[enemyState - 1], xpos, ypos);
       } else {
         //death();
       }
     }
 
     public void move() {
-      switch (gamestate){
+      switch (enemyState){
         case 1:
           ypos += speed1 * PApplet.parseFloat(millis() - ticksLastUpdate)*0.001f;
         break;
@@ -558,7 +561,7 @@ class BasicEnemy {
     public void shootHandler() {
       if (shooting) {
         int delta = millis() - ticksLast;
-        switch (gamestate){
+        switch (enemyState){
           case 1:
           shootRateModifier = 2000;
           if (delta > shootRateModifier) {
@@ -708,23 +711,29 @@ class EnemyManager {
 
   public void enemySpawner() {
     enemyKiller();
-
-    if (enemyCounter >= 20) {
-      for (int i = basicEnemies.size() - 1; i >= 0; i--) {
-        basicEnemies.remove(i);
+    if (gamestate < 6) {
+      if (enemyCounter >= 20) {
+        for (int i = basicEnemies.size() - 1; i >= 0; i--) {
+          basicEnemies.remove(i);
+        }
+        for (int i = bullets.size() - 1; i >= 0; i--) {
+          bullets.remove(i);
+        }
+        menuIndex++;
+        enemyCounter = 0;
+      } else {
+        if (ticksElapsed > timeStamp + 100 && maxEnemies < 20) {
+          basicEnemies.add(new BasicEnemy(gamestate));
+          timeStamp = ticksElapsed;
+          maxEnemies ++;
+        }
       }
-      for (int i = bullets.size() - 1; i >= 0; i--) {
-        bullets.remove(i);
-      }
-      menuIndex++;
-      enemyCounter = 0;
-    } else {
-      if (ticksElapsed > timeStamp + 100 && maxEnemies < 20) {
-        basicEnemies.add(new BasicEnemy());
-        timeStamp = ticksElapsed;
-        maxEnemies ++;
-      }
+  } else {
+    if (ticksElapsed > timeStamp + 100) {
+      basicEnemies.add(new BasicEnemy((int)random(1, 5)));
+      timeStamp = ticksElapsed;
     }
+  }
 
     for (int i = basicEnemies.size() - 1; i >= 0; i--) {
       basicEnemies.get(i).drawEnemy();
@@ -1240,6 +1249,8 @@ class PlayerManager{
     ticksLast = millis();
     frameDuration = 100;
     score = 0;
+    health = 3;
+    shootRateModifier = 10;
   }
 
   public void avatarStatSetter() {

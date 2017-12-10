@@ -1,14 +1,15 @@
 class BasicEnemy {
-  int timeStamp, shootRateModifier, shootCounter, ticksLast, cycleCount,xMove, yMove;
+  int timeStamp, shootRateModifier, shootCounter, ticksLast, cycleCount,xMove, yMove, enemyState;
   float xpos, ypos, speed1, speed2, speed3, speed4, speed5, size, leftSpeed, rightSpeed, upSpeed, downSpeed, speedModifier, brakeModifier;
   boolean alive, shooting;
   ArrayList<EnemyBullet> bullets;
   PImage enemyImage1, enemyImage2, enemyImage3, enemyImage4, enemyImage5;
   PImage[] enemyImages;
 
-  BasicEnemy() {
+  BasicEnemy(int level) {
     xMove = 0;
     yMove = 0;
+    enemyState = level;
     cycleCount = 0;
     ticksLast = millis();
     shootCounter = 0;
@@ -50,14 +51,14 @@ class BasicEnemy {
       bulletCollision();
       shootHandler();
       imageMode(CENTER);
-      image(enemyImages[gamestate - 1], xpos, ypos);
+      image(enemyImages[enemyState - 1], xpos, ypos);
       } else {
         //death();
       }
     }
 
     void move() {
-      switch (gamestate){
+      switch (enemyState){
         case 1:
           ypos += speed1 * float(millis() - ticksLastUpdate)*0.001;
         break;
@@ -183,7 +184,7 @@ class BasicEnemy {
     void shootHandler() {
       if (shooting) {
         int delta = millis() - ticksLast;
-        switch (gamestate){
+        switch (enemyState){
           case 1:
           shootRateModifier = 2000;
           if (delta > shootRateModifier) {
