@@ -42,7 +42,6 @@ void setup() {
   String tempScoreString = tempScoreList[0];
   String[] tempScoreArray = split(tempScoreString, ',');
   highScoreList = new ArrayList<Score>();
-  println(tempScoreArray.length);
   for(int i = 0; i < tempScoreArray.length - 1; i++){
     Score newScore = new Score();
     newScore.tag = tempScoreArray[i].substring(0,3);
@@ -54,7 +53,6 @@ void setup() {
   String tempScoreStringEndless = tempScoreListEndless[0];
   String[] tempScoreArrayEndless = split(tempScoreStringEndless, ',');
   highScoreListEndless = new ArrayList<Score>();
-  println(tempScoreArrayEndless.length);
   for(int i = 0; i < tempScoreArrayEndless.length - 1; i++){
     Score newScoreEndless = new Score();
     newScoreEndless.tag = tempScoreArrayEndless[i].substring(0,3);
@@ -191,6 +189,10 @@ void keyPressed() { //handles all the keyboard input for the different screens
         break;
         case '6':
           gamestate = 6;
+        break;
+        case 'a':
+          enemyManager.enemyCounter = 20;
+          levelManager.advanceGamestate();
         break;
       }
       break;

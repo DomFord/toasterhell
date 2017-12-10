@@ -172,11 +172,9 @@ class BasicEnemy {
               && playerManager.bullets.get(i).xpos + playerManager.bullets.get(i).size / 2 < xpos + size / 2
               && playerManager.bullets.get(i).ypos - playerManager.bullets.get(i).size / 2 > ypos - size / 2
               && playerManager.bullets.get(i).ypos + playerManager.bullets.get(i).size / 2 < ypos + size / 2) {
-                println("Enemy hit!");
                 alive = false;
                 playerManager.bullets.remove(i);
                 playerManager.score += enemyState * 10;
-                println(playerManager.score);
               }
         }
     }

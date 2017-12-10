@@ -40,6 +40,7 @@ class PlayerManager{
   }
 
   void avatarStatSetter() { //this deals with the stats of the two different player avatars - health, speed and shoot rate.
+    gamestate = 1;
     leftSpeed = 0;
     rightSpeed = 0;
     upSpeed = 0;
@@ -182,11 +183,9 @@ class PlayerManager{
           && enemyManager.bullets.get(k).xpos + enemyManager.bullets.get(k).size / 2 < xpos + size
           && enemyManager.bullets.get(k).ypos - enemyManager.bullets.get(k).size / 2 > ypos - size
           && enemyManager.bullets.get(k).ypos + enemyManager.bullets.get(k).size / 2 < ypos + size) {
-            println("Player hit!");
             enemyManager.bullets.remove(k);
             hitBlinkOpacity = 255 / 2;
             health--;
-            println(health);
       }
     }
     for (int i = enemyManager.basicEnemies.size() - 1; i >= 0; i--) {
@@ -195,7 +194,6 @@ class PlayerManager{
             && enemyManager.basicEnemies.get(i).bullets.get(j).xpos + enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 < xpos + size
             && enemyManager.basicEnemies.get(i).bullets.get(j).ypos - enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 > ypos - size
             && enemyManager.basicEnemies.get(i).bullets.get(j).ypos + enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 < ypos + size) {
-              println("Player hit!");
               enemyManager.basicEnemies.get(i).bullets.remove(j);
               hitBlinkOpacity = 255 / 2;
               health--;

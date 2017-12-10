@@ -63,7 +63,6 @@ public void setup() {
   String tempScoreString = tempScoreList[0];
   String[] tempScoreArray = split(tempScoreString, ',');
   highScoreList = new ArrayList<Score>();
-  println(tempScoreArray.length);
   for(int i = 0; i < tempScoreArray.length - 1; i++){
     Score newScore = new Score();
     newScore.tag = tempScoreArray[i].substring(0,3);
@@ -75,7 +74,6 @@ public void setup() {
   String tempScoreStringEndless = tempScoreListEndless[0];
   String[] tempScoreArrayEndless = split(tempScoreStringEndless, ',');
   highScoreListEndless = new ArrayList<Score>();
-  println(tempScoreArrayEndless.length);
   for(int i = 0; i < tempScoreArrayEndless.length - 1; i++){
     Score newScoreEndless = new Score();
     newScoreEndless.tag = tempScoreArrayEndless[i].substring(0,3);
@@ -212,6 +210,10 @@ public void keyPressed() { //handles all the keyboard input for the different sc
         break;
         case '6':
           gamestate = 6;
+        break;
+        case 'a':
+          enemyManager.enemyCounter = 20;
+          levelManager.advanceGamestate();
         break;
       }
       break;
@@ -570,11 +572,9 @@ class BasicEnemy {
               && playerManager.bullets.get(i).xpos + playerManager.bullets.get(i).size / 2 < xpos + size / 2
               && playerManager.bullets.get(i).ypos - playerManager.bullets.get(i).size / 2 > ypos - size / 2
               && playerManager.bullets.get(i).ypos + playerManager.bullets.get(i).size / 2 < ypos + size / 2) {
-                println("Enemy hit!");
                 alive = false;
                 playerManager.bullets.remove(i);
                 playerManager.score += enemyState * 10;
-                println(playerManager.score);
               }
         }
     }
@@ -739,6 +739,9 @@ class EnemyManager {
         }
         for (int i = bullets.size() - 1; i >= 0; i--) {
           bullets.remove(i);
+        }
+        for (int i = powerUpManager.powerUps.size() - 1; i >= 0; i--) {
+          powerUpManager.powerUps.remove(i);
         }
         menuIndex++;
         enemyCounter = 0;
@@ -1416,6 +1419,7 @@ class PlayerManager{
   }
 
   public void avatarStatSetter() { //this deals with the stats of the two different player avatars - health, speed and shoot rate.
+    gamestate = 1;
     leftSpeed = 0;
     rightSpeed = 0;
     upSpeed = 0;
@@ -1487,8 +1491,6 @@ class PlayerManager{
     powerUpCollision();
     hitBlinker();
     displayLife();
-    println(xpos);
-    println(ypos);
     if (xpos - size < 0) {
       leftSpeed = 0;
     }
@@ -1560,11 +1562,9 @@ class PlayerManager{
           && enemyManager.bullets.get(k).xpos + enemyManager.bullets.get(k).size / 2 < xpos + size
           && enemyManager.bullets.get(k).ypos - enemyManager.bullets.get(k).size / 2 > ypos - size
           && enemyManager.bullets.get(k).ypos + enemyManager.bullets.get(k).size / 2 < ypos + size) {
-            println("Player hit!");
             enemyManager.bullets.remove(k);
             hitBlinkOpacity = 255 / 2;
             health--;
-            println(health);
       }
     }
     for (int i = enemyManager.basicEnemies.size() - 1; i >= 0; i--) {
@@ -1573,7 +1573,6 @@ class PlayerManager{
             && enemyManager.basicEnemies.get(i).bullets.get(j).xpos + enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 < xpos + size
             && enemyManager.basicEnemies.get(i).bullets.get(j).ypos - enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 > ypos - size
             && enemyManager.basicEnemies.get(i).bullets.get(j).ypos + enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 < ypos + size) {
-              println("Player hit!");
               enemyManager.basicEnemies.get(i).bullets.remove(j);
               hitBlinkOpacity = 255 / 2;
               health--;
@@ -1663,6 +1662,9 @@ class PlayerManager{
       }
       for (int i = enemyManager.basicEnemies.size() - 1; i >= 0; i--) {
         enemyManager.basicEnemies.remove(i);
+      }
+      for (int i = powerUpManager.powerUps.size() - 1; i >= 0; i--) {
+        powerUpManager.powerUps.remove(i);
       }
     }
   }
