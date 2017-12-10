@@ -1380,13 +1380,12 @@ This script handles the player, both what player is selected, player life, weapo
 class PlayerManager{
   int timeStamp, shootRateModifier, playerSelect, avatarFrame, ticksLast, frameDuration, score, health;
   float xpos, ypos, maxSpeed, size, leftSpeed, rightSpeed, upSpeed, downSpeed, speedModifier, brakeModifier, hitBlinkOpacity;
-  boolean alive, left, right, up, down, shooting;
+  boolean left, right, up, down, shooting;
   ArrayList<PlayerBullet> bullets;
   PImage player1sheet, player2sheet, heart;
 
   PlayerManager() {
     timeStamp = 0;
-    alive = true;
     xpos = width / 2;
     ypos = height - 75;
     maxSpeed = 400;
@@ -1417,15 +1416,32 @@ class PlayerManager{
   }
 
   public void avatarStatSetter() { //this deals with the stats of the two different player avatars - health, speed and shoot rate.
+    leftSpeed = 0;
+    rightSpeed = 0;
+    upSpeed = 0;
+    downSpeed = 0;
+    xpos = width / 2;
+    ypos = height - 75;
+    left = false;
+    right = false;
+    up = false;
+    down = false;
+    left = false;
+    right = false;
+    up = false;
+    down = false;
+    shooting = false;
+    score = 0;
     if (playerSelect == 1) {
+<<<<<<< Updated upstream
       alive = true;
       score = 0;
+=======
+>>>>>>> Stashed changes
       health = 3;
       shootRateModifier = 10;
       speedModifier = 20;
     } else {
-      alive = true;
-      score = 0;
       health = 5;
       shootRateModifier = 25;
       speedModifier = 10;
@@ -1433,40 +1449,38 @@ class PlayerManager{
   }
 
   public void drawPlayer() { //this draws the player at the location defined by the movePlayer function, shows a different picture for the two avatars.
-    if (alive) {
-      speedHandler();
-      movePlayer();
-      shootHandler();
-      displayScore();
-      displayCurrentLevel();
+    speedHandler();
+    movePlayer();
+    shootHandler();
+    displayScore();
+    displayCurrentLevel();
 
-      if(health == 0){
-        death();
-      }
-      imageMode(CENTER);
-      if(playerSelect == 1){
-        PImage f = player1sheet.get((avatarFrame*60),0,60,66);
-        image(f,xpos,ypos);
-        int delta = millis() - ticksLast;
-        if (delta >= frameDuration){
-          avatarFrame++;
-          if(avatarFrame >= 3){
-            avatarFrame = 0;
-          }
-          ticksLast += delta;
+    if(health == 0){
+      death();
+    }
+    imageMode(CENTER);
+    if(playerSelect == 1){
+      PImage f = player1sheet.get((avatarFrame*60),0,60,66);
+      image(f,xpos,ypos);
+      int delta = millis() - ticksLast;
+      if (delta >= frameDuration){
+        avatarFrame++;
+        if(avatarFrame >= 3){
+          avatarFrame = 0;
         }
+        ticksLast += delta;
       }
-      else if (playerSelect == 2) {
-        PImage f = player2sheet.get((avatarFrame*60),0,60,66);
-        image(f,xpos,ypos);
-        int delta = millis() - ticksLast;
-        if (delta >= frameDuration) {
-          avatarFrame++;
-          if(avatarFrame >= 3) {
-            avatarFrame = 0;
-          }
-          ticksLast += delta;
-          }
+    }
+    else if (playerSelect == 2) {
+      PImage f = player2sheet.get((avatarFrame*60),0,60,66);
+      image(f,xpos,ypos);
+      int delta = millis() - ticksLast;
+      if (delta >= frameDuration) {
+        avatarFrame++;
+        if(avatarFrame >= 3) {
+          avatarFrame = 0;
+        }
+        ticksLast += delta;
         }
       }
     }
@@ -1478,6 +1492,8 @@ class PlayerManager{
     powerUpCollision();
     hitBlinker();
     displayLife();
+    println(xpos);
+    println(ypos);
     if (xpos - size < 0) {
       leftSpeed = 0;
     }
