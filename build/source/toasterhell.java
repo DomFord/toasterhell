@@ -33,6 +33,7 @@ ITU 2017, Programming for Designers
 LevelManager levelManager;
 PlayerManager playerManager;
 EnemyManager enemyManager;
+PowerUpManager powerUpManager;
 LeaderboardsInput leaderboardInput;
 MainMenu mainMenu;
 ArrayList<Score> highScoreList;
@@ -53,6 +54,7 @@ public void setup() {
   levelManager = new LevelManager();
   playerManager = new PlayerManager();
   enemyManager = new EnemyManager();
+  powerUpManager = new PowerUpManager();
   leaderboardInput = new LeaderboardsInput();
   mainMenu = new MainMenu();
 
@@ -329,6 +331,7 @@ public void draw() {
         case 5:
           levelManager.levelSelector();
           enemyManager.enemySpawner();
+          powerUpManager.powerUpSpawner();
           playerManager.drawPlayer();
           ticksElapsed++;
           ticksLastUpdate = millis();
@@ -1238,6 +1241,7 @@ class PlayerManager{
       speedHandler();
       shootHandler();
       bulletCollision();
+      powerUpCollision();
       hitBlinker();
       displayLife();
       if (xpos - size < 10) {
@@ -1343,6 +1347,24 @@ class PlayerManager{
       }
   }
 
+  public void powerUpCollision() {
+    for (int i = powerUpManager.powerUps.size() - 1; i >= 0; i--) {
+      /*
+      if (powerUpManager.powerUps.get(i).xpos - 50 > xpos - size / 2
+          && powerUpManager.powerUps.get(i).xpos + 50 < xpos + size / 2
+          && powerUpManager.powerUps.get(i).ypos - 50 > ypos - size / 2
+          && powerUpManager.powerUps.get(i).ypos + 50 < ypos + size / 2) {
+            health++;
+            powerUpManager.powerUps.remove(i);
+          } */
+
+      if (powerUpManager.powerUps.get(i).ypos > ypos - size) {
+        health++;
+        powerUpManager.powerUps.remove(i);
+    }
+  }
+}
+
   public void hitBlinker() {
     fill(218, 44, 56, hitBlinkOpacity);
     rectMode(CENTER);
@@ -1387,6 +1409,47 @@ class PlayerManager{
     }
 
   }
+class PowerUp {
+  PImage heart;
+  float xpos, ypos, speed;
+
+  PowerUp() {
+    heart = loadImage("heart.png");
+    xpos = random(50, width - 50);
+    ypos = -100;
+    speed = 75;
+  }
+
+  public void drawPowerUp() {
+    move();
+    imageMode(CENTER);
+    image(heart, xpos, ypos);
+  }
+
+  public void move() {
+    ypos += speed * PApplet.parseFloat(millis() - ticksLastUpdate)*0.001f;
+  }
+}
+class PowerUpManager {
+  ArrayList<PowerUp> powerUps;
+  int timeStamp;
+
+  PowerUpManager() {
+    powerUps = new ArrayList<PowerUp>();
+    timeStamp = 0;
+  }
+
+  public void powerUpSpawner() {
+    if (ticksElapsed > timeStamp + 400) {
+      powerUps.add(new PowerUp());
+      timeStamp = ticksElapsed;
+    }
+
+    for (int i = powerUps.size() - 1; i >= 0; i--) {
+      powerUps.get(i).drawPowerUp();
+    }
+  }
+}
 /*
 Author: Frederik Boye
 Homepage: http://www.frederikboye.com

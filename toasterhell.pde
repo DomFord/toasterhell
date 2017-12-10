@@ -12,6 +12,7 @@ import java.util.Comparator;
 LevelManager levelManager;
 PlayerManager playerManager;
 EnemyManager enemyManager;
+PowerUpManager powerUpManager;
 LeaderboardsInput leaderboardInput;
 MainMenu mainMenu;
 ArrayList<Score> highScoreList;
@@ -32,6 +33,7 @@ void setup() {
   levelManager = new LevelManager();
   playerManager = new PlayerManager();
   enemyManager = new EnemyManager();
+  powerUpManager = new PowerUpManager();
   leaderboardInput = new LeaderboardsInput();
   mainMenu = new MainMenu();
 
@@ -308,6 +310,7 @@ void draw() {
         case 5:
           levelManager.levelSelector();
           enemyManager.enemySpawner();
+          powerUpManager.powerUpSpawner();
           playerManager.drawPlayer();
           ticksElapsed++;
           ticksLastUpdate = millis();

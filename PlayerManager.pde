@@ -82,6 +82,7 @@ class PlayerManager{
       speedHandler();
       shootHandler();
       bulletCollision();
+      powerUpCollision();
       hitBlinker();
       displayLife();
       if (xpos - size < 10) {
@@ -186,6 +187,24 @@ class PlayerManager{
         }
       }
   }
+
+  void powerUpCollision() {
+    for (int i = powerUpManager.powerUps.size() - 1; i >= 0; i--) {
+      /*
+      if (powerUpManager.powerUps.get(i).xpos - 50 > xpos - size / 2
+          && powerUpManager.powerUps.get(i).xpos + 50 < xpos + size / 2
+          && powerUpManager.powerUps.get(i).ypos - 50 > ypos - size / 2
+          && powerUpManager.powerUps.get(i).ypos + 50 < ypos + size / 2) {
+            health++;
+            powerUpManager.powerUps.remove(i);
+          } */
+
+      if (powerUpManager.powerUps.get(i).ypos > ypos - size) {
+        health++;
+        powerUpManager.powerUps.remove(i);
+    }
+  }
+}
 
   void hitBlinker() {
     fill(218, 44, 56, hitBlinkOpacity);
