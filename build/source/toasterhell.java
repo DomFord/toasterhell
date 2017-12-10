@@ -1420,8 +1420,6 @@ class PlayerManager{
     if (playerSelect == 1) {
       alive = true;
       score = 0;
-      timeStamp = 0;
-      avatarFrame = 0;
       health = 3;
       shootRateModifier = 10;
       speedModifier = 20;

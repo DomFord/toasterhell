@@ -274,5 +274,8 @@ class PlayerManager{
           }
         break;
       }
+      for (int i = enemyManager.basicEnemies.size() - 1; i >= 0; i--) {
+        enemyManager.basicEnemies.remove(i);
+      }
     }
   }
