@@ -62,12 +62,23 @@ public void setup() {
   String tempScoreString = tempScoreList[0];
   String[] tempScoreArray = split(tempScoreString, ',');
   highScoreList = new ArrayList<Score>();
+  println(tempScoreArray.length);
   for(int i = 0; i < tempScoreArray.length - 1; i++){
     Score newScore = new Score();
     newScore.tag = tempScoreArray[i].substring(0,3);
     newScore.points = PApplet.parseInt(tempScoreArray[i].substring(4));
     highScoreList.add(newScore);
   }
+  println(highScoreList.get(0));
+  println(highScoreList.get(1));
+  println(highScoreList.get(2));
+  println(highScoreList.get(3));
+  println(highScoreList.get(4));
+  println(highScoreList.get(5));
+  println(highScoreList.get(6));
+  println(highScoreList.get(7));
+  println(highScoreList.get(8));
+  println(highScoreList.get(9));
 
   stars = new Star[10];
   for (int i = 0; i < 10; i++) {
@@ -284,6 +295,9 @@ public void keyPressed() {
         break;
       }
       break;
+      case 6:
+        menuIndex = 2;
+      break;
   }
 }
 
@@ -352,6 +366,8 @@ public void draw() {
       leaderboardInput.displayInput();
     break;
     case 6:
+      background(0);
+      leaderboardInput.showHighScores();
     break;
   }
 }
@@ -679,19 +695,19 @@ class EnemyBullet {
 class EnemyManager {
   ArrayList<BasicEnemy> basicEnemies;
   ArrayList<EnemyBullet> bullets;
-  int timeStamp, enemyCounter;
+  int timeStamp, enemyCounter, maxEnemies;
 
   EnemyManager() {
+    enemyCounter = 0;
     basicEnemies = new ArrayList<BasicEnemy>();
     bullets = new ArrayList<EnemyBullet>();
     timeStamp = 0;
   }
 
   public void enemySpawner() {
-    //switch case here to spawn the correct numbers and types of enemies per level
     enemyKiller();
 
-    if (enemyCounter >= 5) {
+    if (enemyCounter >= 20) {
       for (int i = basicEnemies.size() - 1; i >= 0; i--) {
         basicEnemies.remove(i);
       }
@@ -701,9 +717,10 @@ class EnemyManager {
       menuIndex++;
       enemyCounter = 0;
     } else {
-      if (ticksElapsed > timeStamp + 100) {
+      if (ticksElapsed > timeStamp + 100 && maxEnemies < 20) {
         basicEnemies.add(new BasicEnemy());
         timeStamp = ticksElapsed;
+        maxEnemies ++;
       }
     }
 
@@ -751,11 +768,6 @@ class EnemyManager {
     }
   }
 }
-/*
-Author: Frederik Boye
-Homepage: http://www.frederikboye.com
-"If you're not weird, don't expect me to understand you"
-*/
 class LeaderboardsInput{
   String name;
   int letter1;
@@ -895,6 +907,7 @@ class LeaderboardsInput{
     }
     scoreArray[0] = scoreString;
     saveStrings("highscore.txt", scoreArray);
+    menuIndex = 6;
   }
 
   public void displayInput(){
@@ -922,6 +935,26 @@ class LeaderboardsInput{
       break;
     }
     rectMode(CORNER);
+  }
+
+  public void showHighScores(){
+    fill(255);
+    textFont(font,(40));
+    textAlign(CENTER);
+    text("LEADERBOARDS", 400, 80);
+    textFont(font,(30));
+    text(highScoreList.get(0).toString(), 400, 140);
+    text(highScoreList.get(1).toString(), 400, 180);
+    text(highScoreList.get(2).toString(), 400, 220);
+    text(highScoreList.get(3).toString(), 400, 260);
+    text(highScoreList.get(4).toString(), 400, 300);
+    text(highScoreList.get(5).toString(), 400, 340);
+    text(highScoreList.get(6).toString(), 400, 380);
+    text(highScoreList.get(7).toString(), 400, 420);
+    text(highScoreList.get(8).toString(), 400, 460);
+    text(highScoreList.get(9).toString(), 400, 500);
+    textFont(font,(15));
+    text("PRESS 'SPACE' TO RETURN TO MAIN MENU!", 400, 580);
   }
 }
 /*
@@ -961,7 +994,17 @@ class LevelManager{
         drawBackground(backgrounds[gamestate - 1]);
       break;
       case 4:
-        advanceGamestate();
+        if(gamestate <= 4){
+          advanceGamestate();
+        }
+        else{
+          if(playerManager.score > highScoreList.get(9).points){  //checks if the player has set a new highscore better than the lowest one currently on the list
+            menuIndex = 5;
+          }
+          else{
+            menuIndex = 6;
+          }
+        }
       break;
     }
   }
@@ -1174,7 +1217,7 @@ class PlayerManager{
     xpos = width / 2;
     ypos = height - 75;
     maxSpeed = 400;
-    size = 50;
+    size = 30;
     left = false;
     right = false;
     up = false;
@@ -1207,6 +1250,9 @@ class PlayerManager{
       displayScore();
       displayCurrentLevel();
 
+      if(health == 0){
+        death();
+      }
       imageMode(CENTER);
       if(playerSelect == 1){
         PImage f = player1sheet.get((avatarFrame*60),0,60,66);
@@ -1230,13 +1276,12 @@ class PlayerManager{
             avatarFrame = 0;
           }
           ticksLast += delta;
+          }
         }
-      }
-      } else {
-        death();
       }
     }
 
+<<<<<<< HEAD
     public void movePlayer() {
       speedHandler();
       shootHandler();
@@ -1268,83 +1313,115 @@ class PlayerManager{
       else {
         ypos += downSpeed * PApplet.parseFloat(millis() - ticksLastUpdate) * 0.001f;
       }
+=======
+  public void movePlayer() {
+    speedHandler();
+    shootHandler();
+    bulletCollision();
+    hitBlinker();
+    displayLife();
+    if (xpos - size < 0) {
+      leftSpeed = 0;
     }
+    else {
+      xpos -= leftSpeed * PApplet.parseFloat(millis() - ticksLastUpdate) * 0.001f;
+    }
+    if (xpos + size > width) {
+      rightSpeed = 0;
+    }
+    else {
+      xpos += rightSpeed * PApplet.parseFloat(millis() - ticksLastUpdate) * 0.001f;
+    }
+    if (ypos - size < 0) {
+      upSpeed = 0;
+>>>>>>> 0f2aaf30cda9aa434fe0704ec05521658897a7af
+    }
+    else {
+      ypos -= upSpeed * PApplet.parseFloat(millis() - ticksLastUpdate) * 0.001f;
+    }
+    if (ypos + size > height) {
+      downSpeed = 0;
+    }
+    else {
+      ypos += downSpeed * PApplet.parseFloat(millis() - ticksLastUpdate) * 0.001f;
+    }
+  }
 
-    public void speedHandler() {
-      if (left) {
-        leftSpeed = constrain(leftSpeed, 0, maxSpeed) + speedModifier;
-      } else if (!left) {
-        leftSpeed = constrain(leftSpeed, brakeModifier, maxSpeed) - brakeModifier;
-      }
-      if (right) {
-        rightSpeed = constrain(rightSpeed, 0, maxSpeed) + speedModifier;
-      } else if (!right) {
-        rightSpeed = constrain(rightSpeed, brakeModifier, maxSpeed) - brakeModifier;
-      }
-      if (up) {
-        upSpeed = constrain(upSpeed, 0, maxSpeed) + speedModifier;
-      } else if (!up) {
-        upSpeed = constrain(upSpeed, brakeModifier, maxSpeed) - brakeModifier;
-      }
-      if (down) {
-        downSpeed = constrain(downSpeed, 0, maxSpeed) + speedModifier;
-      } else if (!down) {
-        downSpeed = constrain(downSpeed, brakeModifier, maxSpeed) - brakeModifier;
+  public void speedHandler() {
+    if (left) {
+      leftSpeed = constrain(leftSpeed, 0, maxSpeed) + speedModifier;
+    } else if (!left) {
+      leftSpeed = constrain(leftSpeed, brakeModifier, maxSpeed) - brakeModifier;
+    }
+    if (right) {
+      rightSpeed = constrain(rightSpeed, 0, maxSpeed) + speedModifier;
+    } else if (!right) {
+      rightSpeed = constrain(rightSpeed, brakeModifier, maxSpeed) - brakeModifier;
+    }
+    if (up) {
+      upSpeed = constrain(upSpeed, 0, maxSpeed) + speedModifier;
+    } else if (!up) {
+      upSpeed = constrain(upSpeed, brakeModifier, maxSpeed) - brakeModifier;
+    }
+    if (down) {
+      downSpeed = constrain(downSpeed, 0, maxSpeed) + speedModifier;
+    } else if (!down) {
+      downSpeed = constrain(downSpeed, brakeModifier, maxSpeed) - brakeModifier;
+    }
+  }
+
+  public void speedDebug() {
+    if (millis() / 1000 % 2 == 0) {
+      println("Left: " + leftSpeed);
+      println("Right: " + rightSpeed);
+      println("Up: " + upSpeed);
+      println("Down: " + downSpeed);
+    }
+  }
+
+  public void shootHandler() {
+    if (shooting) {
+      if (ticksElapsed > timeStamp + shootRateModifier) {
+        bullets.add(new PlayerBullet(xpos, ypos));
+        score--;
+        timeStamp = ticksElapsed;
       }
     }
-
-    public void speedDebug() {
-      if (millis() / 1000 % 2 == 0) {
-        println("Left: " + leftSpeed);
-        println("Right: " + rightSpeed);
-        println("Up: " + upSpeed);
-        println("Down: " + downSpeed);
+    for (int i = bullets.size() - 1; i >= 0; i--) {
+      bullets.get(i).drawBullet();
+      if (bullets.get(i).ypos < 0) {
+        bullets.remove(i);
       }
-    }
-
-    public void shootHandler() {
-      if (shooting) {
-        if (ticksElapsed > timeStamp + shootRateModifier) {
-          bullets.add(new PlayerBullet(xpos, ypos));
-          score--;
-          timeStamp = ticksElapsed;
-        }
-      }
-      for (int i = bullets.size() - 1; i >= 0; i--) {
-        bullets.get(i).drawBullet();
-        if (bullets.get(i).ypos < 0) {
-          bullets.remove(i);
-        }
     }
   }
 
   public void bulletCollision() {
     for (int k = enemyManager.bullets.size() - 1; k >= 0; k--) {
-      if (enemyManager.bullets.get(k).xpos - enemyManager.bullets.get(k).size / 2 > xpos - size / 2
-          && enemyManager.bullets.get(k).xpos + enemyManager.bullets.get(k).size / 2 < xpos + size / 2
-          && enemyManager.bullets.get(k).ypos - enemyManager.bullets.get(k).size / 2 > ypos - size / 2
-          && enemyManager.bullets.get(k).ypos + enemyManager.bullets.get(k).size / 2 < ypos + size / 2) {
+      if (enemyManager.bullets.get(k).xpos - enemyManager.bullets.get(k).size / 2 > xpos - size
+          && enemyManager.bullets.get(k).xpos + enemyManager.bullets.get(k).size / 2 < xpos + size
+          && enemyManager.bullets.get(k).ypos - enemyManager.bullets.get(k).size / 2 > ypos - size
+          && enemyManager.bullets.get(k).ypos + enemyManager.bullets.get(k).size / 2 < ypos + size) {
             println("Player hit!");
             enemyManager.bullets.remove(k);
             hitBlinkOpacity = 255 / 2;
             health--;
             println(health);
-        }
       }
+    }
     for (int i = enemyManager.basicEnemies.size() - 1; i >= 0; i--) {
       for (int j = enemyManager.basicEnemies.get(i).bullets.size() - 1; j >= 0; j--) {
-        if (enemyManager.basicEnemies.get(i).bullets.get(j).xpos - enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 > xpos - size / 2
-            && enemyManager.basicEnemies.get(i).bullets.get(j).xpos + enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 < xpos + size / 2
-            && enemyManager.basicEnemies.get(i).bullets.get(j).ypos - enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 > ypos - size / 2
-            && enemyManager.basicEnemies.get(i).bullets.get(j).ypos + enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 < ypos + size / 2) {
+        if (enemyManager.basicEnemies.get(i).bullets.get(j).xpos - enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 > xpos - size
+            && enemyManager.basicEnemies.get(i).bullets.get(j).xpos + enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 < xpos + size
+            && enemyManager.basicEnemies.get(i).bullets.get(j).ypos - enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 > ypos - size
+            && enemyManager.basicEnemies.get(i).bullets.get(j).ypos + enemyManager.basicEnemies.get(i).bullets.get(j).size / 2 < ypos + size) {
               println("Player hit!");
               enemyManager.basicEnemies.get(i).bullets.remove(j);
               hitBlinkOpacity = 255 / 2;
               health--;
               println(health);
-          }
         }
       }
+    }
   }
 
   public void powerUpCollision() {
@@ -1393,21 +1470,25 @@ class PlayerManager{
   }
 
   public void displayScore() {
-    fill(0);
+    fill(255);
     textSize(32);
-    text(score, 40, height - 40);
+    text(score, 80, height - 80);
   }
 
   public void displayCurrentLevel() {
-    fill(0);
+    fill(255);
     textSize(24);
-    text("LEVEL " + gamestate, 40, 40);
+    text("LEVEL " + gamestate, 150, 40);
   }
 
     public void death() {
-
+      if(playerManager.score > highScoreList.get(9).points){  //checks if the player has set a new highscore better than the lowest one currently on the list
+        menuIndex = 5;
+      }
+      else{
+        menuIndex = 6;
+      }
     }
-
   }
 class PowerUp {
   PImage heart;

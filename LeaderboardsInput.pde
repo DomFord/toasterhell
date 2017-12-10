@@ -1,8 +1,3 @@
-/*
-Author: Frederik Boye
-Homepage: http://www.frederikboye.com
-"If you're not weird, don't expect me to understand you"
-*/
 class LeaderboardsInput{
   String name;
   int letter1;
@@ -142,6 +137,7 @@ class LeaderboardsInput{
     }
     scoreArray[0] = scoreString;
     saveStrings("highscore.txt", scoreArray);
+    menuIndex = 6;
   }
 
   void displayInput(){
@@ -169,5 +165,25 @@ class LeaderboardsInput{
       break;
     }
     rectMode(CORNER);
+  }
+
+  void showHighScores(){
+    fill(255);
+    textFont(font,(40));
+    textAlign(CENTER);
+    text("LEADERBOARDS", 400, 80);
+    textFont(font,(30));
+    text(highScoreList.get(0).toString(), 400, 140);
+    text(highScoreList.get(1).toString(), 400, 180);
+    text(highScoreList.get(2).toString(), 400, 220);
+    text(highScoreList.get(3).toString(), 400, 260);
+    text(highScoreList.get(4).toString(), 400, 300);
+    text(highScoreList.get(5).toString(), 400, 340);
+    text(highScoreList.get(6).toString(), 400, 380);
+    text(highScoreList.get(7).toString(), 400, 420);
+    text(highScoreList.get(8).toString(), 400, 460);
+    text(highScoreList.get(9).toString(), 400, 500);
+    textFont(font,(15));
+    text("PRESS 'SPACE' TO RETURN TO MAIN MENU!", 400, 580);
   }
 }

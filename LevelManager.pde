@@ -35,7 +35,17 @@ class LevelManager{
         drawBackground(backgrounds[gamestate - 1]);
       break;
       case 4:
-        advanceGamestate();
+        if(gamestate <= 4){
+          advanceGamestate();
+        }
+        else{
+          if(playerManager.score > highScoreList.get(9).points){  //checks if the player has set a new highscore better than the lowest one currently on the list
+            menuIndex = 5;
+          }
+          else{
+            menuIndex = 6;
+          }
+        }
       break;
     }
   }

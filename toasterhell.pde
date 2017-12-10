@@ -41,12 +41,23 @@ void setup() {
   String tempScoreString = tempScoreList[0];
   String[] tempScoreArray = split(tempScoreString, ',');
   highScoreList = new ArrayList<Score>();
+  println(tempScoreArray.length);
   for(int i = 0; i < tempScoreArray.length - 1; i++){
     Score newScore = new Score();
     newScore.tag = tempScoreArray[i].substring(0,3);
     newScore.points = int(tempScoreArray[i].substring(4));
     highScoreList.add(newScore);
   }
+  println(highScoreList.get(0));
+  println(highScoreList.get(1));
+  println(highScoreList.get(2));
+  println(highScoreList.get(3));
+  println(highScoreList.get(4));
+  println(highScoreList.get(5));
+  println(highScoreList.get(6));
+  println(highScoreList.get(7));
+  println(highScoreList.get(8));
+  println(highScoreList.get(9));
 
   stars = new Star[10];
   for (int i = 0; i < 10; i++) {
@@ -263,6 +274,9 @@ void keyPressed() {
         break;
       }
       break;
+      case 6:
+        menuIndex = 2;
+      break;
   }
 }
 
@@ -331,6 +345,8 @@ void draw() {
       leaderboardInput.displayInput();
     break;
     case 6:
+      background(0);
+      leaderboardInput.showHighScores();
     break;
   }
 }
